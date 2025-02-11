@@ -1,0 +1,25 @@
+langchain~=0.3.14
+langchain_community
+langchain_openai
+langgraph~=0.2.61
+
+# YOLO
+torch~=2.5.1
+opencv-python~=4.10.0.84
+ultralytics~=8.3.58
+
+#Phoenix tracing
+arize-phoenix
+arize-phoenix-otel
+openinference-instrumentation-langchain
+
+python-dotenv~=1.0.1
+openai~=1.59.3
+grandalf~=0.8
+
+torchvision~=0.20.1
+numpy~=1.26.4
+pillow~=11.1.0
+pydantic~=2.10.4
+
+aiofiles~=24.1.0
