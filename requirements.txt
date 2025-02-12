@@ -23,3 +23,7 @@ pillow~=11.1.0
 pydantic~=2.10.4
 
 aiofiles~=24.1.0
+langchain-core~=0.3.29
+typing_extensions~=4.12.2
+langchain-openai~=0.2.14
+requests~=2.32.3

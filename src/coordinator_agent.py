@@ -8,6 +8,11 @@ from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
 
+from langgraph.graph import END, START, StateGraph
+import operator
+from typing import Annotated, List
+from typing_extensions import TypedDict
+
 from pydantic import BaseModel, Field
 from typing import List
 
@@ -18,13 +23,18 @@ from swarm_intelligence_agent import SwarmAgent
 
 
 class Subtask(BaseModel):
-    subtask: str = Field(description="Description of the subtask")
+    id: str = Field(description="Unique identifier for the subtask. It must be unique across the plan")
+    name: str = Field(description="Description or name of the subtask")
     agent: str = Field(description="Name of the assigned agent")
-    dependencies: List[str] = Field(default_factory=list, description="List of dependencies")
+    dependencies: List[dict] = Field(
+        default_factory=list,
+        description="List of dependencies. Each dependency is a dictionary with 'id' and 'name' keys."
+    )
 
 
 class Task(BaseModel):
-    task: str = Field(description="Name of the main task")
+    id: str = Field(description="Unique identifier for the task. It must be unique across the plan")
+    name: str = Field(description="Description or name of of the main task")
     subtasks: List[Subtask] = Field(description="List of subtasks")
 
 
@@ -103,6 +113,7 @@ class CoordinatorAgent:
         self.agents_file = agents_file
         self.auto_register = auto_register
         self.agents = []
+        self.graph = None
 
     async def initialize(self):
         """
@@ -158,13 +169,6 @@ class CoordinatorAgent:
         self.memory.append(HumanMessage(content=user_input))
         return user_input
 
-    def find_relevant_agents(self, subtask):
-        """Finds relevant agents for a given subtask."""
-        relevant_agents = [
-            agent for agent in self.agents if agent["description"].lower() in subtask.lower()
-        ]
-        return relevant_agents
-
     def segment_task(self, user_task):
         """Asks the LLM to segment the task into structured subtasks."""
         agents_info = json.dumps(self.agents)  # Convert available agents to string
@@ -176,125 +180,27 @@ class CoordinatorAgent:
         ]
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | tasks_parser
-        response = chain.invoke({
+        task_plan = chain.invoke({
             "agents_info": agents_info,
             "user_task": user_task,
             "format_instructions": tasks_parser.get_format_instructions()
         })
-        return response
-
-    def generate_subtask_plan(self, tasks):
-        """Segments the task and assigns agents where applicable."""
-        # Extracting subtasks from structured_plan
-        subtasks_plan = [subtask for tasks in tasks.tasks for subtask in tasks.subtasks]
-        self.logger.info(f"Extracted {len(subtasks_plan)} subtasks from the task plan.")
-        return subtasks_plan
-
-    async def execute_with_swarm_intelligence(self, subtasks):
-        """
-        Executes a task plan using swarm intelligence.
-        Delegates subtasks to crews to work in parallel or sequentially.
-        """
-        self.logger.info("Starting swarm intelligence execution.")
-
-        # Handle dependencies and assign tasks to crews
-        crews = self._create_crews(subtasks)
-        self.logger.info(f"Created {len(crews)} crews to resolve subtasks.")
-
-        # Execute crews based on parallel or sequential mode
-        if self.run_in_parallel:
-            self.logger.info("Executing crews in parallel.")
-            await asyncio.gather(*(self._execute_crew(crew) for crew in crews))
-        else:
-            self.logger.info("Executing crews sequentially.")
-            for crew in crews:
-                await self._execute_crew(crew)
-
-        # Consolidate results from all crews
-        results = self._consolidate_task_results(crews)
-        self.logger.info(f"Swarm task execution completed. Results: {results}")
-        return results
-
-    def _create_crews(self, subtasks):
-        """
-        Divides the subtasks into crews for subsequent execution.
-        """
-        # Create crews based on the defined number (self.num_crews)
-        crews = [[] for _ in range(self.swarm_agent.num_crews)]
-        for i, subtask in enumerate(subtasks):
-            crews[i % len(crews)].append(subtask)
-        return crews
-
-    async def _execute_crew(self, crew):
-        """
-        Executes a crew (list of subtasks) while respecting dependencies.
-        """
-        for subtask in crew:
-            # Check if the subtask's dependencies are resolved:
-            if not self._check_dependencies_resolved(subtask):
-                self.logger.warning(
-                    f"Skipping subtask {subtask.name} due to unresolved dependencies."
-                )
-                continue
-
-            # Execute the subtask
-            await self._execute_subtask(subtask)
-
-    def _check_dependencies_resolved(self, subtask):
-        """
-        Checks if the dependencies of a subtask are resolved.
-        """
-        if not subtask.dependencies:
-            return True
-        for dependency in subtask.dependencies:
-            if not dependency.get("resolved", False):
-                return False
-        return True
-
-    async def _execute_subtask(self, subtask):
-        """
-        Executes a single subtask.
-        """
-        self.logger.info(f"Executing subtask {subtask.name}")
-        await asyncio.sleep(1)  # Simulates actual execution
-        subtask.resolved = True  # Marks the subtask as resolved
-        self.logger.info(f"Subtask {subtask.name} execution completed.")
-
-    def _consolidate_task_results(self, crews):
-        """
-        Consolidates the results of the subtasks executed across all crews.
-        """
-        results = {
-            "resolved_subtasks": sum(len(crew) for crew in crews),
-            "details": [
-                {"name": subtask.name, "resolved": getattr(subtask, "resolved", False)}
-                for crew in crews for subtask in crew
-            ]
-        }
-        return results
-
+        return task_plan
 
     def run(self):
         """Executes the user interaction and structured task segmentation."""
         user_task = self.ask_user()
+        self.logger.info(f"Received user task: {user_task}")
+
         task_plan = self.segment_task(user_task)
         self.logger.info(f"\n Generated Task Plan:\n{json.dumps(task_plan, indent=4)}")
-        return task_plan
+
+        # Build and initialize the graph
+
 
 
 if __name__ == "__main__":
     async def main():
-        # Create a sample agents registry file for testing
-        # test_agents = [
-        #     {"name": "ObjectDetectionAgent", "description": "Detects objects in images"},
-        #     {"name": "TextSummarizationAgent", "description": "Summarizes long text"},
-        #     {"name": "ImageClassificationAgent", "description": "Classifies images into categories"}
-        # ]
-        #
-        # # Save test agents to a JSON file
-        # with open("test_agents_registry.json", "w") as f:
-        #     json.dump(test_agents, f, indent=4)
-
         # Initialize the coordinator agent with the test registry
         coordinator = CoordinatorAgent(agents_file="agents_registry.json", auto_register=True)
         await coordinator.initialize()
@@ -309,6 +215,91 @@ if __name__ == "__main__":
         print("\nGenerated Plan:")
         print(plan)
 
-        coordinator.generate_subtask_plan(plan)
-
     asyncio.run(main())
+
+
+
+
+# # TODO: PROBADO HASTA AQUI
+# async def execute_with_swarm_intelligence(self, subtasks):
+#     """
+#     Executes a task plan using swarm intelligence.
+#     Delegates subtasks to crews to work in parallel or sequentially.
+#     """
+#     self.logger.info("Starting swarm intelligence execution.")
+#
+#     # Handle dependencies and assign tasks to crews
+#     crews = self._create_crews(subtasks)
+#     self.logger.info(f"Created {len(crews)} crews to resolve subtasks.")
+#
+#     # Execute crews based on parallel or sequential mode
+#     if self.run_in_parallel:
+#         self.logger.info("Executing crews in parallel.")
+#         await asyncio.gather(*(self._execute_crew(crew) for crew in crews))
+#     else:
+#         self.logger.info("Executing crews sequentially.")
+#         for crew in crews:
+#             await self._execute_crew(crew)
+#
+#     # Consolidate results from all crews
+#     results = self._consolidate_task_results(crews)
+#     self.logger.info(f"Swarm task execution completed. Results: {results}")
+#     return results
+#
+# def _create_crews(self, subtasks):
+#     """
+#     Divides the subtasks into crews for subsequent execution.
+#     """
+#     # Create crews based on the defined number (self.num_crews)
+#     crews = [[] for _ in range(self.swarm_agent.num_crews)]
+#     for i, subtask in enumerate(subtasks):
+#         crews[i % len(crews)].append(subtask)
+#     return crews
+#
+# async def _execute_crew(self, crew):
+#     """
+#     Executes a crew (list of subtasks) while respecting dependencies.
+#     """
+#     for subtask in crew:
+#         # Check if the subtask's dependencies are resolved:
+#         if not self._check_dependencies_resolved(subtask):
+#             self.logger.warning(
+#                 f"Skipping subtask {subtask.name} due to unresolved dependencies."
+#             )
+#             continue
+#
+#         # Execute the subtask
+#         await self._execute_subtask(subtask)
+#
+# def _check_dependencies_resolved(self, subtask):
+#     """
+#     Checks if the dependencies of a subtask are resolved.
+#     """
+#     if not subtask.dependencies:
+#         return True
+#     for dependency in subtask.dependencies:
+#         if not dependency.get("resolved", False):
+#             return False
+#     return True
+#
+# async def _execute_subtask(self, subtask):
+#     """
+#     Executes a single subtask.
+#     """
+#     self.logger.info(f"Executing subtask {subtask.name}")
+#     await asyncio.sleep(1)  # Simulates actual execution
+#     subtask.resolved = True  # Marks the subtask as resolved
+#     self.logger.info(f"Subtask {subtask.name} execution completed.")
+#
+# def _consolidate_task_results(self, crews):
+#     """
+#     Consolidates the results of the subtasks executed across all crews.
+#     """
+#     results = {
+#         "resolved_subtasks": sum(len(crew) for crew in crews),
+#         "details": [
+#             {"name": subtask.name, "resolved": getattr(subtask, "resolved", False)}
+#             for crew in crews for subtask in crew
+#         ]
+#     }
+#     return results
