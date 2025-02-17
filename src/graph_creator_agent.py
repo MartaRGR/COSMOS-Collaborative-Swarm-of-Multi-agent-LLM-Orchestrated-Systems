@@ -28,10 +28,12 @@ class PrivateState(TypedDict):
     agents: Annotated[dict, operator.add]  # Agents assigned to each subtask
     dependencies: Annotated[dict, operator.add]  # Subtasks' dependencies
     subtask_results: Annotated[dict, operator.add]  # Individual results for each subtask
+    # subtask_results indicará si el nodo ha completado la tarea y puede iniciar el siguiente dependiente
     message_exchange: Annotated[dict, operator.add]  # Messages exchanged between subtasks
 
 
 def coordinator_crew(state: OverallState) -> PrivateState:
+    # Actualizará el estado
     pass
 
 def swarm_agent(state: PrivateState) -> PrivateState:
@@ -55,28 +57,28 @@ class GraphCreatorAgent:
         self.logger = logging.getLogger("GraphCreatorAgent")
         self.memory = MemorySaver()
         self.task_plan = task_plan
+        self.node_controllers = {}
         self.graph = self.create_graph()
         self.compiled_graph = self.graph.compile(checkpointer=self.memory)
 
     def create_graph(self):
-        """Create the network using the provided task plan.
-        Args:
-            task_plan: Task plan containing nodes and dependencies as input.
-        Returns:
-            StateGraph: Task graph ready to run.
-        """
+        """Create the network using the provided task plan."""
         self.logger.info("Starting the dynamic creation of the graph...")
         graph = StateGraph(OverallState)
 
         # Create nodes dynamically based on task's plan
         for task in self.task_plan:
+            # TODO: change task by id
             task_crew, task_response = task.task + " - CREW", task.task + " - RESPONSE"
             graph.add_node(task_crew, coordinator_crew)
+            self.node_controllers[task_crew] = coordinator_crew
             graph.add_edge(START, task_crew)
             graph.add_node(task_response, coordinator_response)
+            self.node_controllers[task_response] = coordinator_response
             graph.add_node("Human Feedback - " + task_response, human_feedback)
             for subtask in task.subtasks:
                 graph.add_node(subtask.subtask, swarm_agent)
+                self.node_controllers[subtask.subtask] = swarm_agent
                 if not subtask.dependencies:
                     graph.add_edge(task_crew, subtask.subtask)
                 for dependency in subtask.dependencies:
@@ -91,6 +93,118 @@ class GraphCreatorAgent:
 
         self.logger.info(f"Graph created with {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
         return graph
+
+    @staticmethod
+    def is_node_completed(subtask_id: str, private_state: PrivateState) -> bool:
+        """
+        Check if the subtask has been completed.
+        True if the node is completed, False otherwise.
+        """
+        results = private_state.get("subtask_results", {})
+        return results.get(subtask_id, {}).get("status") == "completed"
+
+    def can_activate_node(self, subtask_id: str, private_state: PrivateState) -> bool:
+        """
+        Check if a node can be activated based on whether all its dependencies are completed.
+        True if all dependencies are completed, False otherwise.
+        """
+        dependencies = private_state.get("dependencies", {}).get(subtask_id, [])
+        for dep_id in dependencies:
+            if not self.is_node_completed(dep_id, private_state):
+                return False  # A dependency is not completed
+        return True  # All dependencies are completed
+
+    def activate_dependent_nodes(self, subtask_id: str, private_state: PrivateState):
+        """Activate nodes that depend on the given subtask, if their dependencies are resolved."""
+        for dependent_id, dependencies in private_state.get("dependencies", {}).items():
+            if subtask_id in dependencies and self.can_activate_node(dependent_id, private_state):
+                # Create a message or update state to activate the dependent node
+                private_state["message_exchange"].setdefault(dependent_id, []).append({
+                    "sender": subtask_id,
+                    "content": {
+                        "type": "activation",
+                        "data": f"Node {subtask_id} completed"
+                    }
+                })
+                private_state["subtask_results"][dependent_id] = {
+                    "status": "pending",
+                    "progress": 0
+                }
+                self.logger.info(f"Dependent node {dependent_id} activated after completing {subtask_id}")
+
+    def process_node(self, subtask_id: str, private_state: PrivateState):
+        """Process an individual node in the graph by resolving its dependencies and executing its task."""
+        # Step 1: Verify that the node can be processed (dependencies must be resolved)
+        if not self.can_activate_node(subtask_id, private_state):
+            self.logger.info(f"Node {subtask_id} cannot be processed yet. Unresolved dependencies.")
+            return  # Exit if dependencies are not resolved
+
+        # 2. Check if the node is currently in progress
+        current_status = private_state.get("subtask_results", {}).get(subtask_id, {}).get("status")
+        if current_status == "in_progress":
+            self.logger.info(f"Node {subtask_id} is already in progress. Skipping.")
+            return  # Do not process nodes already being worked on
+
+        # 3. Check if the node's dependencies have been resolved
+        if not self.can_activate_node(subtask_id, private_state):
+            self.logger.info(f"Node {subtask_id} cannot start. Unresolved dependencies.")
+            return  # Exit as dependencies are not resolved yet
+
+        controller = self.node_controllers.get(subtask_id)  # Use external mapping
+        if not controller:
+            self.logger.error(f"Node {subtask_id} does not have an assigned controller.")
+            return
+
+        # 5. Mark the node as "in progress"
+        private_state["subtask_results"][subtask_id] = {
+            "status": "in_progress",
+            "progress": 0  # Start with 0% progress
+        }
+        self.logger.info(f"Node {subtask_id} is now in progress.")
+
+        # 6. Delegate execution to the node's controller
+        try:
+            controller_result = controller(subtask_id, private_state)  # Call the controller
+
+            # 7. On successful execution, mark the node as completed
+            private_state["subtask_results"][subtask_id] = {
+                "status": "completed",
+                "progress": 100,  # Fully completed
+                "result": controller_result  # Store the result returned by the controller
+            }
+            self.logger.info(f"Node {subtask_id} has been completed successfully.")
+
+            # 8. Activate dependent nodes
+            self.activate_dependent_nodes(subtask_id, private_state)
+
+        except Exception as e:
+            # Handle any errors that occur within the controller
+            private_state["subtask_results"][subtask_id] = {
+                "status": "error",
+                "progress": 0,
+                "error": str(e)
+            }
+            self.logger.error(f"Error while executing node {subtask_id}: {e}")
+
+
+def execute_graph(self, private_state: PrivateState):
+        """
+        Iterate over all nodes in the graph and process them in order based on dependencies.
+        :param self: The instance of the class.
+        :param private_state: The private state of the graph.
+        """
+        while True:
+            # Fetch all nodes with pending or in-progress status
+            pending_nodes = [
+                node for node, result in private_state["subtask_results"].items()
+                if result.get("status") not in ("completed", "in_progress")
+            ]
+            if not pending_nodes:
+                break  # All nodes are completed, exit the loop
+            for node in pending_nodes:
+                self.process_node(node, private_state)
+        self.logger.info("Graph execution completed.")
+
 
 if __name__ == "__main__":
     import logging
@@ -118,25 +232,25 @@ if __name__ == "__main__":
                         dependencies=['Detect objects in the image'])
             ]
         ),
-        Task(
-            task='Clasify image',
-            subtasks=[
-                Subtask(subtask='Classify whole image', agent='object_detection_agent', dependencies=[]),
-                Subtask(subtask='Segment objects', agent='LLM', dependencies=[]),
-                Subtask(subtask='Classify segmented objects', agent='LLM', dependencies=["Segment objects"]),
-            ]
-        )
+        # Task(
+        #     task='Classify image',
+        #     subtasks=[
+        #         Subtask(subtask='Classify whole image', agent='object_detection_agent', dependencies=[]),
+        #         Subtask(subtask='Segment objects', agent='LLM', dependencies=[]),
+        #         Subtask(subtask='Classify segmented objects', agent='LLM', dependencies=["Segment objects"]),
+        #     ]
+        # )
     ]
 
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("GraphCreatorAgentExample")
 
-    graph_creator = GraphCreatorAgent(logger=logger, task_plan=tasks)
+    graph_creator = GraphCreatorAgent(task_plan=tasks)
     file_path = "graph.png"
     graph_png_data = graph_creator.compiled_graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
     with open(file_path, "wb") as file:
         file.write(graph_png_data)
-    print(f"Gráfico guardado exitosamente en: {file_path}")
+    print(f"Graph successfully saved in: {file_path}")
 
     img = Image.open(file_path)
     img.show()
