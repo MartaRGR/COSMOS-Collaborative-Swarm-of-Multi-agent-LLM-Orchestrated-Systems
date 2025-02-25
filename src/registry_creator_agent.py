@@ -55,6 +55,30 @@ class AgentRegistry:
     async def load_agent_metadata(self, module_name):
         """Load metadata of an agent by reading the file asynchronously."""
         import re
+        import json
+
+        def extract_agent_metadata(text):
+            # IMPORTANT TO NOTE: every agent MUST have AGENT_METADATA variable to be processed
+            # Searching the beginning of AGENT_METADATA. If literal not found, then return None
+            match = re.search(r'AGENT_METADATA\s*=\s*\{', text)
+            if not match:
+                return None
+
+            start = match.end() - 1  # Beginning from first '{'
+            stack = 0  # Counter of stacked keys
+            end = start
+
+            # Searching the end of the stacked keys
+            for i in range(start, len(text)):
+                if text[i] == '{':
+                    stack += 1
+                elif text[i] == '}':
+                    stack -= 1
+                    if stack == 0:  # block completely closed
+                        end = i + 1
+                        break
+            return json.loads(text[start:end])
+
         try:
             agent_file = os.path.join(os.path.abspath(self.agents_folder), f"{module_name}.py")
             if not os.path.exists(agent_file):
@@ -64,11 +88,9 @@ class AgentRegistry:
             async with aiofiles.open(agent_file, mode="r", encoding="utf-8") as file:
                 contents = await file.read()
 
-            # Using regex to search AGENT_METADATA dictionary
             # IMPORTANT TO NOTE: every agent MUST have AGENT_METADATA variable to be processed
-            match = re.search(r"AGENT_METADATA\s*=\s*(\{.*?\})", contents, re.DOTALL)
-            if match:
-                metadata = eval(match.group(1))
+            metadata = extract_agent_metadata(contents)
+            if metadata:
                 self.logger.debug(f"Loaded metadata for module {module_name}: {metadata}")
                 return module_name, metadata
             else:

@@ -2,44 +2,92 @@ import os
 import json
 import asyncio
 import logging
+import copy
+import random
+import uuid
+import operator
+from typing import Annotated, List
+from typing_extensions import TypedDict
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
-from langchain.schema import SystemMessage, HumanMessage, AIMessage
+from langchain.schema import HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
 
 from langgraph.graph import END, START, StateGraph
-import operator
-from typing import Annotated, List
-from typing_extensions import TypedDict
-
-from pydantic import BaseModel, Field
-from typing import List
-
-from dotenv import load_dotenv, find_dotenv
+from langgraph.checkpoint.memory import MemorySaver
 
 from registry_creator_agent import AgentRegistry
-from swarm_intelligence_agent import SwarmAgent
+# from swarm_intelligence_agent import SwarmAgent
+
+
+class SubtaskDependency(BaseModel):
+    id: str = Field(description="Unique identifier for the dependent subtask")
+    name: str = Field(description="Name of the dependent subtask")
 
 
 class Subtask(BaseModel):
-    id: str = Field(description="Unique identifier for the subtask. It must be unique across the plan")
+    id: str = Field(description="Unique identifier for the subtask")
     name: str = Field(description="Description or name of the subtask")
+    order: int = Field(description="Order of execution of the subtask within the task")
     agent: str = Field(description="Name of the assigned agent")
-    dependencies: List[dict] = Field(
-        default_factory=list,
-        description="List of dependencies. Each dependency is a dictionary with 'id' and 'name' keys."
-    )
+    dependencies: List[SubtaskDependency] = Field(description="List of dependencies")
+    status: str = Field(default="pending", description="Current status of the subtask (pending, in_progress, completed)")
 
 
 class Task(BaseModel):
-    id: str = Field(description="Unique identifier for the task. It must be unique across the plan")
-    name: str = Field(description="Description or name of of the main task")
+    id: str = Field(description="Unique identifier for the task")
+    name: str = Field(description="Description or name of the main task")
     subtasks: List[Subtask] = Field(description="List of subtasks")
+    status: str = Field(default="pending", description="Current status of the task")
 
 
 class TaskPlan(BaseModel):
-    tasks: List[Task] = Field(description="List of tasks")
+    tasks: List[Task] = Field(description="List of tasks in the plan")
+
+
+class OverallState(TypedDict):
+    """
+    The Overall state of the LangGraph graph.
+    Tracks the global execution state for tasks and subtasks.
+    """
+    user_task: Annotated[dict, operator.add]
+    task_plan: Annotated[dict, operator.add]
+    results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks
+    pending_tasks: Annotated[dict, operator.add]  # Pending tasks details
+    completed_tasks: Annotated[dict, operator.add]  # Completed tasks details
+    finished: bool  # Marks whether the entire network has been completed
+    traceability: Annotated[dict, operator.add]  # Hierarchical information about nodes and connections
+
+
+class PrivateState(TypedDict):
+    """
+    Communication state for individual subtasks in LangGraph.
+    Tracks crews, agents, dependencies, and results of subtasks.
+    """
+    crew_details: Annotated[dict, operator.add]  # Details about the crews (i.e, number, composition...)
+    agents: Annotated[dict, operator.add]  # Agents assigned to each subtask
+    dependencies: Annotated[dict, operator.add]  # Subtasks' dependencies
+    subtask_results: Annotated[dict, operator.add]  # Individual results for each subtask
+    # subtask_results indicará si el nodo ha completado la tarea y puede iniciar el siguiente dependiente
+    message_exchange: Annotated[dict, operator.add]  # Messages exchanged between subtasks
+
+
+def coordinator_crew(state: OverallState) -> PrivateState:
+    # Actualizará el estado
+    pass
+
+def swarm_agent(state: PrivateState) -> PrivateState:
+    pass
+
+def coordinator_response(state: PrivateState) -> OverallState:
+    pass
+
+def human_feedback(state: OverallState) -> OverallState:
+    pass
+
 
 
 # Read LLM configuration from environment variables
@@ -51,9 +99,11 @@ class CoordinatorAgent:
     """LLM Agent that segments tasks, assigns agents, and structures execution plans."""
 
     SYSTEM_PROMPT = """Segment the user's task into subtasks and define dependencies.
-    - Identify which tasks can be executed in parallel and which require sequential processing.
-    - Use only agents from the available agent list.
-    - If no agents match a subtask, the LLM will handle it.
+    - Identify which subtasks can be executed in parallel and which require sequential execution.
+    - Use only agents from the available agent list to assign an agent to each subtask.
+    - If no suitable agent exists for a subtask, assign the subtask to "LLM".
+    - Assign unique IDs to each task and subtask using UUID format.
+    - If a subtask depends on another subtask, include the ID of the dependent subtask in the dependencies list.
     - Return a structured plan in JSON format with tasks, subtasks, dependencies, and assigned agents."""
 
     def __init__(
@@ -107,13 +157,17 @@ class CoordinatorAgent:
         self.num_crews = num_crews
 
         self.run_in_parallel = run_in_parallel  # Attribute to control execution mode
-        self.swarm_agent = SwarmAgent(num_crews, run_in_parallel)
+        # self.swarm_agent = SwarmAgent(num_crews, run_in_parallel)
 
-        self.memory = []  # Conversation history
         self.agents_file = agents_file
         self.auto_register = auto_register
         self.agents = []
-        self.graph = None
+
+        self.user_memory = []
+
+        self.memory = MemorySaver()
+        self.graph = self.create_graph()
+        self.compiled_graph = self.graph.compile(checkpointer=self.memory)
 
     async def initialize(self):
         """
@@ -166,7 +220,7 @@ class CoordinatorAgent:
     def ask_user(self):
         """Requests the initial task from the user."""
         user_input = input("Enter your task: ")
-        self.memory.append(HumanMessage(content=user_input))
+        self.user_memory.append(HumanMessage(content=user_input))
         return user_input
 
     def segment_task(self, user_task):
@@ -187,6 +241,147 @@ class CoordinatorAgent:
         })
         return task_plan
 
+    def create_crews(self, task_plan):
+        """Creates heterogeneous crews, assigning agents with specific configurations to each subtask."""
+        crews_plan = []
+
+        for crew_id in range(self.num_crews):
+            crew = {
+                "id": str(uuid.uuid4()),
+                "name": f"Crew {crew_id + 1}",
+                "task_plan": {
+                    "tasks": []
+                }
+            }
+
+            for task in task_plan.tasks:
+                structured_task = {
+                    "id": task.id,
+                    "name": task.name,
+                    "subtasks": []
+                }
+
+                for subtask in task.subtasks:
+                    subtask_agent = subtask.agent
+                    if subtask_agent in self.agents:
+                        # Select a random model from the available agent
+                        selected_model = random.choice(self.agents[subtask_agent]["models"])
+                        selected_hyperparameters = copy.deepcopy(selected_model["hyperparameters"])
+
+                        # Adjust hyperparameters according to their type
+                        for param, value in selected_hyperparameters.items():
+                            if isinstance(value, list) and value:
+                                if len(value) == 2:
+                                    if all(isinstance(v, (int, float)) for v in value):
+                                        selected_hyperparameters[param] = random.uniform(value[0],
+                                                                                         value[1]) if isinstance(
+                                            value[0], float) else random.randint(value[0], value[1])
+                                    elif all(isinstance(v, str) for v in value):
+                                        selected_hyperparameters[param] = random.choice(value)
+                                elif len(value) > 2:
+                                    selected_hyperparameters[param] = random.choice(value)
+
+                        # Configure the agent with the selected model and hyperparameters
+                        agent_details = {
+                            "id": str(uuid.uuid4()),
+                            "name": selected_model["name"],
+                            "hyperparameters": selected_hyperparameters
+                        }
+                    else:
+                        # If no agent available, assign LLM with random configuration
+                        agent_details = {
+                            "id": str(uuid.uuid4()),
+                            "name": "LLM",
+                            "hyperparameters": {
+                                "model": random.choice(["gpt-4o-mini", "gpt-4"]),
+                                "temperature": random.uniform(0.0, 1.0),
+                            }
+                        }
+
+                    # Structure the subtask information
+                    structured_subtask = {
+                        "order": subtask.order,
+                        "id": subtask.id,
+                        "name": subtask.name,
+                        "subtask_dependencies": [dep.id for dep in subtask.dependencies],
+                        "agent": agent_details
+                    }
+                    structured_task["subtasks"].append(structured_subtask)
+                crew["task_plan"]["tasks"].append(structured_task)
+            crews_plan.append(crew)
+
+        return crews_plan
+
+    def ask_user_task(self, state: OverallState) -> OverallState:
+        """Asks the user for a task and returns the updated state."""
+        user_task = self.ask_user()
+        self.logger.info(f"Received user task: {user_task}")
+        state.user_task = user_task
+        return state
+
+    def task_planner(self, state: OverallState) -> OverallState:
+        """Generates a task plan based on the user's task."""
+        task_planner = self.segment_task(state["user_task"])
+        state.task_plan = task_planner
+        return state
+
+    def initialize_crews(self, state: OverallState) -> OverallState:
+        """Initializes the crews for execution."""
+        crews_plan = self.create_crews(state["task_plan"])
+        state.crews_plan = crews_plan
+        return state
+
+    def create_graph(self):
+        """Create the LangGraph graph for coordinator execution."""
+        self.logger.info("Starting the dynamic creation of the graph...")
+        graph = StateGraph(OverallState)
+
+        # Initial configuration for the start node
+        graph.add_node("ask_user_task", self.ask_user_task)
+        graph.set_entry_point("ask_user_task")
+
+        graph.add_node("task_planner", self.task_planner)
+        graph.add_node("initialize_crews", self.initialize_crews)
+
+        graph.add_node("swarm_intelligence_execution", swarm_agent)
+        graph.add_node("coordinated_response", coordinator_crew)
+
+        graph.add_node("END", lambda state: state.finished)
+
+
+        graph.add_node("START", coordinator_crew)
+        graph.add_edge(START, "Ask user for task")
+        graph.add_edge("Ask user for task", END)
+
+
+        # Create nodes dynamically based on task's plan
+        for crew in self.crews_plan:
+            # TODO: change task by id
+            task_crew, task_response = task.task + " - CREW", task.task + " - RESPONSE"
+            graph.add_node(task_crew, coordinator_crew)
+            self.node_controllers[task_crew] = coordinator_crew
+            graph.add_edge(START, task_crew)
+            graph.add_node(task_response, coordinator_response)
+            self.node_controllers[task_response] = coordinator_response
+            graph.add_node("Human Feedback - " + task_response, human_feedback)
+            for subtask in task.subtasks:
+                graph.add_node(subtask.subtask, swarm_agent)
+                self.node_controllers[subtask.subtask] = swarm_agent
+                if not subtask.dependencies:
+                    graph.add_edge(task_crew, subtask.subtask)
+                for dependency in subtask.dependencies:
+                    graph.add_edge(dependency, subtask.subtask)
+                graph.add_edge(subtask.subtask, task_response)
+            graph.add_edge(task_response, "Human Feedback - " + task_response)
+            graph.add_conditional_edges(
+                "Human Feedback - " + task_response,
+                lambda s: END if s["finished_detection"] else task_crew,
+                [END, task_crew]
+            )
+
+        self.logger.info(f"Graph created with {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
+        return graph
+
     def run(self):
         """Executes the user interaction and structured task segmentation."""
         user_task = self.ask_user()
@@ -195,7 +390,11 @@ class CoordinatorAgent:
         task_plan = self.segment_task(user_task)
         self.logger.info(f"\n Generated Task Plan:\n{json.dumps(task_plan, indent=4)}")
 
+        crews_plan = self.create_crews(task_plan)
+        self.logger.info(f"\n Generated Crews Plan:\n{json.dumps(crews_plan, indent=4)}")
+
         # Build and initialize the graph
+        graph = self.create_graph(crews_plan)
 
 
 
@@ -214,7 +413,7 @@ if __name__ == "__main__":
         # Display the output
         print("\nGenerated Plan:")
         print(plan)
-
+        coordinator.create_crews(plan)
     asyncio.run(main())
 
 

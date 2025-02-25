@@ -48,7 +48,7 @@ def human_feedback(state: OverallState) -> OverallState:
 
 class GraphCreatorAgent:
     """Agent that creates a graph from a task plan"""
-    def __init__(self, task_plan):
+    def __init__(self, task_plan, n_crews=3):
         logging.basicConfig(
             level=logging.INFO,
             format='[%(asctime)s] [%(levelname)s] %(message)s',
@@ -57,6 +57,7 @@ class GraphCreatorAgent:
         self.logger = logging.getLogger("GraphCreatorAgent")
         self.memory = MemorySaver()
         self.task_plan = task_plan
+        self.n_crews = n_crews
         self.node_controllers = {}
         self.graph = self.create_graph()
         self.compiled_graph = self.graph.compile(checkpointer=self.memory)
