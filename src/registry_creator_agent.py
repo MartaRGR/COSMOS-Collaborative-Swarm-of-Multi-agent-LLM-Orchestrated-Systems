@@ -43,7 +43,7 @@ class AgentRegistry:
             return {}
 
         self.logger.info(f"Found {len(agents_files)} agent files: {agents_files}")
-        module_names = [os.path.splitext(os.path.basename(file))[0] for file in agents_files]
+        module_names = [os.path.basename(file) for file in agents_files]
         # Async parallel tasks
         tasks = [self.load_agent_metadata(module_name) for module_name in module_names]
         results = await asyncio.gather(*tasks)
@@ -80,9 +80,9 @@ class AgentRegistry:
             return json.loads(text[start:end])
 
         try:
-            agent_file = os.path.join(os.path.abspath(self.agents_folder), f"{module_name}.py")
+            agent_file = os.path.join(os.path.abspath(self.agents_folder), module_name)
             if not os.path.exists(agent_file):
-                self.logger.warning(f"File for module {module_name} not found.")
+                self.logger.warning(f"File {module_name} not found.")
                 return None
 
             async with aiofiles.open(agent_file, mode="r", encoding="utf-8") as file:

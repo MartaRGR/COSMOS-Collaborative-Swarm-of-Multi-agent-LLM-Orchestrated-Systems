@@ -15,6 +15,7 @@ from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
@@ -32,7 +33,7 @@ class Subtask(BaseModel):
     id: str = Field(description="Unique identifier for the subtask")
     name: str = Field(description="Description or name of the subtask")
     order: int = Field(description="Order of execution of the subtask within the task")
-    agent: str = Field(description="Name of the assigned agent")
+    agents: list = Field(description="List of the assigned agents capable of resolving the subtask")
     dependencies: List[SubtaskDependency] = Field(description="List of dependencies")
     status: str = Field(default="pending", description="Current status of the subtask (pending, in_progress, completed)")
 
@@ -60,6 +61,8 @@ class OverallState(TypedDict):
     completed_tasks: Annotated[dict, operator.add]  # Completed tasks details
     finished: bool  # Marks whether the entire network has been completed
     traceability: Annotated[dict, operator.add]  # Hierarchical information about nodes and connections
+    user_feedback: str
+    finished_flow: bool
 
 
 class PrivateState(TypedDict):
@@ -100,10 +103,10 @@ class CoordinatorAgent:
 
     SYSTEM_PROMPT = """Segment the user's task into subtasks and define dependencies.
     - Identify which subtasks can be executed in parallel and which require sequential execution.
-    - Use only agents from the available agent list to assign an agent to each subtask.
-    - If no suitable agent exists for a subtask, assign the subtask to "LLM".
+    - For each subtask, assign ALL agents from the available agent list that have the capability to solve it.
+    - Use only agents from the available agent list to assign them to each subtask.
+    - If no suitable agents exists for a subtask, assign the subtask to "LLM".
     - Assign unique IDs to each task and subtask using UUID format.
-    - If a subtask depends on another subtask, include the ID of the dependent subtask in the dependencies list.
     - Return a structured plan in JSON format with tasks, subtasks, dependencies, and assigned agents."""
 
     def __init__(
@@ -166,8 +169,8 @@ class CoordinatorAgent:
         self.user_memory = []
 
         self.memory = MemorySaver()
-        self.graph = self.create_graph()
-        self.compiled_graph = self.graph.compile(checkpointer=self.memory)
+        # self.graph = self.create_graph()
+        # self.compiled_graph = self.graph.compile(checkpointer=self.memory)
 
     async def initialize(self):
         """
@@ -262,7 +265,7 @@ class CoordinatorAgent:
                 }
 
                 for subtask in task.subtasks:
-                    subtask_agent = subtask.agent
+                    subtask_agent = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
                     if subtask_agent in self.agents:
                         # Select a random model from the available agent
                         selected_model = random.choice(self.agents[subtask_agent]["models"])
@@ -272,11 +275,11 @@ class CoordinatorAgent:
                         for param, value in selected_hyperparameters.items():
                             if isinstance(value, list) and value:
                                 if len(value) == 2:
-                                    if all(isinstance(v, (int, float)) for v in value):
-                                        selected_hyperparameters[param] = random.uniform(value[0],
-                                                                                         value[1]) if isinstance(
-                                            value[0], float) else random.randint(value[0], value[1])
-                                    elif all(isinstance(v, str) for v in value):
+                                    if all(isinstance(v, int) for v in value):
+                                        selected_hyperparameters[param] = random.randint(value[0], value[1])
+                                    elif any(isinstance(v, float) for v in value) and not any(isinstance(v, str) for v in value):
+                                        selected_hyperparameters[param] = round(random.uniform(value[0], value[1]), 2)
+                                    else:
                                         selected_hyperparameters[param] = random.choice(value)
                                 elif len(value) > 2:
                                     selected_hyperparameters[param] = random.choice(value)
@@ -284,17 +287,18 @@ class CoordinatorAgent:
                         # Configure the agent with the selected model and hyperparameters
                         agent_details = {
                             "id": str(uuid.uuid4()),
-                            "name": selected_model["name"],
+                            "name": subtask_agent,
+                            "model": selected_model["name"],
                             "hyperparameters": selected_hyperparameters
                         }
                     else:
                         # If no agent available, assign LLM with random configuration
                         agent_details = {
                             "id": str(uuid.uuid4()),
-                            "name": "LLM",
+                            "name": "default-LLM.py",
+                            "model": random.choice(["gpt-4o-mini", "gpt-4"]),
                             "hyperparameters": {
-                                "model": random.choice(["gpt-4o-mini", "gpt-4"]),
-                                "temperature": random.uniform(0.0, 1.0),
+                                "temperature": round(random.uniform(0.0, 1.0), 2)
                             }
                         }
 
@@ -331,6 +335,17 @@ class CoordinatorAgent:
         state.crews_plan = crews_plan
         return state
 
+    def coordinated_response(self, state: OverallState) -> OverallState:
+        """Function to handle coordinated response."""
+        pass
+
+    def human_feedback(self, state: OverallState) -> OverallState:
+        """Asks the user for answer's feedback"""
+        feedback = input("Are you satisfied with the answer? (yes/no): ")
+        state["user_feedback"] = feedback
+        state["finished_flow"] = feedback.lower() == "yes"
+        return state
+
     def create_graph(self):
         """Create the LangGraph graph for coordinator execution."""
         self.logger.info("Starting the dynamic creation of the graph...")
@@ -342,45 +357,52 @@ class CoordinatorAgent:
 
         graph.add_node("task_planner", self.task_planner)
         graph.add_node("initialize_crews", self.initialize_crews)
+        graph.add_node("coordinated_response", self.coordinated_response)
+        graph.add_node("human_feedback", self.human_feedback)
 
-        graph.add_node("swarm_intelligence_execution", swarm_agent)
-        graph.add_node("coordinated_response", coordinator_crew)
+        for crew_num in range(self.num_crews):
+            graph.add_node(f"crew_{crew_num + 1}", swarm_agent)
+            graph.add_edge("initialize_crews", f"crew_{crew_num + 1}")
+            graph.add_edge(f"crew_{crew_num + 1}", "coordinated_response")
 
-        graph.add_node("END", lambda state: state.finished)
+        graph.add_edge("ask_user_task", "task_planner")
+        graph.add_edge("task_planner", "initialize_crews")
+        graph.add_edge("initialize_crews", "coordinated_response")
+        graph.add_edge("coordinated_response", "human_feedback")
+        graph.add_conditional_edges(
+            "human_feedback",
+            lambda s: END if s["finished_flow"] else "initialize_crews",
+            [END, "initialize_crews"]
+        )
+        # graph.add_edge("human_feedback", END)
 
-
-        graph.add_node("START", coordinator_crew)
-        graph.add_edge(START, "Ask user for task")
-        graph.add_edge("Ask user for task", END)
-
-
-        # Create nodes dynamically based on task's plan
-        for crew in self.crews_plan:
-            # TODO: change task by id
-            task_crew, task_response = task.task + " - CREW", task.task + " - RESPONSE"
-            graph.add_node(task_crew, coordinator_crew)
-            self.node_controllers[task_crew] = coordinator_crew
-            graph.add_edge(START, task_crew)
-            graph.add_node(task_response, coordinator_response)
-            self.node_controllers[task_response] = coordinator_response
-            graph.add_node("Human Feedback - " + task_response, human_feedback)
-            for subtask in task.subtasks:
-                graph.add_node(subtask.subtask, swarm_agent)
-                self.node_controllers[subtask.subtask] = swarm_agent
-                if not subtask.dependencies:
-                    graph.add_edge(task_crew, subtask.subtask)
-                for dependency in subtask.dependencies:
-                    graph.add_edge(dependency, subtask.subtask)
-                graph.add_edge(subtask.subtask, task_response)
-            graph.add_edge(task_response, "Human Feedback - " + task_response)
-            graph.add_conditional_edges(
-                "Human Feedback - " + task_response,
-                lambda s: END if s["finished_detection"] else task_crew,
-                [END, task_crew]
-            )
-
-        self.logger.info(f"Graph created with {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
-        return graph
+        # # Create nodes dynamically based on task's plan
+        # for crew in self.crews_plan:
+        #     # TODO: change task by id
+        #     task_crew, task_response = task.task + " - CREW", task.task + " - RESPONSE"
+        #     graph.add_node(task_crew, coordinator_crew)
+        #     self.node_controllers[task_crew] = coordinator_crew
+        #     graph.add_edge(START, task_crew)
+        #     graph.add_node(task_response, coordinator_response)
+        #     self.node_controllers[task_response] = coordinator_response
+        #     graph.add_node("Human Feedback - " + task_response, human_feedback)
+        #     for subtask in task.subtasks:
+        #         graph.add_node(subtask.subtask, swarm_agent)
+        #         self.node_controllers[subtask.subtask] = swarm_agent
+        #         if not subtask.dependencies:
+        #             graph.add_edge(task_crew, subtask.subtask)
+        #         for dependency in subtask.dependencies:
+        #             graph.add_edge(dependency, subtask.subtask)
+        #         graph.add_edge(subtask.subtask, task_response)
+        #     graph.add_edge(task_response, "Human Feedback - " + task_response)
+        #     graph.add_conditional_edges(
+        #         "Human Feedback - " + task_response,
+        #         lambda s: END if s["finished_detection"] else task_crew,
+        #         [END, task_crew]
+        #     )
+        #
+        # self.logger.info(f"Graph created with {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
+        return graph.compile(checkpointer=self.memory)
 
     def run(self):
         """Executes the user interaction and structured task segmentation."""
@@ -394,7 +416,7 @@ class CoordinatorAgent:
         self.logger.info(f"\n Generated Crews Plan:\n{json.dumps(crews_plan, indent=4)}")
 
         # Build and initialize the graph
-        graph = self.create_graph(crews_plan)
+        # graph = self.create_graph(crews_plan)
 
 
 
@@ -413,7 +435,16 @@ if __name__ == "__main__":
         # Display the output
         print("\nGenerated Plan:")
         print(plan)
-        coordinator.create_crews(plan)
+        crews_plan = coordinator.create_crews(plan)
+        print("\nGenerated Crews' Plan:")
+        print(crews_plan)
+
+        graph = coordinator.create_graph()
+        graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
+        file_path = "graph_coordinator.png"
+        with open(file_path, "wb") as file:
+            file.write(graph_png_data)
+        print(f"Graph successfully saved in: {file_path}")
     asyncio.run(main())
 
 
