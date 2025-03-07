@@ -15,13 +15,13 @@ from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
-from langchain_core.runnables.graph import MermaidDrawMethod
+from langchain_core.runnables.config import RunnableConfig
 
-from langgraph.graph import END, START, StateGraph
+from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
 
 from registry_creator_agent import AgentRegistry
-# from swarm_intelligence_agent import SwarmAgent
+from swarm_agent import SwarmAgent
 
 
 class SubtaskDependency(BaseModel):
@@ -54,15 +54,15 @@ class OverallState(TypedDict):
     The Overall state of the LangGraph graph.
     Tracks the global execution state for tasks and subtasks.
     """
-    user_task: Annotated[dict, operator.add]
-    task_plan: Annotated[dict, operator.add]
-    results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks
-    pending_tasks: Annotated[dict, operator.add]  # Pending tasks details
-    completed_tasks: Annotated[dict, operator.add]  # Completed tasks details
+    user_task: str
+    task_plan: str
+    crews_plan: str
+    # results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks
+    # pending_tasks: Annotated[dict, operator.add]  # Pending tasks details
+    # completed_tasks: Annotated[dict, operator.add]  # Completed tasks details
     finished: bool  # Marks whether the entire network has been completed
-    traceability: Annotated[dict, operator.add]  # Hierarchical information about nodes and connections
+    # traceability: Annotated[dict, operator.add]  # Hierarchical information about nodes and connections
     user_feedback: str
-    finished_flow: bool
 
 
 class PrivateState(TypedDict):
@@ -74,23 +74,7 @@ class PrivateState(TypedDict):
     agents: Annotated[dict, operator.add]  # Agents assigned to each subtask
     dependencies: Annotated[dict, operator.add]  # Subtasks' dependencies
     subtask_results: Annotated[dict, operator.add]  # Individual results for each subtask
-    # subtask_results indicará si el nodo ha completado la tarea y puede iniciar el siguiente dependiente
     message_exchange: Annotated[dict, operator.add]  # Messages exchanged between subtasks
-
-
-def coordinator_crew(state: OverallState) -> PrivateState:
-    # Actualizará el estado
-    pass
-
-def swarm_agent(state: PrivateState) -> PrivateState:
-    pass
-
-def coordinator_response(state: PrivateState) -> OverallState:
-    pass
-
-def human_feedback(state: OverallState) -> OverallState:
-    pass
-
 
 
 # Read LLM configuration from environment variables
@@ -164,7 +148,7 @@ class CoordinatorAgent:
 
         self.agents_file = agents_file
         self.auto_register = auto_register
-        self.agents = []
+        self.agents = self.initialize()
 
         self.user_memory = []
 
@@ -251,7 +235,7 @@ class CoordinatorAgent:
         for crew_id in range(self.num_crews):
             crew = {
                 "id": str(uuid.uuid4()),
-                "name": f"Crew {crew_id + 1}",
+                "name": f"crew_{crew_id + 1}",
                 "task_plan": {
                     "tasks": []
                 }
@@ -320,30 +304,57 @@ class CoordinatorAgent:
         """Asks the user for a task and returns the updated state."""
         user_task = self.ask_user()
         self.logger.info(f"Received user task: {user_task}")
-        state.user_task = user_task
+        state["user_task"] = user_task
         return state
 
     def task_planner(self, state: OverallState) -> OverallState:
         """Generates a task plan based on the user's task."""
+        self.logger.info("Starting task planner...")
         task_planner = self.segment_task(state["user_task"])
-        state.task_plan = task_planner
+        state["task_plan"] = task_planner
         return state
 
     def initialize_crews(self, state: OverallState) -> OverallState:
         """Initializes the crews for execution."""
+        self.logger.info("Initializing crews...")
         crews_plan = self.create_crews(state["task_plan"])
-        state.crews_plan = crews_plan
+        state["crews_plan"] = crews_plan
         return state
 
-    def coordinated_response(self, state: OverallState) -> OverallState:
+    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
+        """Function to handle swarm intelligence execution."""
+        crew_name = config["metadata"]["langgraph_node"] # get node name
+        self.logger.info(f"Executing crew: {crew_name}")
+        # Getting dict with node crew detail
+        crew_detail = next((crew_detail for crew_detail in state["crews_plan"] if crew_detail["name"] == crew_name), {})
+        if not crew_detail:
+            self.logger.warning(f"Crew {crew_name} not found in crews plan.")
+            return PrivateState(crew_details={
+                "crew_name": crew_name,
+                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
+                "crew_results": {}
+            })
+
+        # Executing SwarmAgent
+        swarm_agent = SwarmAgent(crew_detail)
+        crew_results = swarm_agent.run()
+
+        return PrivateState(crew_details={
+            "crew_name": crew_name,
+            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
+            "crew_results": crew_results,
+        })
+
+    def coordinated_response(self, state: PrivateState) -> OverallState:
         """Function to handle coordinated response."""
+        self.logger.info("Starting coordinated response...")
         pass
 
     def human_feedback(self, state: OverallState) -> OverallState:
         """Asks the user for answer's feedback"""
         feedback = input("Are you satisfied with the answer? (yes/no): ")
         state["user_feedback"] = feedback
-        state["finished_flow"] = feedback.lower() == "yes"
+        state["finished"] = feedback.lower() == "yes"
         return state
 
     def create_graph(self):
@@ -361,9 +372,10 @@ class CoordinatorAgent:
         graph.add_node("human_feedback", self.human_feedback)
 
         for crew_num in range(self.num_crews):
-            graph.add_node(f"crew_{crew_num + 1}", swarm_agent)
-            graph.add_edge("initialize_crews", f"crew_{crew_num + 1}")
-            graph.add_edge(f"crew_{crew_num + 1}", "coordinated_response")
+            node_name = f"crew_{crew_num + 1}"
+            graph.add_node(node_name, self.swarm_intelligence)
+            graph.add_edge("initialize_crews", node_name)
+            graph.add_edge(node_name, "coordinated_response")
 
         graph.add_edge("ask_user_task", "task_planner")
         graph.add_edge("task_planner", "initialize_crews")
@@ -371,52 +383,36 @@ class CoordinatorAgent:
         graph.add_edge("coordinated_response", "human_feedback")
         graph.add_conditional_edges(
             "human_feedback",
-            lambda s: END if s["finished_flow"] else "initialize_crews",
+            lambda s: END if s["finished"] else "initialize_crews",
             [END, "initialize_crews"]
         )
-        # graph.add_edge("human_feedback", END)
 
-        # # Create nodes dynamically based on task's plan
-        # for crew in self.crews_plan:
-        #     # TODO: change task by id
-        #     task_crew, task_response = task.task + " - CREW", task.task + " - RESPONSE"
-        #     graph.add_node(task_crew, coordinator_crew)
-        #     self.node_controllers[task_crew] = coordinator_crew
-        #     graph.add_edge(START, task_crew)
-        #     graph.add_node(task_response, coordinator_response)
-        #     self.node_controllers[task_response] = coordinator_response
-        #     graph.add_node("Human Feedback - " + task_response, human_feedback)
-        #     for subtask in task.subtasks:
-        #         graph.add_node(subtask.subtask, swarm_agent)
-        #         self.node_controllers[subtask.subtask] = swarm_agent
-        #         if not subtask.dependencies:
-        #             graph.add_edge(task_crew, subtask.subtask)
-        #         for dependency in subtask.dependencies:
-        #             graph.add_edge(dependency, subtask.subtask)
-        #         graph.add_edge(subtask.subtask, task_response)
-        #     graph.add_edge(task_response, "Human Feedback - " + task_response)
-        #     graph.add_conditional_edges(
-        #         "Human Feedback - " + task_response,
-        #         lambda s: END if s["finished_detection"] else task_crew,
-        #         [END, task_crew]
-        #     )
-        #
-        # self.logger.info(f"Graph created with {len(graph.nodes)} nodes and {len(graph.edges)} edges.")
         return graph.compile(checkpointer=self.memory)
 
     def run(self):
         """Executes the user interaction and structured task segmentation."""
-        user_task = self.ask_user()
-        self.logger.info(f"Received user task: {user_task}")
-
-        task_plan = self.segment_task(user_task)
-        self.logger.info(f"\n Generated Task Plan:\n{json.dumps(task_plan, indent=4)}")
-
-        crews_plan = self.create_crews(task_plan)
-        self.logger.info(f"\n Generated Crews Plan:\n{json.dumps(crews_plan, indent=4)}")
+        # user_task = self.ask_user()
+        # self.logger.info(f"Received user task: {user_task}")
+        #
+        # task_plan = self.segment_task(user_task)
+        # self.logger.info(f"\n Generated Task Plan:\n{task_plan}")
+        #
+        # crews_plan = self.create_crews(task_plan)
+        # self.logger.info(f"\n Generated Crews Plan:\n{crews_plan}")
 
         # Build and initialize the graph
-        # graph = self.create_graph(crews_plan)
+        graph = self.create_graph()
+        # graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
+        # file_path = "graph_coordinator.png"
+        # with open(file_path, "wb") as file:
+        #     file.write(graph_png_data)
+        # self.logger.info(f"Graph successfully saved in: {file_path}")
+        thread = {"configurable": {"thread_id": "1"}}
+        state = OverallState(finished=False)
+        while not state["finished"]:
+            for event in graph.stream(state, thread, stream_mode="values"):
+                print(event)
+                state = event
 
 
 
@@ -425,26 +421,28 @@ if __name__ == "__main__":
         # Initialize the coordinator agent with the test registry
         coordinator = CoordinatorAgent(agents_file="agents_registry.json", auto_register=True)
         await coordinator.initialize()
-        print(f"Agentes inicializados: {coordinator.agents}")
+        # print(f"Agentes inicializados: {coordinator.agents}")
+        #
+        # # Simulate a user task
+        # user_task = "Detect objets in the image and summarize its content."
+        #
+        # # Generate a plan
+        # plan = coordinator.segment_task(user_task)
+        # # Display the output
+        # print("\nGenerated Plan:")
+        # print(plan)
+        # crews_plan = coordinator.create_crews(plan)
+        # print("\nGenerated Crews' Plan:")
+        # print(crews_plan)
+        #
+        # graph = coordinator.create_graph()
+        # graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
+        # file_path = "graph_coordinator.png"
+        # with open(file_path, "wb") as file:
+        #     file.write(graph_png_data)
+        # print(f"Graph successfully saved in: {file_path}")
 
-        # Simulate a user task
-        user_task = "Analyze an image and summarize its content."
-
-        # Generate a plan
-        plan = coordinator.segment_task(user_task)
-        # Display the output
-        print("\nGenerated Plan:")
-        print(plan)
-        crews_plan = coordinator.create_crews(plan)
-        print("\nGenerated Crews' Plan:")
-        print(crews_plan)
-
-        graph = coordinator.create_graph()
-        graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
-        file_path = "graph_coordinator.png"
-        with open(file_path, "wb") as file:
-            file.write(graph_png_data)
-        print(f"Graph successfully saved in: {file_path}")
+        coordinator.run()
     asyncio.run(main())
 
 
