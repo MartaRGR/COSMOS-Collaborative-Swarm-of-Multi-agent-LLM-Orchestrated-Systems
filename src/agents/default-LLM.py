@@ -34,7 +34,7 @@ AGENT_METADATA = {
 }
 
 
-class ObjectDetection:
+class DefaultLlmAgent:
     def __init__(self, model_name):
         """Initializes the model based on the selected name."""
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'

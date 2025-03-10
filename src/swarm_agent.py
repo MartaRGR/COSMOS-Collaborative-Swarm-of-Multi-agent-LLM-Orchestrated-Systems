@@ -1,10 +1,13 @@
-import importlib
+import os
+import sys
+import importlib.util
 import concurrent.futures
 import logging
+import re
 
 
 class SwarmAgent:
-    def __init__(self, crew_detail):
+    def __init__(self, crew_detail, default_agent="default-LLM.py", agents_folder="agents"):
         """
         Initializes the SwarmAgent with the details of the crew and its tasks.
 
@@ -13,23 +16,104 @@ class SwarmAgent:
         """
         self.logger = logging.getLogger("SwarmAgent")
         self.crew_detail = crew_detail
+        self.default_agent = default_agent
+        self.agents_folder = agents_folder
         self.tasks = crew_detail.get("task_plan", {}).get("tasks", [])
+        self.agent_modules = {}
+        self._initialize_agents()
 
-    @staticmethod
-    def _load_agent(agent_name):
+    def _initialize_agents(self):
+        """Load agent modules based on crew_detail. Avoid loading the same module more than once."""
+        try:
+            subtask_agent_names = [
+                subtask['agent'].get("name") for task in self.tasks for subtask in task['subtasks'] if 'agent' in subtask
+            ]
+            for name in subtask_agent_names:
+                # Avoid loading the same module twice
+                if name in self.agent_modules:
+                    self.logger.info(f"Agent '{name}' already loaded. Using cache.")
+                    continue
+
+                # Loading agent using the _load_agent method
+                agent_instance = self._load_agent(name)
+                if agent_instance:
+                    self.agent_modules[name] = agent_instance
+                    self.logger.info(f"Agent '{name}' successfully loaded")
+                else:
+                    self.logger.error(f"Error loading agent '{name}'")
+
+        except Exception as e:
+            self.logger.error(f"Error during agents' initialization: {e}")
+
+    def _load_agent(self, agent_name):
         """Dynamically loads the specified agent module."""
         try:
-            module_name = agent_name.replace(".py", "")
-            agent_module = importlib.import_module(module_name)
-            return agent_module.Agent()
+            if not agent_name or agent_name == "":
+                self.logger.warning(f"No agent name specified. Falling back to default agent: {self.default_agent}")
+                agent_name = self.default_agent
+
+            if self.agents_folder not in sys.path:
+                sys.path.append(self.agents_folder)
+            module_name = os.path.splitext(agent_name)[0]
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(self._load_agent_from_module, module_name)
+                try:
+                    return future.result()
+                except ModuleNotFoundError:
+                    self.logger.warning(f"Module '{module_name}' not found. Trying default agent '{self.default_agent}'")
+                    if module_name != self.default_agent:
+                        return self._load_agent(self.default_agent)
+                    self.logger.error(f"Default agent '{self.default_agent}' also not found.")
+                    raise ImportError(f"Cannot load module '{module_name}' or default agent '{self.default_agent}'.")
+
+            # agent_path = os.path.join(os.path.abspath(self.agents_folder), agent_name)
+            # if not os.path.exists(agent_path):
+            #     raise ImportError(f"Module '{agent_path}' does not exist in '{self.agents_folder}'")
+            #
+            # spec = importlib.util.spec_from_file_location(agent_name, agent_path)
+            # modulo = importlib.util.module_from_spec(spec)
+            # spec.loader.exec_module(modulo)
+            #
+            # agent_class_name = self.to_camel_case_with_agent(agent_name)
+            # if hasattr(modulo, agent_class_name):
+            #     return getattr(modulo, agent_class_name)
+            # else:
+            #     raise ImportError(f"Class '{agent_class_name}' does not exists in '{agent_name}'")
         except Exception as e:
             raise RuntimeError(f"Error loading agent '{agent_name}': {e}")
 
+    def _load_agent_from_module(self, module_name):
+        """Loads a module dynamically and return the agent class."""
+        try:
+            module = importlib.import_module(module_name)
+            class_name = self.to_camel_case_with_agent(module_name)
+            if not hasattr(module, class_name):
+                self.logger.error(f"Class '{class_name}' not found in module '{module_name}'.")
+                return None
+            self.logger.info(f"Successfully loaded agent class '{class_name}' from module '{module_name}'.")
+            return getattr(module, class_name)
+        except Exception as e:
+            self.logger.error(f"Failed to load module '{module_name}'. Error: {e}")
+            raise
+
+    @staticmethod
+    def to_camel_case_with_agent(name):
+        """
+        Converts a string to CamelCase with "Agent" appended if not already present.
+        Used for agent class names.
+        """
+        words = re.split(r'[^a-zA-Z]', os.path.splitext(name)[0])
+        camel_case_name = ''.join(word.capitalize() for word in words if word)
+        if not camel_case_name.endswith("Agent"):
+            camel_case_name += "Agent"
+        return camel_case_name
+
     def _process_subtask(self, subtask):
         """Process a specific subtask by running the corresponding agent."""
-        agent_info = subtask.get("agent")
+        self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
         try:
             # Load and configure the agent
+            agent_info = subtask.get("agent")
             agent = self._load_agent(agent_info["name"])
             agent.configure(agent_info["model"], agent_info["hyperparameters"])
 
@@ -42,13 +126,16 @@ class SwarmAgent:
 
     def execute_task(self, task):
         """Execute all subtasks of a task, respecting dependencies and parallelizing subtasks of the same order."""
+        self.logger.info(f"Executing task {task['id']} - {task['name']}...")
         subtasks = task.get("subtasks", [])
         completed = {}  # Store results of completed subtasks
 
         # Group subtasks in order
-        subtasks_by_order = {}
-        for subtask in subtasks:
-            subtasks_by_order.setdefault(subtask["order"], []).append(subtask)
+        subtasks_by_order = {
+            order: [
+                subtask for subtask in subtasks if subtask["order"] == order
+            ] for order in set(s["order"] for s in subtasks)
+        }
 
         # Run subtasks in order
         for order in sorted(subtasks_by_order.keys()):
@@ -107,7 +194,20 @@ if __name__ == "__main__":
                         'model': 'gpt-4',
                        'hyperparameters': {'temperature': 0.03}
                     }
-                }]
+                },
+                    {
+                        'order': 2,
+                        'id': 'd2f8e1b4-3c7e-4c1a-8e9f-1c3f9e1e8f5f',
+                        'name': 'Summarize the content2',
+                        'subtask_dependencies': ['b1e4d1a2-4b8c-4b5a-9c8e-4b8e1c3f9e1e'],
+                        'agent': {
+                            'id': '6ebadc1f-2b63-4f54-884f-9189cf24bc----marta',
+                            'name': 'hola',
+                            'model': 'gpt-4',
+                            'hyperparameters': {'temperature': 0.03}
+                        }
+                    }
+                ]
             }
             ]
         }
