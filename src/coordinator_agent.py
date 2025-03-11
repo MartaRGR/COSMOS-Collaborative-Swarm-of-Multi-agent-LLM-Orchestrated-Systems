@@ -1,7 +1,6 @@
 import os
 import json
 import asyncio
-import logging
 import copy
 import random
 import uuid
@@ -19,6 +18,8 @@ from langchain_core.runnables.config import RunnableConfig
 
 from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
+
+from utils.setup_logger import get_agent_logger
 
 from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
@@ -105,12 +106,8 @@ class CoordinatorAgent:
             agents_file: JSON file with available agents.
             auto_register: If True, automatically calls AgentRegistry if the agents file is missing.
         """
-        logging.basicConfig(
-            level=logging.INFO,
-            format='[%(asctime)s] [%(levelname)s] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
-        self.logger = logging.getLogger("CoordinatorAgent")
+        self.logger = get_agent_logger("CoordinatorAgent")
+        self.logger.info("Initializing...")
 
         # Validate temperature
         if not (0.0 <= temperature <= 1.0):

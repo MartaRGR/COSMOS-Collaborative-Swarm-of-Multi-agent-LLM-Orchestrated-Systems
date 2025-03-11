@@ -34,7 +34,7 @@
         ]
     },
     "object_detection_agent.py": {
-        "function": "Analyze and detect objects in an image",
+        "function": "Detect objects in an image",
         "input": "image",
         "output": "list of detected objects",
         "models": [

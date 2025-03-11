@@ -2,8 +2,9 @@ import os
 import sys
 import importlib.util
 import concurrent.futures
-import logging
 import re
+
+from utils.setup_logger import get_agent_logger
 
 
 class SwarmAgent:
@@ -14,7 +15,9 @@ class SwarmAgent:
         Arguments:
             crew_detail (dict): Detail of the tasks assigned to the group.
         """
-        self.logger = logging.getLogger("SwarmAgent")
+        self.logger = get_agent_logger("SwarmAgent")
+        self.logger.info("Initializing...")
+
         self.crew_detail = crew_detail
         self.default_agent = default_agent
         self.agents_folder = agents_folder
@@ -60,25 +63,11 @@ class SwarmAgent:
                 try:
                     return future.result()
                 except ModuleNotFoundError:
-                    self.logger.warning(f"Module '{module_name}' not found. Trying default agent '{self.default_agent}'")
+                    self.logger.warning(f"Module '{module_name}' not found. Falling back to default agent: '{self.default_agent}'")
                     if module_name != self.default_agent:
                         return self._load_agent(self.default_agent)
                     self.logger.error(f"Default agent '{self.default_agent}' also not found.")
                     raise ImportError(f"Cannot load module '{module_name}' or default agent '{self.default_agent}'.")
-
-            # agent_path = os.path.join(os.path.abspath(self.agents_folder), agent_name)
-            # if not os.path.exists(agent_path):
-            #     raise ImportError(f"Module '{agent_path}' does not exist in '{self.agents_folder}'")
-            #
-            # spec = importlib.util.spec_from_file_location(agent_name, agent_path)
-            # modulo = importlib.util.module_from_spec(spec)
-            # spec.loader.exec_module(modulo)
-            #
-            # agent_class_name = self.to_camel_case_with_agent(agent_name)
-            # if hasattr(modulo, agent_class_name):
-            #     return getattr(modulo, agent_class_name)
-            # else:
-            #     raise ImportError(f"Class '{agent_class_name}' does not exists in '{agent_name}'")
         except Exception as e:
             raise RuntimeError(f"Error loading agent '{agent_name}': {e}")
 

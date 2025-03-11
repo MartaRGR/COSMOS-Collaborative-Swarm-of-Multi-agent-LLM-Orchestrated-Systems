@@ -1,9 +1,9 @@
 import os
 import glob
 import time
-import logging
 import asyncio
 import aiofiles
+from utils.setup_logger import get_agent_logger
 
 
 class AgentRegistry:
@@ -16,12 +16,8 @@ class AgentRegistry:
             agents_folder: Folder where the agents are defined.
             registry_file: File where the agent registry will be saved.
         """
-        logging.basicConfig(
-            level=logging.INFO,
-            format='[%(asctime)s] [%(levelname)s] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
-        self.logger = logging.getLogger("AgentRegistry")
+        self.logger = get_agent_logger("AgentRegistry")
+        self.logger.info("Initializing...")
 
         self.agents_folder = agents_folder
         self.registry_file = registry_file
