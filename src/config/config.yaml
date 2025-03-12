@@ -1,0 +1,21 @@
+default:
+  # Agents Configuration
+  agents:
+    folder: "agents"  # Folder where agents are located inside src/
+    registry_file: "agents_registry.json"   # Name of the file used for registering and managing agents
+    default_agent: "default-LLM.py"   # The default agent file to be used if no specific agent is specified or found for task resolution
+  # Crews Configuration
+  crews:
+    num_crews: 5  # Number of crews (groups of agents) for task execution
+    run_in_parallel: True   # Indicates if crews should run tasks simultaneously (True) or sequentially (False)
+  # Coordinator Agent Parameters
+  coordinator_agent:
+    model_name: 'gpt-4o-mini'  # The name of the model used by the coordinator agent
+    deployment_name: 'gpt-4o-mini'  # Name or ID of the OpenAI deployment (used for custom deployments or Azure OpenAI)
+    api_version: "2024-08-01-preview"  # Version of the OpenAI API to interact with (e.g., '2023-06-01-preview' for Azure OpenAI)
+    temperature: 0.2  # Controls randomness/creativity of the model output (lower = more deterministic) (must be between 0 and 1)
+    auto_register: True   # Determines if the coordinator agent should auto-register agents on initialization (True) or loading agents directly from registry_file (False)
+  # OpenAI settings
+  openai:
+    api_key: ${OPENAI_API_KEY}  # Environmental variable defined with that EXACT name into .env file - OpenAI API key for authentication defined in .env
+    api_base: ${OPENAI_API_BASE}  # Environmental variable defined with that EXACT name into .env file - Base URL or endpoint for the OpenAI API (e.g., 'https://api.openai.com/v1/' or Azure-specific URL)

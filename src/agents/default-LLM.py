@@ -11,26 +11,8 @@ AGENT_METADATA = {
     "function": "Detect objects in an image",
     "input": "image",
     "output": "list of detected objects",
-    "models": [
-        {
-            "name": "yolo11n",
-            "hyperparameters": {
-                "classes": [1,5]
-            }
-        },
-        {
-            "name": "yolov8n",
-            "hyperparameters": {
-                "classes": [5,8]
-            }
-        },
-        {
-            "name": "resnet50",
-            "hyperparameters": {
-                "weights": [1.0, 5.0]
-            }
-        }
-    ]
+    "class": "DefaultLlmAgent",
+    "models": []
 }
 
 

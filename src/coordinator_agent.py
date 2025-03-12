@@ -4,10 +4,6 @@ import asyncio
 import copy
 import random
 import uuid
-import operator
-from typing import Annotated, List
-from typing_extensions import TypedDict
-from pydantic import BaseModel, Field
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
@@ -20,270 +16,131 @@ from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
 
 from utils.setup_logger import get_agent_logger
+from utils.config_loader import load_default_config
+from utils.task_models import TaskPlan
+from utils.state_models import OverallState, PrivateState
 
 from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
 
-
-class SubtaskDependency(BaseModel):
-    id: str = Field(description="Unique identifier for the dependent subtask")
-    name: str = Field(description="Name of the dependent subtask")
-
-
-class Subtask(BaseModel):
-    id: str = Field(description="Unique identifier for the subtask")
-    name: str = Field(description="Description or name of the subtask")
-    order: int = Field(description="Order of execution of the subtask within the task")
-    agents: list = Field(description="List of the assigned agents capable of resolving the subtask")
-    dependencies: List[SubtaskDependency] = Field(description="List of dependencies")
-    status: str = Field(default="pending", description="Current status of the subtask (pending, in_progress, completed)")
-
-
-class Task(BaseModel):
-    id: str = Field(description="Unique identifier for the task")
-    name: str = Field(description="Description or name of the main task")
-    subtasks: List[Subtask] = Field(description="List of subtasks")
-    status: str = Field(default="pending", description="Current status of the task")
-
-
-class TaskPlan(BaseModel):
-    tasks: List[Task] = Field(description="List of tasks in the plan")
-
-
-class OverallState(TypedDict):
-    """
-    The Overall state of the LangGraph graph.
-    Tracks the global execution state for tasks and subtasks.
-    """
-    user_task: str
-    task_plan: str
-    crews_plan: str
-    # results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks
-    # pending_tasks: Annotated[dict, operator.add]  # Pending tasks details
-    # completed_tasks: Annotated[dict, operator.add]  # Completed tasks details
-    finished: bool  # Marks whether the entire network has been completed
-    # traceability: Annotated[dict, operator.add]  # Hierarchical information about nodes and connections
-    user_feedback: str
-
-
-class PrivateState(TypedDict):
-    """
-    Communication state for individual subtasks in LangGraph.
-    Tracks crews, agents, dependencies, and results of subtasks.
-    """
-    crew_details: Annotated[dict, operator.add]  # Details about the crews (i.e, number, composition...)
-    agents: Annotated[dict, operator.add]  # Agents assigned to each subtask
-    dependencies: Annotated[dict, operator.add]  # Subtasks' dependencies
-    subtask_results: Annotated[dict, operator.add]  # Individual results for each subtask
-    message_exchange: Annotated[dict, operator.add]  # Messages exchanged between subtasks
-
-
-# Read LLM configuration from environment variables
+# Read OpenAI configuration from environment variables
 _ = load_dotenv(find_dotenv())  # read local .env file
+# Initialize tasks parser
 tasks_parser = PydanticOutputParser(pydantic_object=TaskPlan)
 
 
-class CoordinatorAgent:
-    """LLM Agent that segments tasks, assigns agents, and structures execution plans."""
+# ==========================
+# COMPONENT: ConfigManager
+# ==========================
+class ConfigManager:
+    """Manages the coordinator agent's settings."""
+    REQUIRED_FIELDS = {
+        "agents": ["registry_file", "default_agent"],
+        "coordinator_agent": ["model_name", "deployment_name", "temperature", "api_version", "auto_register"],
+        "crews": ["num_crews", "run_in_parallel"]
+    }
 
-    SYSTEM_PROMPT = """Segment the user's task into subtasks and define dependencies.
-    - Identify which subtasks can be executed in parallel and which require sequential execution.
-    - For each subtask, assign ALL agents from the available agent list that have the capability to solve it.
-    - Use only agents from the available agent list to assign them to each subtask.
-    - If no suitable agents exists for a subtask, assign the subtask to "LLM".
-    - Assign unique IDs to each task and subtask using UUID format.
-    - Return a structured plan in JSON format with tasks, subtasks, dependencies, and assigned agents."""
+    def __init__(self, user_config=None):
+        default_config = load_default_config()
+        if user_config:
+            default_config.update(user_config)
+        self.config = default_config
+        self.validate_config()
 
-    def __init__(
-            self, model_name=None, temperature=0.2, num_crews=5, run_in_parallel=True,
-            agents_file="agents_registry.json", auto_register=True
-    ):
-        """
-        Initializes the coordinator agent.
-        Args:
-            model_name: LLM model name.
-            temperature: Controls the AI's creativity.
-            agents_file: JSON file with available agents.
-            auto_register: If True, automatically calls AgentRegistry if the agents file is missing.
-        """
-        self.logger = get_agent_logger("CoordinatorAgent")
-        self.logger.info("Initializing...")
+    def validate_config(self):
+        """Validates required configuration fields and assigns attributes dynamically."""
+        for section, fields in self.REQUIRED_FIELDS.items():
+            sect = self.config.get(section, {})
+            for field in fields:
+                value = sect.get(field)
+                if not value:
+                    raise KeyError(f"Missing required configuration: '{section}.{field}'. Check your configuration file.")
+            self.config[section] = {field: sect[field] for field in fields}
 
-        # Validate temperature
-        if not (0.0 <= temperature <= 1.0):
-            self.logger.warning("Temperature must be between 0.0 and 1.0. Using default value 0.2.")
-            temperature = 0.2
-        self.temperature = temperature
 
-        # Set default model name if not provided and validate it
-        self.model_name = model_name or os.getenv("OPENAI_DEPLOYMENT")
-        if not self.model_name:
-            error_message = """
-                Model name not provided. You can define OPENAI_DEPLOYMENT environment variable or pass 
-                a model name.\n Using default model: gpt-4o-mini.
-            """
-            self.logger.warning(error_message)
-            self.model_name = "gpt-4o-mini"
-        try:
-            self.llm = AzureChatOpenAI(
-                deployment_name=self.model_name,
-                model_name=self.model_name,
-                temperature=self.temperature
-            )
-        except Exception as e:
-            error_message = f"Failed to initialize AzureChatOpenAI: {e}"
-            self.logger.error(error_message)
-            raise RuntimeError(error_message)
-
-        if not (1 <= num_crews <= 10):
-            self.logger.warning("Crews number must be between 1 and 10. Using default value 3.")
-            num_crews = 3
-        self.num_crews = num_crews
-
-        self.run_in_parallel = run_in_parallel  # Attribute to control execution mode
-        # self.swarm_agent = SwarmAgent(num_crews, run_in_parallel)
-
-        self.agents_file = agents_file
-        self.auto_register = auto_register
-        self.agents = self.initialize()
-
-        self.user_memory = []
-
-        self.memory = MemorySaver()
-        # self.graph = self.create_graph()
-        # self.compiled_graph = self.graph.compile(checkpointer=self.memory)
-
-    async def initialize(self):
-        """
-        Asynchronous initializer for the CoordinatorAgent.
-        Handles asynchronous calls to load the agents.
-        """
-        try:
-            self.agents = await self.load_agents()
-        except FileNotFoundError:
-            self.logger.warning(f"Agents file not found: {self.agents_file}. Agent list will be empty.")
-            self.agents = []
-        except Exception as e:
-            self.logger.warning(f"Error loading agents from file: {e}. Agent list will be empty.")
-            self.agents = []
-
-    def load_json_file(self):
-        """Reads and parses the JSON file if it exists."""
-        if os.path.exists(self.agents_file):
-            try:
-                with open(self.agents_file, "r") as f:
-                    agents = json.load(f)
-                    if not isinstance(agents, dict):
-                        self.logger.warning(f"""
-                            Invalid agents file format: Expected a dictionary, got {type(agents)}. 
-                            Agent list will be empty.
-                        """)
-                        return []
-                    return agents
-            except json.JSONDecodeError:
-                self.logger.warning("Error decoding JSON file. Check the format. Agent list will be empty.")
-                return []
-        else:
-            self.logger.warning("Agents file not found. Agent list will be empty.")
-            return []
+# ==========================
+# COMPONENT: AgentRegistryLoader
+# ==========================
+class AgentRegistryLoader:
+    """Loads the agent registry from a JSON file, activating the Registry Creator Agent if specified."""
+    def __init__(self, config, logger):
+        self.registry_file = config.get("agents", {}).get("registry_file")
+        self.auto_register = config.get("coordinator_agent", {}).get("auto_register")
+        self.logger = logger
 
     async def load_agents(self):
-        """Loads the list of agents from a JSON file or creates it if needed."""
-        # If auto_register is enabled, try to create the agents file
         if self.auto_register:
             self.logger.info("Calling Registry Creator Agent...")
             try:
                 registry = AgentRegistry()
                 await registry.run()
-                return self.load_json_file()
             except Exception as e:
-                self.logger.warning(f"Failed to create agents file: {e}. Agent list will be empty.")
-                return []
+                self.logger.warning(f"Failed to create agents file: {e}")
         return self.load_json_file()
 
-    def ask_user(self):
-        """Requests the initial task from the user."""
-        user_input = input("Enter your task: ")
-        self.user_memory.append(HumanMessage(content=user_input))
-        return user_input
+    def load_json_file(self):
+        if os.path.exists(self.registry_file):
+            try:
+                with open(self.registry_file, "r") as f:
+                    agents = json.load(f)
+                    if not isinstance(agents, dict):
+                        self.logger.warning("Invalid agents file format. Expected a dictionary.")
+                        return {}
+                    return agents
+            except json.JSONDecodeError:
+                self.logger.warning("Error decoding JSON file. Check the format.")
+        else:
+            self.logger.warning("Agents file not found.")
+        return {}
+
+# ==========================
+# COMPONENT: TaskPlanner
+# ==========================
+class TaskPlanner:
+    def __init__(self, llm, agents, logger):
+        self.llm = llm
+        self.agents = agents
+        self.logger = logger
 
     def segment_task(self, user_task):
-        """Asks the LLM to segment the task into structured subtasks."""
-        agents_info = json.dumps(self.agents)  # Convert available agents to string
+        """
+        Segments the user task into subtasks and dependencies, according to the agent registry and the system prompt.
+        Returns a structured JSON plan.
+        """
         messages = [
-            ("system", self.SYSTEM_PROMPT),
+            ("system", CoordinatorAgent.SYSTEM_PROMPT),
             ("system", "Available agents: {agents_info}"),
             ("system", "Respond with a JSON that follows this format: {format_instructions}"),
             ("human", "{user_task}")
         ]
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | tasks_parser
-        task_plan = chain.invoke({
-            "agents_info": agents_info,
-            "user_task": user_task,
-            "format_instructions": tasks_parser.get_format_instructions()
+        return chain.invoke({
+            "agents_info": json.dumps(self.agents),
+            "format_instructions": tasks_parser.get_format_instructions(),
+            "user_task": user_task
         })
-        return task_plan
 
-    def create_crews(self, task_plan):
+# ==========================
+# COMPONENT: CrewManager
+# ==========================
+class CrewManager:
+    """Creates crews for execution."""
+    def __init__(self, num_crews, default_agent, agents, logger):
+        self.num_crews = num_crews
+        self.default_agent = default_agent
+        self.agents = agents
+        self.logger = logger
+
+    def create_crews_plan(self, task_plan):
         """Creates heterogeneous crews, assigning agents with specific configurations to each subtask."""
         crews_plan = []
-
         for crew_id in range(self.num_crews):
-            crew = {
-                "id": str(uuid.uuid4()),
-                "name": f"crew_{crew_id + 1}",
-                "task_plan": {
-                    "tasks": []
-                }
-            }
-
+            crew = {"id": str(uuid.uuid4()), "name": f"crew_{crew_id + 1}", "task_plan": {"tasks": []}}
             for task in task_plan.tasks:
-                structured_task = {
-                    "id": task.id,
-                    "name": task.name,
-                    "subtasks": []
-                }
-
+                structured_task = {"id": task.id, "name": task.name, "subtasks": []}
                 for subtask in task.subtasks:
-                    subtask_agent = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
-                    if subtask_agent in self.agents:
-                        # Select a random model from the available agent
-                        selected_model = random.choice(self.agents[subtask_agent]["models"])
-                        selected_hyperparameters = copy.deepcopy(selected_model["hyperparameters"])
-
-                        # Adjust hyperparameters according to their type
-                        for param, value in selected_hyperparameters.items():
-                            if isinstance(value, list) and value:
-                                if len(value) == 2:
-                                    if all(isinstance(v, int) for v in value):
-                                        selected_hyperparameters[param] = random.randint(value[0], value[1])
-                                    elif any(isinstance(v, float) for v in value) and not any(isinstance(v, str) for v in value):
-                                        selected_hyperparameters[param] = round(random.uniform(value[0], value[1]), 2)
-                                    else:
-                                        selected_hyperparameters[param] = random.choice(value)
-                                elif len(value) > 2:
-                                    selected_hyperparameters[param] = random.choice(value)
-
-                        # Configure the agent with the selected model and hyperparameters
-                        agent_details = {
-                            "id": str(uuid.uuid4()),
-                            "name": subtask_agent,
-                            "model": selected_model["name"],
-                            "hyperparameters": selected_hyperparameters
-                        }
-                    else:
-                        # If no agent available, assign LLM with random configuration
-                        agent_details = {
-                            "id": str(uuid.uuid4()),
-                            "name": "default-LLM.py",
-                            "model": random.choice(["gpt-4o-mini", "gpt-4"]),
-                            "hyperparameters": {
-                                "temperature": round(random.uniform(0.0, 1.0), 2)
-                            }
-                        }
-
-                    # Structure the subtask information
+                    agent_details = self.get_agent_details(subtask)
                     structured_subtask = {
                         "order": subtask.order,
                         "id": subtask.id,
@@ -294,69 +151,174 @@ class CoordinatorAgent:
                     structured_task["subtasks"].append(structured_subtask)
                 crew["task_plan"]["tasks"].append(structured_task)
             crews_plan.append(crew)
-
         return crews_plan
 
+    def get_agent_details(self, subtask):
+        """Selects an agent for a subtask and returns its configuration."""
+        if not subtask.agents:
+            self.logger.warning(
+                f"No agents found for subtask '{subtask.name}'. Using default agent: {self.default_agent}")
+            candidate = self.default_agent
+        else:
+            candidate = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
+
+        if candidate not in self.agents:
+            self.logger.warning(f"Agent '{candidate}' not found. Using default agent: {self.default_agent}")
+            candidate = self.default_agent
+
+        if candidate not in self.agents:
+            raise ValueError(f"Agent '{candidate}' is not available in the registry.")
+
+        agent_info = self.agents[candidate]
+        if not agent_info.get("class"):
+            raise ValueError(f"Agent '{candidate}' does not have a class specified. Please check the registry file")
+        models = agent_info.get("models", [])
+        selected_model = random.choice(models) if models else {}
+        hyperparameters = self.randomize_hyperparameters(selected_model.get("hyperparameters", {}))
+
+        return {
+            "id": str(uuid.uuid4()),
+            "name": candidate,
+            "class": agent_info["class"],
+            "model": selected_model.get("name"),
+            "hyperparameters": hyperparameters
+        }
+
+    @staticmethod
+    def randomize_hyperparameters(hyperparameters):
+        randomized = copy.deepcopy(hyperparameters)
+        for param, value in randomized.items():
+            if isinstance(value, list) and value:
+                if len(value) == 2:
+                    if all(isinstance(v, int) for v in value):
+                        randomized[param] = random.randint(value[0], value[1])
+                    elif any(isinstance(v, float) for v in value) and not any(isinstance(v, str) for v in value):
+                        randomized[param] = round(random.uniform(value[0], value[1]), 2)
+                    else:
+                        randomized[param] = random.choice(value)
+                elif len(value) > 2:
+                    randomized[param] = random.choice(value)
+        return randomized
+
+# ==========================
+# MAIN COMPONENT: CoordinatorAgent
+# ==========================
+class CoordinatorAgent:
+    """High-level orchestrator that segments tasks, assigns agents, and structures execution plans."""
+    SYSTEM_PROMPT = (
+        "Segment the user's task into subtasks and define dependencies.\n"
+        "- Identify which subtasks can be executed in parallel and which require sequential execution.\n"
+        "- Assign ALL agents from the available agent list that have the capability to solve each subtask.\n"
+        "- If no suitable agent exists, assign the subtask to \"default_agent\".\n"
+        "- Assign unique IDs to each task and subtask using UUID format.\n"
+        "- Return a structured JSON plan."
+    )
+
+    def __init__(self, user_config=None):
+        self.logger = get_agent_logger("CoordinatorAgent")
+        self.logger.info("Initializing CoordinatorAgent...")
+        # Configuration handling
+        self.config_manager = ConfigManager(user_config)
+        self.config = self.config_manager.config
+
+        # Set attributes from configuration
+        ca_config = self.config.get("coordinator_agent", {})
+        crews_config = self.config.get("crews", {})
+        agents_config = self.config.get("agents", {})
+
+        self.deployment_name = ca_config["deployment_name"]
+        self.model_name = ca_config["model_name"]
+        self.temperature = ca_config["temperature"]
+        self.api_version = ca_config["api_version"]
+        self.auto_register = ca_config["auto_register"]
+        self.num_crews = crews_config["num_crews"]
+        self.run_in_parallel = crews_config["run_in_parallel"]
+        self.default_agent = agents_config["default_agent"]
+        self.registry_file = agents_config["registry_file"]
+
+        # Validate numeric values
+        if not (0.0 <= self.temperature <= 1.0):
+            self.logger.warning("Invalid temperature. Using default value of 0.2")
+            self.temperature = 0.2
+        if self.num_crews < 1:
+            self.logger.warning("Invalid num_crews. Using default value of 5.")
+            self.num_crews = 5
+
+        # Initialize LLM
+        self.llm = self._initialize_llm()
+
+        # Memory and agent registry loader
+        self.memory = MemorySaver()
+        self.registry_loader = AgentRegistryLoader(self.config, self.logger)
+
+        # Placeholders for runtime data
+        self.user_memory = []
+        self.agents = {}
+
+    async def setup(self):
+        """Performs asynchronous initialization steps."""
+        await self._initialize_agents()
+
+    async def _initialize_agents(self):
+        """Loads the agent registry asynchronously."""
+        try:
+            self.agents = await self.registry_loader.load_agents()
+        except Exception as e:
+            self.logger.warning(f"Error loading agents: {e}")
+            self.agents = {}
+
+    def _initialize_llm(self):
+        """Initializes the language model (LLM)."""
+        try:
+            return AzureChatOpenAI(
+                deployment_name=self.deployment_name,
+                model_name=self.model_name,
+                api_version=self.api_version,
+                temperature=self.temperature
+            )
+        except Exception as e:
+            error_message = f"Failed to initialize AzureChatOpenAI: {e}"
+            self.logger.error(error_message)
+            raise RuntimeError(error_message)
+
+    # ==========================
+    # TASK SEGMENTATION & CREW CREATION
+    # ==========================
     def ask_user_task(self, state: OverallState) -> OverallState:
-        """Asks the user for a task and returns the updated state."""
-        user_task = self.ask_user()
-        self.logger.info(f"Received user task: {user_task}")
+        user_task = input("Enter your task: ")
+        self.user_memory.append(user_task)
         state["user_task"] = user_task
         return state
 
     def task_planner(self, state: OverallState) -> OverallState:
-        """Generates a task plan based on the user's task."""
         self.logger.info("Starting task planner...")
-        task_planner = self.segment_task(state["user_task"])
-        state["task_plan"] = task_planner
+        planner = TaskPlanner(self.llm, self.agents, self.logger)
+        state["task_plan"] = planner.segment_task(state["user_task"])
         return state
 
     def initialize_crews(self, state: OverallState) -> OverallState:
-        """Initializes the crews for execution."""
         self.logger.info("Initializing crews...")
-        crews_plan = self.create_crews(state["task_plan"])
-        state["crews_plan"] = crews_plan
+        crew_manager = CrewManager(self.num_crews, self.default_agent, self.agents, self.logger)
+        state["crews_plan"] = crew_manager.create_crews_plan(state["task_plan"])
         return state
 
-    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
-        """Function to handle swarm intelligence execution."""
-        crew_name = config["metadata"]["langgraph_node"] # get node name
-        self.logger.info(f"Executing crew: {crew_name}")
-        # Getting dict with node crew detail
-        crew_detail = next((crew_detail for crew_detail in state["crews_plan"] if crew_detail["name"] == crew_name), {})
-        if not crew_detail:
-            self.logger.warning(f"Crew {crew_name} not found in crews plan.")
-            return PrivateState(crew_details={
-                "crew_name": crew_name,
-                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
-                "crew_results": {}
-            })
-
-        # Executing SwarmAgent
-        swarm_agent = SwarmAgent(crew_detail)
-        crew_results = swarm_agent.run()
-
-        return PrivateState(crew_details={
-            "crew_name": crew_name,
-            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
-            "crew_results": crew_results,
-        })
-
-    def coordinated_response(self, state: PrivateState) -> OverallState:
-        """Function to handle coordinated response."""
+    def coordinated_response(self, state: dict) -> dict:
         self.logger.info("Starting coordinated response...")
-        pass
+        # TODO: Implement coordinated response logic
+        return state
 
-    def human_feedback(self, state: OverallState) -> OverallState:
-        """Asks the user for answer's feedback"""
+    def human_feedback(self, state: dict) -> dict:
         feedback = input("Are you satisfied with the answer? (yes/no): ")
         state["user_feedback"] = feedback
         state["finished"] = feedback.lower() == "yes"
         return state
 
+    # ==========================
+    # GRAPH & EXECUTION FLOW
+    # ==========================
     def create_graph(self):
-        """Create the LangGraph graph for coordinator execution."""
-        self.logger.info("Starting the dynamic creation of the graph...")
+        """Creates the execution graph for coordinator execution."""
+        self.logger.info("Creating execution graph...")
         graph = StateGraph(OverallState)
 
         # Initial configuration for the start node
@@ -367,13 +329,11 @@ class CoordinatorAgent:
         graph.add_node("initialize_crews", self.initialize_crews)
         graph.add_node("coordinated_response", self.coordinated_response)
         graph.add_node("human_feedback", self.human_feedback)
-
         for crew_num in range(self.num_crews):
             node_name = f"crew_{crew_num + 1}"
             graph.add_node(node_name, self.swarm_intelligence)
             graph.add_edge("initialize_crews", node_name)
             graph.add_edge(node_name, "coordinated_response")
-
         graph.add_edge("ask_user_task", "task_planner")
         graph.add_edge("task_planner", "initialize_crews")
         graph.add_edge("initialize_crews", "coordinated_response")
@@ -383,148 +343,48 @@ class CoordinatorAgent:
             lambda s: END if s["finished"] else "initialize_crews",
             [END, "initialize_crews"]
         )
-
         return graph.compile(checkpointer=self.memory)
 
-    def run(self):
-        """Executes the user interaction and structured task segmentation."""
-        # user_task = self.ask_user()
-        # self.logger.info(f"Received user task: {user_task}")
-        #
-        # task_plan = self.segment_task(user_task)
-        # self.logger.info(f"\n Generated Task Plan:\n{task_plan}")
-        #
-        # crews_plan = self.create_crews(task_plan)
-        # self.logger.info(f"\n Generated Crews Plan:\n{crews_plan}")
+    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
+        """Function to handle swarm intelligence execution."""
+        crew_name = config["metadata"]["langgraph_node"]
+        self.logger.info(f"Executing crew: {crew_name}")
 
-        # Build and initialize the graph
+        # Getting dict with node crew detail
+        crew_detail = next((c for c in state["crews_plan"] if c["name"] == crew_name), {})
+        if not crew_detail:
+            self.logger.warning(f"Crew {crew_name} not found.")
+            return PrivateState(crew_details={
+                "crew_name": crew_name,
+                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
+                "crew_results": {}
+            })
+        self.logger.info(f"Crew {crew_name} details: {crew_detail}")
+        # SwarmAgent execution
+        swarm_agent = SwarmAgent(crew_detail)
+        crew_results = swarm_agent.run()
+        return PrivateState(crew_details={
+            "crew_name": crew_name,
+            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
+            "crew_results": crew_results,
+        })
+
+    def run(self):
         graph = self.create_graph()
-        # graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
-        # file_path = "graph_coordinator.png"
-        # with open(file_path, "wb") as file:
-        #     file.write(graph_png_data)
-        # self.logger.info(f"Graph successfully saved in: {file_path}")
-        thread = {"configurable": {"thread_id": "1"}}
         state = OverallState(finished=False)
-        while not state["finished"]:
+        thread = {"configurable": {"thread_id": "1"}}
+        while not state.get("finished"):
             for event in graph.stream(state, thread, stream_mode="values"):
                 print(event)
                 state = event
 
 
-
 if __name__ == "__main__":
     async def main():
         # Initialize the coordinator agent with the test registry
-        coordinator = CoordinatorAgent(agents_file="agents_registry.json", auto_register=True)
-        await coordinator.initialize()
-        # print(f"Agentes inicializados: {coordinator.agents}")
-        #
+        coordinator = CoordinatorAgent(user_config={})
+        await coordinator.setup()
         # # Simulate a user task
         # user_task = "Detect objets in the image and summarize its content."
-        #
-        # # Generate a plan
-        # plan = coordinator.segment_task(user_task)
-        # # Display the output
-        # print("\nGenerated Plan:")
-        # print(plan)
-        # crews_plan = coordinator.create_crews(plan)
-        # print("\nGenerated Crews' Plan:")
-        # print(crews_plan)
-        #
-        # graph = coordinator.create_graph()
-        # graph_png_data = graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
-        # file_path = "graph_coordinator.png"
-        # with open(file_path, "wb") as file:
-        #     file.write(graph_png_data)
-        # print(f"Graph successfully saved in: {file_path}")
-
         coordinator.run()
     asyncio.run(main())
-
-
-
-
-# # TODO: PROBADO HASTA AQUI
-# async def execute_with_swarm_intelligence(self, subtasks):
-#     """
-#     Executes a task plan using swarm intelligence.
-#     Delegates subtasks to crews to work in parallel or sequentially.
-#     """
-#     self.logger.info("Starting swarm intelligence execution.")
-#
-#     # Handle dependencies and assign tasks to crews
-#     crews = self._create_crews(subtasks)
-#     self.logger.info(f"Created {len(crews)} crews to resolve subtasks.")
-#
-#     # Execute crews based on parallel or sequential mode
-#     if self.run_in_parallel:
-#         self.logger.info("Executing crews in parallel.")
-#         await asyncio.gather(*(self._execute_crew(crew) for crew in crews))
-#     else:
-#         self.logger.info("Executing crews sequentially.")
-#         for crew in crews:
-#             await self._execute_crew(crew)
-#
-#     # Consolidate results from all crews
-#     results = self._consolidate_task_results(crews)
-#     self.logger.info(f"Swarm task execution completed. Results: {results}")
-#     return results
-#
-# def _create_crews(self, subtasks):
-#     """
-#     Divides the subtasks into crews for subsequent execution.
-#     """
-#     # Create crews based on the defined number (self.num_crews)
-#     crews = [[] for _ in range(self.swarm_agent.num_crews)]
-#     for i, subtask in enumerate(subtasks):
-#         crews[i % len(crews)].append(subtask)
-#     return crews
-#
-# async def _execute_crew(self, crew):
-#     """
-#     Executes a crew (list of subtasks) while respecting dependencies.
-#     """
-#     for subtask in crew:
-#         # Check if the subtask's dependencies are resolved:
-#         if not self._check_dependencies_resolved(subtask):
-#             self.logger.warning(
-#                 f"Skipping subtask {subtask.name} due to unresolved dependencies."
-#             )
-#             continue
-#
-#         # Execute the subtask
-#         await self._execute_subtask(subtask)
-#
-# def _check_dependencies_resolved(self, subtask):
-#     """
-#     Checks if the dependencies of a subtask are resolved.
-#     """
-#     if not subtask.dependencies:
-#         return True
-#     for dependency in subtask.dependencies:
-#         if not dependency.get("resolved", False):
-#             return False
-#     return True
-#
-# async def _execute_subtask(self, subtask):
-#     """
-#     Executes a single subtask.
-#     """
-#     self.logger.info(f"Executing subtask {subtask.name}")
-#     await asyncio.sleep(1)  # Simulates actual execution
-#     subtask.resolved = True  # Marks the subtask as resolved
-#     self.logger.info(f"Subtask {subtask.name} execution completed.")
-#
-# def _consolidate_task_results(self, crews):
-#     """
-#     Consolidates the results of the subtasks executed across all crews.
-#     """
-#     results = {
-#         "resolved_subtasks": sum(len(crew) for crew in crews),
-#         "details": [
-#             {"name": subtask.name, "resolved": getattr(subtask, "resolved", False)}
-#             for crew in crews for subtask in crew
-#         ]
-#     }
-#     return results

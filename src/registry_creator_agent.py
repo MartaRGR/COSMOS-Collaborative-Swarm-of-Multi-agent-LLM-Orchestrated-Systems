@@ -3,30 +3,52 @@ import glob
 import time
 import asyncio
 import aiofiles
+
 from utils.setup_logger import get_agent_logger
+from utils.config_loader import load_default_config
 
 
 class AgentRegistry:
     """Automatically scan and register available agents."""
 
-    def __init__(self, agents_folder="agents", registry_file="agents_registry.json"):
-        """
-        Initializes agent registration.
-        Args:
-            agents_folder: Folder where the agents are defined.
-            registry_file: File where the agent registry will be saved.
-        """
+    def __init__(self, user_config=None):
+        """Initializes agent registration."""
         self.logger = get_agent_logger("AgentRegistry")
         self.logger.info("Initializing...")
 
-        self.agents_folder = agents_folder
-        self.registry_file = registry_file
+        # Merging default configuration with user settings
+        self.logger.info("Loading configuration...")
+        default_config = load_default_config()
+        self.config = default_config.get("agents", {})
+        if user_config:
+            self._update_config(user_config)
+
+        self.agents_folder = self.config.get("folder")
+        self.registry_file = self.config.get("registry_file")
+        if not self.agents_folder or not self.registry_file:
+            error_message = """
+                Agent folder or registry file path not set. 
+                Please set them in the config file or using the user_config argument.
+            """
+            self.logger.error(error_message)
+            raise ValueError(error_message)
+
         self.agents = {}
 
+    def _update_config(self, user_config):
+        """Update configuration with user settings."""
+        if "agents" in user_config:
+            self.config.update(user_config["agents"])
+        else:
+            self.logger.warning("User config does not contain 'agents' key. Using default config settings.")
+    
     async def discover_agents(self):
         """Discover agents asynchronously in the specified folder."""
         if not os.path.exists(self.agents_folder):
-            error_message = f"Folder {self.agents_folder} does not exist in path {os.path.abspath(self.agents_folder)}"
+            error_message = f"""
+                Agents folder {self.agents_folder} does not exist in path {os.path.abspath(self.agents_folder)}.
+                Please check the path and try again.
+            """
             self.logger.error(error_message)
             raise ValueError(error_message)
         agents_files = [
@@ -111,7 +133,7 @@ class AgentRegistry:
 
     async def run(self):
         """Run the discovery and registration process."""
-        self.logger.info("REGISTRY CREATOR AGENT - Looking for agents...")
+        self.logger.info("Looking for agents...")
         start_time = time.time()
 
         await self.discover_agents()
@@ -120,12 +142,12 @@ class AgentRegistry:
         start_time = time.time()
         await self.save_registry()
         self.logger.info(f"Registry saved in {time.time() - start_time:.4f}s")
-        self.logger.info("END OF REGISTRY CREATOR AGENT")
+        self.logger.info("Registry done")
 
 
 if __name__ == "__main__":
     async def main():
-        register = AgentRegistry(agents_folder="agents")
+        register = AgentRegistry(user_config={"agents": {"folder": "agents"}})
         await register.run()
     asyncio.run(main())
 

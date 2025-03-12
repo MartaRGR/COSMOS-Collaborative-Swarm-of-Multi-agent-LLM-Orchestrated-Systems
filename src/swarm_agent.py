@@ -168,6 +168,7 @@ if __name__ == "__main__":
                     'agent': {
                         'id': '0678eedf-9415-48e3-8f6c-35035be2bb5a',
                         'name': 'object_detection_agent.py',
+                        'class': 'ObjectDetectionAgent',
                         'model': 'resnet50',
                         'hyperparameters': {'weights': 3.65}
                     }
@@ -180,6 +181,7 @@ if __name__ == "__main__":
                     'agent': {
                         'id': '6ebadc1f-2b63-4f54-884f-9189cf24bcde',
                         'name': 'default-LLM.py',
+                        'class': 'DefaultLlM',
                         'model': 'gpt-4',
                        'hyperparameters': {'temperature': 0.03}
                     }

@@ -11,6 +11,7 @@ AGENT_METADATA = {
     "function": "Detect objects in an image",
     "input": "image",
     "output": "list of detected objects",
+    "class": "ObjectDetectionAgent",
     "models": [
         {
             "name": "yolo11n",
