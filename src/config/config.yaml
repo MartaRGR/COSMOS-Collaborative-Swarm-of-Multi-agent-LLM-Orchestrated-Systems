@@ -14,7 +14,7 @@ default:
     deployment_name: 'gpt-4o-mini'  # Name or ID of the OpenAI deployment (used for custom deployments or Azure OpenAI)
     api_version: "2024-08-01-preview"  # Version of the OpenAI API to interact with (e.g., '2023-06-01-preview' for Azure OpenAI)
     temperature: 0.2  # Controls randomness/creativity of the model output (lower = more deterministic) (must be between 0 and 1)
-    auto_register: True   # Determines if the coordinator agent should auto-register agents on initialization (True) or loading agents directly from registry_file (False)
+    auto_register: False   # Determines if the coordinator agent should auto-register agents on initialization (True) or loading agents directly from registry_file (False)
   # OpenAI settings
   openai:
     api_key: ${OPENAI_API_KEY}  # Environmental variable defined with that EXACT name into .env file - OpenAI API key for authentication defined in .env

@@ -2,13 +2,12 @@ import os
 import sys
 import importlib.util
 import concurrent.futures
-import re
 
 from utils.setup_logger import get_agent_logger
 
 
 class SwarmAgent:
-    def __init__(self, crew_detail, default_agent="default-LLM.py", agents_folder="agents"):
+    def __init__(self, crew_detail, default_agent, agents_folder):
         """
         Initializes the SwarmAgent with the details of the crew and its tasks.
 
@@ -84,18 +83,6 @@ class SwarmAgent:
         except Exception as e:
             self.logger.error(f"Failed to load module '{module_name}'. Error: {e}")
             raise
-
-    @staticmethod
-    def to_camel_case_with_agent(name):
-        """
-        Converts a string to CamelCase with "Agent" appended if not already present.
-        Used for agent class names.
-        """
-        words = re.split(r'[^a-zA-Z]', os.path.splitext(name)[0])
-        camel_case_name = ''.join(word.capitalize() for word in words if word)
-        if not camel_case_name.endswith("Agent"):
-            camel_case_name += "Agent"
-        return camel_case_name
 
     def _process_subtask(self, subtask):
         """Process a specific subtask by running the corresponding agent."""

@@ -2,6 +2,7 @@ from typing_extensions import TypedDict
 from typing import Annotated
 import operator
 
+from .task_models import TaskPlan
 
 class OverallState(TypedDict):
     """
@@ -9,8 +10,9 @@ class OverallState(TypedDict):
     Tracks the global execution state for tasks and subtasks.
     """
     user_task: str
-    task_plan: str
-    crews_plan: str
+    task_plan: TaskPlan
+    agentic_modules: dict
+    crews_plan: list
     # results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks
     # pending_tasks: Annotated[dict, operator.add]  # Pending tasks details
     # completed_tasks: Annotated[dict, operator.add]  # Completed tasks details

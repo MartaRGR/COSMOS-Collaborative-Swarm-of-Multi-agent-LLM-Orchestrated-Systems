@@ -1,9 +1,12 @@
 import os
+import sys
 import json
 import asyncio
 import copy
 import random
 import uuid
+import importlib.util
+import concurrent.futures
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
@@ -35,10 +38,9 @@ tasks_parser = PydanticOutputParser(pydantic_object=TaskPlan)
 class ConfigManager:
     """Manages the coordinator agent's settings."""
     REQUIRED_FIELDS = {
-        "agents": ["registry_file", "default_agent"],
+        "agents": ["registry_file", "default_agent", "folder"],
         "coordinator_agent": ["model_name", "deployment_name", "temperature", "api_version", "auto_register"],
-        "crews": ["num_crews", "run_in_parallel"]
-    }
+        "crews": ["num_crews", "run_in_parallel"]}
 
     def __init__(self, user_config=None):
         default_config = load_default_config()
@@ -53,7 +55,7 @@ class ConfigManager:
             sect = self.config.get(section, {})
             for field in fields:
                 value = sect.get(field)
-                if not value:
+                if value is None:
                     raise KeyError(f"Missing required configuration: '{section}.{field}'. Check your configuration file.")
             self.config[section] = {field: sect[field] for field in fields}
 
@@ -102,17 +104,25 @@ class TaskPlanner:
         self.agents = agents
         self.logger = logger
 
-    def segment_task(self, user_task):
+    def segment_task(self, user_task, default_agent):
         """
         Segments the user task into subtasks and dependencies, according to the agent registry and the system prompt.
         Returns a structured JSON plan.
         """
+        try:
+            automatic_task_segmentation = self._intelligent_task_segmentation(user_task)
+            return self._task_agents_check(automatic_task_segmentation, default_agent)
+        except Exception as e:
+            self.logger.error(f"Error segmenting tasks: {e}")
+            raise RuntimeError(f"Error segmenting tasks: {e}")
+
+    def _intelligent_task_segmentation(self, user_task):
+        """Call OpenAI to segment the user task into subtasks and dependencies."""
         messages = [
             ("system", CoordinatorAgent.SYSTEM_PROMPT),
             ("system", "Available agents: {agents_info}"),
             ("system", "Respond with a JSON that follows this format: {format_instructions}"),
-            ("human", "{user_task}")
-        ]
+            ("human", "{user_task}")]
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | tasks_parser
         return chain.invoke({
@@ -121,23 +131,87 @@ class TaskPlanner:
             "user_task": user_task
         })
 
+    def _task_agents_check(self, automatic_task_segmentation, default_agent):
+        """Checks the validity of the agents and fix the plan if needed."""
+        for task in automatic_task_segmentation.tasks:
+             for subtask in task.subtasks:
+                 if not subtask.agents:
+                     self.logger.warning(
+                         f"Subtask '{subtask.name}' does not have any associated agent. "
+                         f"Selecting default agent: {default_agent}.")
+                     subtask.agents = [default_agent]
+                 subtask.agents = [
+                     (agent if agent in self.agents else self._log_and_replace_agent(agent, default_agent))
+                     for agent in subtask.agents
+                 ]
+        return automatic_task_segmentation
+
+    def _log_and_replace_agent(self, agent, default_agent):
+        """Logs a message and returns the default agent."""
+        self.logger.warning(
+            f"Agent '{agent}' not found in the registry. Selecting default agent: {default_agent}."
+        )
+        return default_agent
+
+
 # ==========================
 # COMPONENT: CrewManager
 # ==========================
 class CrewManager:
     """Creates crews for execution."""
-    def __init__(self, num_crews, default_agent, agents, logger):
+    def __init__(self, num_crews, agents, folder, task_plan, logger):
         self.num_crews = num_crews
-        self.default_agent = default_agent
         self.agents = agents
+        self.folder = folder
+        if self.folder not in sys.path:
+            sys.path.append(self.folder)
+        self.task_plan = task_plan
         self.logger = logger
 
-    def create_crews_plan(self, task_plan):
+    def initialize_agents(self):
+        """Load agent modules based on task_detail. Avoid loading the same module more than once."""
+        try:
+            agent_modules = {}
+            task_list = [task for _, tasks in self.task_plan for task in tasks]
+            unique_subtask_agents = list({agent for task in task_list for subtask in task.subtasks if subtask.agents for agent in subtask.agents})
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future_to_agent = {executor.submit(self._load_agent, agent): agent for agent in unique_subtask_agents}
+                for future in concurrent.futures.as_completed(future_to_agent):
+                    agent_name = future_to_agent[future]
+                    try:
+                        agent_instance = future.result()
+                        if agent_instance:
+                            agent_modules[agent_name] = agent_instance
+                            self.logger.info(f"Agent '{agent_name}' successfully loaded")
+                        else:
+                            self.logger.error(f"Error loading agent '{agent_name}'")
+                    except Exception as exc:
+                        self.logger.error(f"Error loading agent '{agent_name}': {exc}")
+            return agent_modules
+
+        except Exception as e:
+            self.logger.error(f"Error initializing agents: {e}")
+
+
+    def _load_agent(self, agent_name):
+        """Loads an agent from its module and returns the agent instance if successful, None otherwise."""
+        try:
+            module = importlib.import_module(os.path.splitext(agent_name)[0])
+            class_name = self.agents[agent_name]["class"]
+            if not hasattr(module, class_name):
+                self.logger.error(f"Class '{class_name}' not found in agent's file '{agent_name}'.")
+                return None
+            return getattr(module, class_name)
+        except Exception as e:
+            self.logger.error(f"Failed to load agent's file '{agent_name}'. Error: {e}")
+            raise
+
+    def create_crews_plan(self):
         """Creates heterogeneous crews, assigning agents with specific configurations to each subtask."""
         crews_plan = []
         for crew_id in range(self.num_crews):
             crew = {"id": str(uuid.uuid4()), "name": f"crew_{crew_id + 1}", "task_plan": {"tasks": []}}
-            for task in task_plan.tasks:
+            for task in self.task_plan.tasks:
                 structured_task = {"id": task.id, "name": task.name, "subtasks": []}
                 for subtask in task.subtasks:
                     agent_details = self.get_agent_details(subtask)
@@ -146,8 +220,7 @@ class CrewManager:
                         "id": subtask.id,
                         "name": subtask.name,
                         "subtask_dependencies": [dep.id for dep in subtask.dependencies],
-                        "agent": agent_details
-                    }
+                        "agent": agent_details}
                     structured_task["subtasks"].append(structured_subtask)
                 crew["task_plan"]["tasks"].append(structured_task)
             crews_plan.append(crew)
@@ -155,34 +228,17 @@ class CrewManager:
 
     def get_agent_details(self, subtask):
         """Selects an agent for a subtask and returns its configuration."""
-        if not subtask.agents:
-            self.logger.warning(
-                f"No agents found for subtask '{subtask.name}'. Using default agent: {self.default_agent}")
-            candidate = self.default_agent
-        else:
-            candidate = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
-
-        if candidate not in self.agents:
-            self.logger.warning(f"Agent '{candidate}' not found. Using default agent: {self.default_agent}")
-            candidate = self.default_agent
-
-        if candidate not in self.agents:
-            raise ValueError(f"Agent '{candidate}' is not available in the registry.")
-
-        agent_info = self.agents[candidate]
-        if not agent_info.get("class"):
-            raise ValueError(f"Agent '{candidate}' does not have a class specified. Please check the registry file")
-        models = agent_info.get("models", [])
-        selected_model = random.choice(models) if models else {}
+        selected_agent = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
+        agent_info = self.agents[selected_agent]
+        selected_model = random.choice(agent_info.get("models", {})) if agent_info.get("models") else {}
         hyperparameters = self.randomize_hyperparameters(selected_model.get("hyperparameters", {}))
-
         return {
             "id": str(uuid.uuid4()),
-            "name": candidate,
+            "name": selected_agent,
+            # TODO: Me hace falta la clase para el swarm_intelligence?? Si no, quitar esta parte
             "class": agent_info["class"],
             "model": selected_model.get("name"),
-            "hyperparameters": hyperparameters
-        }
+            "hyperparameters": hyperparameters}
 
     @staticmethod
     def randomize_hyperparameters(hyperparameters):
@@ -199,6 +255,7 @@ class CrewManager:
                 elif len(value) > 2:
                     randomized[param] = random.choice(value)
         return randomized
+
 
 # ==========================
 # MAIN COMPONENT: CoordinatorAgent
@@ -234,6 +291,7 @@ class CoordinatorAgent:
         self.num_crews = crews_config["num_crews"]
         self.run_in_parallel = crews_config["run_in_parallel"]
         self.default_agent = agents_config["default_agent"]
+        self.folder = agents_config["folder"]
         self.registry_file = agents_config["registry_file"]
 
         # Validate numeric values
@@ -274,8 +332,7 @@ class CoordinatorAgent:
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 api_version=self.api_version,
-                temperature=self.temperature
-            )
+                temperature=self.temperature)
         except Exception as e:
             error_message = f"Failed to initialize AzureChatOpenAI: {e}"
             self.logger.error(error_message)
@@ -293,13 +350,14 @@ class CoordinatorAgent:
     def task_planner(self, state: OverallState) -> OverallState:
         self.logger.info("Starting task planner...")
         planner = TaskPlanner(self.llm, self.agents, self.logger)
-        state["task_plan"] = planner.segment_task(state["user_task"])
+        state["task_plan"] = planner.segment_task(state["user_task"], self.default_agent)
         return state
 
     def initialize_crews(self, state: OverallState) -> OverallState:
-        self.logger.info("Initializing crews...")
-        crew_manager = CrewManager(self.num_crews, self.default_agent, self.agents, self.logger)
-        state["crews_plan"] = crew_manager.create_crews_plan(state["task_plan"])
+        self.logger.info("Crews' Configuration...")
+        crew_manager = CrewManager(self.num_crews, self.agents, self.folder, state["task_plan"], self.logger)
+        state["agentic_modules"] = crew_manager.initialize_agents()
+        state["crews_plan"] = crew_manager.create_crews_plan()
         return state
 
     def coordinated_response(self, state: dict) -> dict:
@@ -361,13 +419,12 @@ class CoordinatorAgent:
             })
         self.logger.info(f"Crew {crew_name} details: {crew_detail}")
         # SwarmAgent execution
-        swarm_agent = SwarmAgent(crew_detail)
+        swarm_agent = SwarmAgent(crew_detail, self.default_agent, self.folder)
         crew_results = swarm_agent.run()
         return PrivateState(crew_details={
             "crew_name": crew_name,
             "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
-            "crew_results": crew_results,
-        })
+            "crew_results": crew_results})
 
     def run(self):
         graph = self.create_graph()
