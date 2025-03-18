@@ -7,6 +7,7 @@ import random
 import uuid
 import importlib.util
 import concurrent.futures
+
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
@@ -20,16 +21,18 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
-from utils.task_models import TaskPlan
+from utils.task_models import TaskPlan, MissingInputResponse
 from utils.state_models import OverallState, PrivateState
 
 from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
 
+
 # Read OpenAI configuration from environment variables
 _ = load_dotenv(find_dotenv())  # read local .env file
 # Initialize tasks parser
 tasks_parser = PydanticOutputParser(pydantic_object=TaskPlan)
+missing_object_parser = PydanticOutputParser(pydantic_object=MissingInputResponse)
 
 
 # ==========================
@@ -103,6 +106,7 @@ class TaskPlanner:
         self.llm = llm
         self.agents = agents
         self.logger = logger
+        self.user_input = []
 
     def segment_task(self, user_task, default_agent):
         """
@@ -110,12 +114,64 @@ class TaskPlanner:
         Returns a structured JSON plan.
         """
         try:
+            missing_info_response = self._check_missing_info(user_task)
+            # If missing fields are detected, ask the user
+            if missing_info_response.missing_inputs:
+                self.logger.warning("Task is incomplete. Interacting with the user to collect missing information.")
+                self._handle_missing_info(missing_info_response.missing_inputs)
+
+            # Proceed with intelligent task segmentation
+            self.logger.info("Task is complete. Proceeding with segmentation.")
             automatic_task_segmentation = self._intelligent_task_segmentation(user_task)
+
+            # Validate tasks and assign agents
             checked_tasks = self._task_agents_check(automatic_task_segmentation, default_agent)
+
+            # Return ordered tasks
             return self._order_tasks(checked_tasks)
+
+        # automatic_task_segmentation = self._intelligent_task_segmentation(user_task)
+            # checked_tasks = self._task_agents_check(automatic_task_segmentation, default_agent)
+            # return self._order_tasks(checked_tasks)
         except Exception as e:
             self.logger.error(f"Error segmenting tasks: {e}")
             raise RuntimeError(f"Error segmenting tasks: {e}")
+
+    def _check_missing_info(self, user_task):
+        """Function to check if the user task contains all the required information."""
+        messages = [
+            ("system", """
+                Analyze the task provided by the user and determine whether it lacks any critical input information to proceed. 
+                Identify inputs that are necessary to complete the task and classify each missing input based on its criticality:
+                - High: Critical for the task to be completed successfully.
+                - Medium: Not critical, but should be taken into account for the task to be completed successfully.
+                - Low: Not critical, the task can be completed successfully without it but will provide less accurate or complete information.
+                Do not include inputs that are not necessary to complete the task.
+            """),
+            ("system", "Respond with a JSON that follows this format: {format_instructions}"),
+            ("human", "{user_task}")]
+        prompt = ChatPromptTemplate.from_messages(messages)
+        chain = prompt | self.llm | missing_object_parser
+
+        # Invoke LLM with appropriate data
+        return chain.invoke({
+            "agents_info": json.dumps(self.agents),
+            "format_instructions": missing_object_parser.get_format_instructions(),
+            "user_task": user_task
+        })
+
+    def _handle_missing_info(self, missing_inputs):
+        """Interacts with the user to collect missing information and update the task."""
+        print("The task is incomplete. Please provide the following information:")
+        i = 1
+        for obj in missing_inputs:
+            response = input(f"{i} - {obj.description}")
+            if response:
+                self.user_input.append({"input": obj.object, "description": obj.description, "response": response})
+                i += 1
+            else:
+                self.logger.warning(f"The '{obj.object}' input was not provided. Proceeding with potential defaults.")
+        self.logger.info("All missing information was collected and added to the task.")
 
     def _intelligent_task_segmentation(self, user_task):
         """Call OpenAI to segment the user task into subtasks and dependencies."""
@@ -123,13 +179,16 @@ class TaskPlanner:
             ("system", CoordinatorAgent.SYSTEM_PROMPT),
             ("system", "Available agents: {agents_info}"),
             ("system", "Respond with a JSON that follows this format: {format_instructions}"),
-            ("human", "{user_task}")]
+            ("human", "Task: {user_task}"),
+            ("human", "User Input: {user_input}")
+        ]
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | tasks_parser
         return chain.invoke({
             "agents_info": json.dumps(self.agents),
             "format_instructions": tasks_parser.get_format_instructions(),
-            "user_task": user_task
+            "user_task": user_task,
+            "user_input": self.user_input,
         })
 
     def _task_agents_check(self, automatic_task_segmentation, default_agent):
