@@ -168,6 +168,13 @@ class ObjectDetectionAgent:
         cv2.imwrite(save_path, frame)
         print(f"Results saved in {save_path}")
 
+    def run(self):
+        """Function to run the agent."""
+        image = self.load_image("pruebas/istockphoto-1346064470-612x612.jpg")
+        prediction = self.predict(image)
+        print(prediction)
+        return prediction
+
 
 if __name__ == "__main__":
 

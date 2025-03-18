@@ -111,7 +111,8 @@ class TaskPlanner:
         """
         try:
             automatic_task_segmentation = self._intelligent_task_segmentation(user_task)
-            return self._task_agents_check(automatic_task_segmentation, default_agent)
+            checked_tasks = self._task_agents_check(automatic_task_segmentation, default_agent)
+            return self._order_tasks(checked_tasks)
         except Exception as e:
             self.logger.error(f"Error segmenting tasks: {e}")
             raise RuntimeError(f"Error segmenting tasks: {e}")
@@ -153,6 +154,22 @@ class TaskPlanner:
         )
         return default_agent
 
+    @staticmethod
+    def _order_tasks(task_plan):
+        """Orders the subtasks of each task by their order attribute, returning a structured JSON plan."""
+        ordered_plan = []
+        for task in task_plan.tasks:
+            subtasks_by_order = {
+                order: [
+                    {k: v for k, v in subtask.__dict__.items() if k != 'order'}
+                    for subtask in task.subtasks
+                    if subtask.order == order
+                ]
+                for order in set(s.order for s in task.subtasks)
+            }
+            ordered_plan.append({"id": task.id, "name": task.name, "subtasks": subtasks_by_order})
+        return ordered_plan
+
 
 # ==========================
 # COMPONENT: CrewManager
@@ -172,8 +189,8 @@ class CrewManager:
         """Load agent modules based on task_detail. Avoid loading the same module more than once."""
         try:
             agent_modules = {}
-            task_list = [task for _, tasks in self.task_plan for task in tasks]
-            unique_subtask_agents = list({agent for task in task_list for subtask in task.subtasks if subtask.agents for agent in subtask.agents})
+            subtask_list = [subtask for task in self.task_plan for subtasks in task['subtasks'].values() for subtask in subtasks]
+            unique_subtask_agents = list({agent for subtask in subtask_list if subtask["agents"] for agent in subtask["agents"]})
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 future_to_agent = {executor.submit(self._load_agent, agent): agent for agent in unique_subtask_agents}
                 for future in concurrent.futures.as_completed(future_to_agent):
@@ -211,24 +228,26 @@ class CrewManager:
         crews_plan = []
         for crew_id in range(self.num_crews):
             crew = {"id": str(uuid.uuid4()), "name": f"crew_{crew_id + 1}", "task_plan": {"tasks": []}}
-            for task in self.task_plan.tasks:
-                structured_task = {"id": task.id, "name": task.name, "subtasks": []}
-                for subtask in task.subtasks:
-                    agent_details = self.get_agent_details(subtask)
-                    structured_subtask = {
-                        "order": subtask.order,
-                        "id": subtask.id,
-                        "name": subtask.name,
-                        "subtask_dependencies": [dep.id for dep in subtask.dependencies],
-                        "agent": agent_details}
-                    structured_task["subtasks"].append(structured_subtask)
+            for task in self.task_plan:
+                structured_task = {"id": task["id"], "name": task["name"], "subtasks": {}}
+                for order, subtasks in task["subtasks"].items():
+                    structured_subtasks = []
+                    for subtask in subtasks:
+                        agent_details = self.get_agent_details(subtask)
+                        structured_subtask = {
+                            "id": subtask.get("id"),
+                            "name": subtask.get("name"),
+                            "subtask_dependencies": [dep.id for dep in subtask["dependencies"]],
+                            "agent": agent_details}
+                        structured_subtasks.append(structured_subtask)
+                    structured_task["subtasks"][order] = structured_subtasks
                 crew["task_plan"]["tasks"].append(structured_task)
             crews_plan.append(crew)
         return crews_plan
 
     def get_agent_details(self, subtask):
         """Selects an agent for a subtask and returns its configuration."""
-        selected_agent = subtask.agents[0] if len(subtask.agents) == 1 else random.choice(subtask.agents)
+        selected_agent = subtask["agents"][0] if len(subtask["agents"]) == 1 else random.choice(subtask["agents"])
         agent_info = self.agents[selected_agent]
         selected_model = random.choice(agent_info.get("models", {})) if agent_info.get("models") else {}
         hyperparameters = self.randomize_hyperparameters(selected_model.get("hyperparameters", {}))
@@ -360,6 +379,29 @@ class CoordinatorAgent:
         state["crews_plan"] = crew_manager.create_crews_plan()
         return state
 
+    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
+        """Function to handle swarm intelligence execution."""
+        crew_name = config["metadata"]["langgraph_node"]
+        self.logger.info(f"Executing crew: {crew_name}")
+
+        # Getting dict with node crew detail
+        crew_detail = next((c for c in state["crews_plan"] if c["name"] == crew_name), {})
+        if not crew_detail:
+            self.logger.warning(f"Crew {crew_name} not found.")
+            return PrivateState(crew_details={
+                "crew_name": crew_name,
+                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
+                "crew_results": {}
+            })
+        self.logger.info(f"Crew {crew_name} details: {crew_detail}")
+        # SwarmAgent execution
+        swarm_agent = SwarmAgent(crew_detail, state["agentic_modules"])
+        crew_results = swarm_agent.run()
+        return PrivateState(crew_details={
+            "crew_name": crew_name,
+            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
+            "crew_results": crew_results})
+
     def coordinated_response(self, state: dict) -> dict:
         self.logger.info("Starting coordinated response...")
         # TODO: Implement coordinated response logic
@@ -403,29 +445,6 @@ class CoordinatorAgent:
         )
         return graph.compile(checkpointer=self.memory)
 
-    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
-        """Function to handle swarm intelligence execution."""
-        crew_name = config["metadata"]["langgraph_node"]
-        self.logger.info(f"Executing crew: {crew_name}")
-
-        # Getting dict with node crew detail
-        crew_detail = next((c for c in state["crews_plan"] if c["name"] == crew_name), {})
-        if not crew_detail:
-            self.logger.warning(f"Crew {crew_name} not found.")
-            return PrivateState(crew_details={
-                "crew_name": crew_name,
-                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
-                "crew_results": {}
-            })
-        self.logger.info(f"Crew {crew_name} details: {crew_detail}")
-        # SwarmAgent execution
-        swarm_agent = SwarmAgent(crew_detail, self.default_agent, self.folder)
-        crew_results = swarm_agent.run()
-        return PrivateState(crew_details={
-            "crew_name": crew_name,
-            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
-            "crew_results": crew_results})
-
     def run(self):
         graph = self.create_graph()
         state = OverallState(finished=False)
@@ -442,6 +461,6 @@ if __name__ == "__main__":
         coordinator = CoordinatorAgent(user_config={})
         await coordinator.setup()
         # # Simulate a user task
-        # user_task = "Detect objets in the image and summarize its content."
+        # user_task = "Detect objets in the image and summarize its content and tell me the weather in Madrid."
         coordinator.run()
     asyncio.run(main())

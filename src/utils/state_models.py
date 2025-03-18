@@ -10,7 +10,7 @@ class OverallState(TypedDict):
     Tracks the global execution state for tasks and subtasks.
     """
     user_task: str
-    task_plan: TaskPlan
+    task_plan: list
     agentic_modules: dict
     crews_plan: list
     # results: Annotated[dict, operator.add]  # Accumulate the results of all subtasks

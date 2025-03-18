@@ -1,88 +1,29 @@
+import importlib
 import os
-import sys
-import importlib.util
+import logging
+
 import concurrent.futures
 
 from utils.setup_logger import get_agent_logger
 
 
 class SwarmAgent:
-    def __init__(self, crew_detail, default_agent, agents_folder):
+    def __init__(self, crew_detail, agentic_modules):
         """
         Initializes the SwarmAgent with the details of the crew and its tasks.
 
         Arguments:
             crew_detail (dict): Detail of the tasks assigned to the group.
         """
-        self.logger = get_agent_logger("SwarmAgent")
+        self.crew_detail = crew_detail
+        self.name = crew_detail.get("name")
+
+        self.logger = get_agent_logger(f"SwarmAgent - Crew {self.name}")
         self.logger.info("Initializing...")
 
-        self.crew_detail = crew_detail
-        self.default_agent = default_agent
-        self.agents_folder = agents_folder
         self.tasks = crew_detail.get("task_plan", {}).get("tasks", [])
-        self.agent_modules = {}
-        self._initialize_agents()
+        self.modules = agentic_modules
 
-    def _initialize_agents(self):
-        """Load agent modules based on crew_detail. Avoid loading the same module more than once."""
-        try:
-            subtask_agent_names = [
-                subtask['agent'].get("name") for task in self.tasks for subtask in task['subtasks'] if 'agent' in subtask
-            ]
-            for name in subtask_agent_names:
-                # Avoid loading the same module twice
-                if name in self.agent_modules:
-                    self.logger.info(f"Agent '{name}' already loaded. Using cache.")
-                    continue
-
-                # Loading agent using the _load_agent method
-                agent_instance = self._load_agent(name)
-                if agent_instance:
-                    self.agent_modules[name] = agent_instance
-                    self.logger.info(f"Agent '{name}' successfully loaded")
-                else:
-                    self.logger.error(f"Error loading agent '{name}'")
-
-        except Exception as e:
-            self.logger.error(f"Error during agents' initialization: {e}")
-
-    def _load_agent(self, agent_name):
-        """Dynamically loads the specified agent module."""
-        try:
-            if not agent_name or agent_name == "":
-                self.logger.warning(f"No agent name specified. Falling back to default agent: {self.default_agent}")
-                agent_name = self.default_agent
-
-            if self.agents_folder not in sys.path:
-                sys.path.append(self.agents_folder)
-            module_name = os.path.splitext(agent_name)[0]
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(self._load_agent_from_module, module_name)
-                try:
-                    return future.result()
-                except ModuleNotFoundError:
-                    self.logger.warning(f"Module '{module_name}' not found. Falling back to default agent: '{self.default_agent}'")
-                    if module_name != self.default_agent:
-                        return self._load_agent(self.default_agent)
-                    self.logger.error(f"Default agent '{self.default_agent}' also not found.")
-                    raise ImportError(f"Cannot load module '{module_name}' or default agent '{self.default_agent}'.")
-        except Exception as e:
-            raise RuntimeError(f"Error loading agent '{agent_name}': {e}")
-
-    def _load_agent_from_module(self, module_name):
-        """Loads a module dynamically and return the agent class."""
-        try:
-            module = importlib.import_module(module_name)
-            class_name = self.to_camel_case_with_agent(module_name)
-            if not hasattr(module, class_name):
-                self.logger.error(f"Class '{class_name}' not found in module '{module_name}'.")
-                return None
-            self.logger.info(f"Successfully loaded agent class '{class_name}' from module '{module_name}'.")
-            return getattr(module, class_name)
-        except Exception as e:
-            self.logger.error(f"Failed to load module '{module_name}'. Error: {e}")
-            raise
 
     def _process_subtask(self, subtask):
         """Process a specific subtask by running the corresponding agent."""
@@ -90,7 +31,7 @@ class SwarmAgent:
         try:
             # Load and configure the agent
             agent_info = subtask.get("agent")
-            agent = self._load_agent(agent_info["name"])
+            agent = self.modules(agent_info["name"])
             agent.configure(agent_info["model"], agent_info["hyperparameters"])
 
             # Subtasks' executing
@@ -106,24 +47,18 @@ class SwarmAgent:
         subtasks = task.get("subtasks", [])
         completed = {}  # Store results of completed subtasks
 
-        # Group subtasks in order
-        subtasks_by_order = {
-            order: [
-                subtask for subtask in subtasks if subtask["order"] == order
-            ] for order in set(s["order"] for s in subtasks)
-        }
-
         # Run subtasks in order
-        for order in sorted(subtasks_by_order.keys()):
-            ready_subtasks = subtasks_by_order[order]
+        for order in sorted(subtasks.keys()):
+            ready_subtask = subtasks[order]
+            self._process_subtask(ready_subtask)
 
             # Process subtasks of the same order in parallel
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                futures = {executor.submit(self._process_subtask, subtask): subtask for subtask in ready_subtasks}
-                for future in concurrent.futures.as_completed(futures):
-                    subtask_id, result = future.result()
-                    completed[subtask_id] = result
-                    self.logger.info(f"Subtask {subtask_id} completed with result: {result}")
+            # with concurrent.futures.ThreadPoolExecutor() as executor:
+            #     futures = {executor.submit(self._process_subtask, subtask): subtask for subtask in ready_subtask}
+            #     for future in concurrent.futures.as_completed(futures):
+            #         subtask_id, result = future.result()
+            #         completed[subtask_id] = result
+            #         self.logger.info(f"Subtask {subtask_id} completed with result: {result}")
 
         return completed
 
@@ -140,56 +75,135 @@ class SwarmAgent:
         return results
 
 if __name__ == "__main__":
-    crews_plan = {
-        'id': '4f2a53f9-86d2-4acf-b329-083d4423fe67',
-        'name': 'crew_1',
-        'task_plan': {
-            'tasks': [{
-                'id': 'c1f7c5b6-5c7e-4c1a-8e9f-1c3f9e1e8f5e',
-                'name': 'Detects objects in the image and Summary',
-                'subtasks': [{
-                    'order': 1,
-                    'id': 'b1e4d1a2-4b8c-4b5a-9c8e-4b8e1c3f9e1e',
-                    'name': 'Detects objects in the image',
-                    'subtask_dependencies': [],
-                    'agent': {
-                        'id': '0678eedf-9415-48e3-8f6c-35035be2bb5a',
-                        'name': 'object_detection_agent.py',
-                        'class': 'ObjectDetectionAgent',
-                        'model': 'resnet50',
-                        'hyperparameters': {'weights': 3.65}
+
+    def initialize_agents(crews_plan, agents):
+        """Load agent modules based on task_detail. Avoid loading the same module more than once."""
+        import sys
+        sys.path.append("agents")
+        try:
+            agent_modules = {}
+            subtask_list = [
+                subtask
+                for task in crews_plan["task_plan"]["tasks"]
+                for subtasks in task['subtasks'].values()
+                for subtask in subtasks
+            ]
+            unique_subtask_agents = list({subtask["agent"]["name"] for subtask in subtask_list if "agent" in subtask})
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future_to_agent = {executor.submit(_load_agent, agent, agents): agent for agent in unique_subtask_agents}
+                for future in concurrent.futures.as_completed(future_to_agent):
+                    agent_name = future_to_agent[future]
+                    try:
+                        agent_instance = future.result()
+                        if agent_instance:
+                            agent_modules[agent_name] = agent_instance
+                            logging.info(f"Agent '{agent_name}' successfully loaded")
+                        else:
+                            logging.error(f"Error loading agent '{agent_name}'")
+                    except Exception as exc:
+                        logging.error(f"Error loading agent '{agent_name}': {exc}")
+            return agent_modules
+
+        except Exception as e:
+            logging.error(f"Error initializing agents: {e}")
+
+
+    def _load_agent(agent_name, agents):
+        """Loads an agent from its module and returns the agent instance if successful, None otherwise."""
+        try:
+            module = importlib.import_module(os.path.splitext(agent_name)[0])
+            class_name = agents[agent_name]["class"]
+            if not hasattr(module, class_name):
+                logging.error(f"Class '{class_name}' not found in agent's file '{agent_name}'.")
+                return None
+            return getattr(module, class_name)
+        except Exception as e:
+            logging.error(f"Failed to load agent's file '{agent_name}'. Error: {e}")
+            raise
+
+    agents = {
+        "default-LLM.py": {
+            "function": "Detect objects in an image",
+            "input": "image",
+            "output": "list of detected objects",
+            "class": "DefaultLlmAgent",
+            "models": []
+        },
+        "object_detection_agent.py": {
+            "function": "Detect objects in an image",
+            "input": "image",
+            "output": "list of detected objects",
+            "class": "ObjectDetectionAgent",
+            "models": [
+                {
+                    "name": "yolo11n",
+                    "hyperparameters": {
+                        "classes": [
+                            1,
+                            5
+                        ]
                     }
                 },
                 {
-                    'order': 2,
-                    'id': 'd2f8e1b4-3c7e-4c1a-8e9f-1c3f9e1e8f5f',
-                    'name': 'Summarize the content',
-                    'subtask_dependencies': ['b1e4d1a2-4b8c-4b5a-9c8e-4b8e1c3f9e1e'],
-                    'agent': {
-                        'id': '6ebadc1f-2b63-4f54-884f-9189cf24bcde',
-                        'name': 'default-LLM.py',
-                        'class': 'DefaultLlM',
-                        'model': 'gpt-4',
-                       'hyperparameters': {'temperature': 0.03}
+                    "name": "yolov8n",
+                    "hyperparameters": {
+                        "classes": [
+                            5,
+                            8
+                        ]
                     }
                 },
-                    {
-                        'order': 2,
-                        'id': 'd2f8e1b4-3c7e-4c1a-8e9f-1c3f9e1e8f5f',
-                        'name': 'Summarize the content2',
-                        'subtask_dependencies': ['b1e4d1a2-4b8c-4b5a-9c8e-4b8e1c3f9e1e'],
-                        'agent': {
-                            'id': '6ebadc1f-2b63-4f54-884f-9189cf24bc----marta',
-                            'name': 'hola',
-                            'model': 'gpt-4',
-                            'hyperparameters': {'temperature': 0.03}
-                        }
+                {
+                    "name": "resnet50",
+                    "hyperparameters": {
+                        "weights": [
+                            1.0,
+                            5.0
+                        ]
                     }
-                ]
-            }
+                }
             ]
         }
     }
 
-    agent = SwarmAgent(crews_plan)
+    crews_plan = {
+        'id': 'f43d011b-84b5-4306-96da-7a0f3bc1e323',
+        'name': 'crew_1',
+        'task_plan': {'tasks': [
+            {
+                'id': 'e5b5c8d1-3e5e-4f4a-8e6e-2d5c8f3c1e7e',
+                'name': 'Detect objects in the image and summarize its content',
+                'subtasks': {
+                    1: [{
+                        'id': 'f1a3b2d4-2c5e-4d8b-8b3f-4f2e7c3e1e8d',
+                        'name': 'Detect objects in the image',
+                        'subtask_dependencies': [],
+                        'agent': {
+                            'id': '1ee11178-00bc-4988-bc2c-1b86c89a4134',
+                            'name': 'object_detection_agent.py',
+                            'class': 'ObjectDetectionAgent',
+                            'model': None,
+                            'hyperparameters': {}
+                        }
+                    }],
+                    2: [{
+                        'id': 'd2b1c3e5-6a8f-4d8b-bc1c-9e4f8c3e1e9e',
+                        'name': 'Summarize content of detected objects',
+                        'subtask_dependencies': ['f1a3b2d4-2c5e-4d8b-8b3f-4f2e7c3e1e8d'],
+                        'agent': {
+                            'id': '2ff56196-b422-4e95-8abb-db4309b188be',
+                            'name': 'default-LLM.py',
+                            'class': 'DefaultLlmAgent',
+                            'model': None,
+                            'hyperparameters': {}
+                        }
+                    }]
+                }
+            }
+        ]}
+    }
+
+    agentic_modules = initialize_agents(crews_plan, agents)
+
+    agent = SwarmAgent(crews_plan, agentic_modules=agentic_modules)
     agent.run()
