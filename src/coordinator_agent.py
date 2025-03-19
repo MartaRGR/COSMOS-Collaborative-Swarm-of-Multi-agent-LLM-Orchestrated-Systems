@@ -27,7 +27,7 @@ from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
 
 # Read OpenAI configuration from environment variables
-_ = load_dotenv(find_dotenv())  # read local .env file
+load_dotenv(find_dotenv())  # read local .env file
 # Initialize tasks parser
 tasks_parser = PydanticOutputParser(pydantic_object=TaskPlan)
 

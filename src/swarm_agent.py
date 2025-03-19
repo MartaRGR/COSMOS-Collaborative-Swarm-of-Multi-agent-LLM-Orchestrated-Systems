@@ -18,39 +18,52 @@ class SwarmAgent:
         self.crew_detail = crew_detail
         self.name = crew_detail.get("name")
 
-        self.logger = get_agent_logger(f"SwarmAgent - Crew {self.name}")
+        self.logger = get_agent_logger(f"SwarmAgent - {self.name}")
         self.logger.info("Initializing...")
 
         self.tasks = crew_detail.get("task_plan", {}).get("tasks", [])
         self.modules = agentic_modules
 
 
-    def _process_subtask(self, subtask):
-        """Process a specific subtask by running the corresponding agent."""
-        self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
+    def _process_subtask(self, subtasks):
+        """Process the ordered subtasks by running the corresponding agents."""
+        # TODO: se puede paralelizar tareas con mismo orden
         try:
-            # Load and configure the agent
-            agent_info = subtask.get("agent")
-            agent = self.modules(agent_info["name"])
-            agent.configure(agent_info["model"], agent_info["hyperparameters"])
+            result = {}
+            for subtask in subtasks:
+                self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
+                # Load and configure the agent
+                agent_info = subtask.get("agent")
+                agent_module = self.modules[agent_info["name"]]
+                agent = agent_module(
+                    crew_id=self.name,
+                    config={
+                        "model": agent_info["model"],
+                        "hyperparameters": agent_info["hyperparameters"]
+                    }
+                )
 
-            # Subtasks' executing
-            result = agent.run(subtask["name"])
-            return subtask["id"], result
+                # Subtasks' executing
+                agent_result = agent.run("istockphoto-1346064470-612x612.jpg")
+                result[subtask["id"]] = agent_result
+            return result
         except Exception as e:
-            self.logger.error(f"Error al procesar subtarea {subtask['id']}: {e}")
-            return subtask["id"], f"Error: {e}"
+            self.logger.error(f"Error al procesar subtarea {subtasks}: {e}")
+            return {}
 
     def execute_task(self, task):
         """Execute all subtasks of a task, respecting dependencies and parallelizing subtasks of the same order."""
         self.logger.info(f"Executing task {task['id']} - {task['name']}...")
-        subtasks = task.get("subtasks", [])
+        subtasks = task.get("subtasks", {})
         completed = {}  # Store results of completed subtasks
 
         # Run subtasks in order
+        result = {}
         for order in sorted(subtasks.keys()):
             ready_subtask = subtasks[order]
-            self._process_subtask(ready_subtask)
+            subtask_result = self._process_subtask(ready_subtask)
+            result[order] = subtask_result
+            self.logger.info(f"Subtask {order} completed with result: {subtask_result}")
 
             # Process subtasks of the same order in parallel
             # with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -182,7 +195,7 @@ if __name__ == "__main__":
                             'id': '1ee11178-00bc-4988-bc2c-1b86c89a4134',
                             'name': 'object_detection_agent.py',
                             'class': 'ObjectDetectionAgent',
-                            'model': None,
+                            'model': "yolov8n",
                             'hyperparameters': {}
                         }
                     }],
@@ -194,7 +207,7 @@ if __name__ == "__main__":
                             'id': '2ff56196-b422-4e95-8abb-db4309b188be',
                             'name': 'default-LLM.py',
                             'class': 'DefaultLlmAgent',
-                            'model': None,
+                            'model': "gpt-4o-mini",
                             'hyperparameters': {}
                         }
                     }]

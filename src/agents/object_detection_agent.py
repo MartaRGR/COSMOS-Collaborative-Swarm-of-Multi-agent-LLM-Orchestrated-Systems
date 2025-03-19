@@ -1,10 +1,9 @@
 import torch
 import cv2
-import torchvision.transforms as transforms
-import torchvision.models as models
-from ultralytics import YOLO
-from PIL import Image
-import requests
+
+from src.utils.setup_logger import get_agent_logger
+from src.utils.base_agent import BaseAgent
+
 
 AGENT_METADATA = {
     "function": "Detect objects in an image",
@@ -34,41 +33,50 @@ AGENT_METADATA = {
 }
 
 
-class ObjectDetectionAgent:
-    def __init__(self, model_name):
-        """Initializes the model based on the selected name."""
+class ObjectDetectionAgent(BaseAgent):
+    def _setup_agent(self, model_name: str, crew_id: int):
+        self.logger = get_agent_logger(f"Object Detection - Crew {crew_id}")
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        print(f'Using Device: {self.device}')
+        self.logger.info(f'Using Device: {self.device}')
         self.model_name = model_name
-        self.model = self.load_model(model_name)
-
-    def load_model(self, model_name):
-        """Loads the selected object detection or classification model."""
         if "yolo" in model_name.lower():
-            return YOLO(f"{model_name.lower()}.pt").to(self.device)
+            from ultralytics import YOLO
+            self.model = YOLO(f"{model_name.lower()}.pt").to(self.device)
         elif model_name.lower() == "resnet50":
-            model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(self.device)
-            model.eval()
-            return model
+            import torchvision.models as models
+            self.model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(self.device)
+            self.model.eval()
         else:
             raise ValueError(f"Unsupported model: {model_name}")
 
-    @staticmethod
-    def load_image(image_path):
-        """Read the image from path using OpenCV."""
-        return cv2.imread(image_path)
-
-    def predict(self, frame, classes=[], conf=0.5):
+    def run(self, path: str):
         """
-        Runs object detection or classification based on the selected model.
-        Args:
-            frame: The image to process.
-            classes: List of classes to filter (only for YOLO).
-            conf: Minimum confidence threshold.
-        Returns:
-            List of detected objects.
+        Execute the object detection agent logic:
+        - Load the image.
+        - Make the prediction.
+        - Return the results.
+        """
+        self.logger.info(f"Running object detection agent on image: {path}")
+        image = self.load_image(path)
+        self.logger.info(f"Image loaded: {path}")
+        results = self.predict(image, **self.hyperparameters)
+        return results
+
+    @staticmethod
+    def load_image(path: str):
+        """Load an image using OpenCV."""
+        return cv2.imread(path)
+
+    def predict(self, frame, **kwargs):
+        """
+        Run the prediction on the frame.
+        The logic here will depend on the model:
+        - For YOLO: run object detection.
+        - For ResNet50: run classification
         """
         if "yolo" in self.model_name.lower():
+            classes = kwargs.get("classes", [])
+            conf = kwargs.get("conf", 0.5)
             return self._predict_yolo(frame, classes, conf)
         elif self.model_name.lower() == "resnet50":
             return self._predict_resnet50(frame)
@@ -77,33 +85,33 @@ class ObjectDetectionAgent:
 
     def _predict_yolo(self, frame, classes, conf):
         """Runs YOLO object detection."""
+        self.logger.info(">>> Running YOLO object detection...")
+        predict_args = {"source": frame, "conf": conf}
         if classes:
-            results = self.model.predict(frame, classes=classes, conf=conf)
-        else:
-            results = self.model.predict(frame, conf=conf)
-        return self.extract_objects(results)
+            predict_args["classes"] = classes
+        results = self.model.predict(**predict_args)
+        objects = self.extract_objects(results)
+        self.logger.info(f"Detected objects: {objects}")
+        return objects
 
     def _predict_resnet50(self, frame):
         """Runs object classification using ResNet50."""
-        url = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
-        imagenet_classes = requests.get(url).text.splitlines()
+        self.logger.info(">>> Running ResNet50 object classification...")
+        # Load ImageNet class labels
+        imagenet_classes = self._fetch_imagenet_classes()
 
-        transform = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+        # Preprocess the input frame
+        image_tensor = self._preprocess_image(frame)
 
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
-        image_pil = Image.fromarray(image)  # Convert to PIL Image
-        image_tensor = transform(image_pil).unsqueeze(0).to(self.device)
-
+        # Perform prediction
         with torch.no_grad():
-            outputs = self.model(image_tensor)
-            _, predicted_class = outputs.max(1)
+            model_outputs = self.model(image_tensor)
+            confidence, predicted_class_idx = torch.nn.functional.softmax(model_outputs, dim=1).max(1)
 
-        predicted_label = imagenet_classes[predicted_class.item()]
-        return [{"class": predicted_label, "confidence": torch.nn.functional.softmax(outputs, dim=1).max().item()}]
+        predicted_label = imagenet_classes[predicted_class_idx.item()]
+        objects = [{"class": predicted_label, "confidence": confidence.item()}]
+        self.logger.info(f"Detected objects: {objects}")
+        return objects
 
     @staticmethod
     def extract_objects(results):
@@ -134,11 +142,11 @@ class ObjectDetectionAgent:
                     "area": area,
                     "bbox": [x1, y1, x2, y2]
                 })
-
         return detected_objects
 
     @staticmethod
     def plot_bboxes(frame, detected_objects, rectangle_thickness=2, text_thickness=1):
+        import cv2
         """
         Draws bounding boxes and labels on the image.
         Args:
@@ -161,44 +169,52 @@ class ObjectDetectionAgent:
                 )
         return frame
 
-    @staticmethod
-    def save_results(frame, save_path):
-        """Saves the image with results to the specified path."""
-        cv2.imwrite(save_path, frame)
-        print(f"Results saved in {save_path}")
+    # @staticmethod
+    # def save_results(frame, save_path):
+    #     """Saves the image with results to the specified path."""
+    #     cv2.imwrite(save_path, frame)
+    #     print(f"Results saved in {save_path}")
 
-    def run(self):
-        """Function to run the agent."""
-        image = self.load_image("pruebas/istockphoto-1346064470-612x612.jpg")
-        prediction = self.predict(image)
-        print(prediction)
-        return prediction
+    @staticmethod
+    def _fetch_imagenet_classes():
+        """Fetch ImageNet class labels from the defined URL."""
+        import requests
+        return requests.get(
+            "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt" # Imagenet Classes URL
+        ).text.splitlines()
+
+    def _preprocess_image(self, frame):
+        """Preprocess the input frame into a tensor suitable for the model."""
+        from PIL import Image
+        import torchvision.transforms as transforms
+
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+        image_pil = Image.fromarray(image)  # Convert to PIL Image
+        return transform(image_pil).unsqueeze(0).to(self.device)
 
 
 if __name__ == "__main__":
+    config = {
+        "model": "yolov8n",
+        "hyperparameters": {
+            "conf": 0.5,
+            "classes": []
+        }
+    }
 
-    # Choose model
-    model_type = "resnet50"
+    # config = {
+    #     "model": "resnet50",
+    #     "hyperparameters": {
+    #         "classes": []
+    #     }
+    # }
 
-    # Initialize the object detector
-    detector = ObjectDetection(model_type)
-
-    # Load image
+    detector = ObjectDetectionAgent("crew_1", config)
     image_path = "pruebas/istockphoto-1346064470-612x612.jpg"
-    image = detector.load_image(image_path)
-
-    # Predict objects
-    detected_objects = detector.predict(image, conf=0.5)
-
-    # Display results in console
-    if detected_objects:
-        print("Detected objects:")
-        [print(f"Class: {obj['class']}, Confidence: {obj['confidence']:.2f}") for obj in detected_objects]
-
-    # If using YOLO, draw bounding boxes
-    if "yolo" in model_type.lower():
-        result_img = detector.plot_bboxes(image, detected_objects)
-        cv2.imshow("Results", result_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        detector.save_results(result_img, "results.jpg")
+    detector.run(image_path)
