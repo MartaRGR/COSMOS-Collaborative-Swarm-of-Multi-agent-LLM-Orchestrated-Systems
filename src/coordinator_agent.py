@@ -8,6 +8,7 @@ import uuid
 import importlib.util
 import concurrent.futures
 from dotenv import load_dotenv, find_dotenv
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
@@ -402,7 +403,7 @@ class CoordinatorAgent:
             "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
             "crew_results": crew_results})
 
-    def coordinated_response(self, state: dict) -> dict:
+    def coordinated_response(self, state: PrivateState) -> OverallState:
         self.logger.info("Starting coordinated response...")
         # TODO: Implement coordinated response logic
         return state
@@ -416,7 +417,7 @@ class CoordinatorAgent:
     # ==========================
     # GRAPH & EXECUTION FLOW
     # ==========================
-    def create_graph(self):
+    def create_graph(self, save_graph=False):
         """Creates the execution graph for coordinator execution."""
         self.logger.info("Creating execution graph...")
         graph = StateGraph(OverallState)
@@ -436,14 +437,22 @@ class CoordinatorAgent:
             graph.add_edge(node_name, "coordinated_response")
         graph.add_edge("ask_user_task", "task_planner")
         graph.add_edge("task_planner", "initialize_crews")
-        graph.add_edge("initialize_crews", "coordinated_response")
         graph.add_edge("coordinated_response", "human_feedback")
         graph.add_conditional_edges(
             "human_feedback",
             lambda s: END if s["finished"] else "initialize_crews",
             [END, "initialize_crews"]
         )
-        return graph.compile(checkpointer=self.memory)
+        compiled_graph = graph.compile(checkpointer=self.memory)
+        if save_graph:
+            self._save_compiled_graph(compiled_graph)
+        return compiled_graph
+
+    def _save_compiled_graph(self, compiled_graph):
+        graph_png_data = compiled_graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
+        with open("coordinator_agent_graph.png", "wb") as file:
+            file.write(graph_png_data)
+        self.logger.info(f"Coordinator Graph successfully saved")
 
     def run(self):
         graph = self.create_graph()

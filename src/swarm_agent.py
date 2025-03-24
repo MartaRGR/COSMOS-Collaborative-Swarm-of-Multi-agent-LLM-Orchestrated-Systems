@@ -1,10 +1,16 @@
+import datetime
 import importlib
 import os
 import logging
+import json
+
+import pytz
+madrid_tz = pytz.timezone("Europe/Madrid")
 
 import concurrent.futures
 
 from utils.setup_logger import get_agent_logger
+from utils.state_models import OverallState, PrivateState
 
 
 class SwarmAgent:
@@ -24,68 +30,150 @@ class SwarmAgent:
         self.tasks = crew_detail.get("task_plan", {}).get("tasks", [])
         self.modules = agentic_modules
 
+        self.private_state: PrivateState = {
+            "task_details": {},
+            "crew_details": crew_detail,
+            "agents": {},
+            "dependencies": {},
+            "subtask_results": {},
+            "message_exchange": {}
+        }
 
-    def _process_subtask(self, subtasks):
+    def _process_subtask(self, subtasks, task_id):
         """Process the ordered subtasks by running the corresponding agents."""
         # TODO: se puede paralelizar tareas con mismo orden
-        try:
-            result = {}
-            for subtask in subtasks:
+        result = []
+        # TODO: meter dependencias para coger como input el resultado de esa tarea
+        for order, elm in subtasks:
+            subtask_result = {}
+            for subtask in elm:
                 self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
                 # Load and configure the agent
                 agent_info = subtask.get("agent")
-                agent_module = self.modules[agent_info["name"]]
+                agent_name = agent_info.get("name")
+                agent_module = self.modules.get(agent_name)
+                if not agent_module:
+                    self.logger.error(f"Module for agent {agent_name} not found.")
+                    continue
                 agent = agent_module(
-                    crew_id=self.name,
                     config={
-                        "model": agent_info["model"],
-                        "hyperparameters": agent_info["hyperparameters"]
-                    }
+                        "model": agent_info.get("model"),
+                        "hyperparameters": agent_info.get("hyperparameters")
+                    },
+                    crew_id=self.name
                 )
 
-                # Subtasks' executing
-                agent_result = agent.run("istockphoto-1346064470-612x612.jpg")
-                result[subtask["id"]] = agent_result
-            return result
-        except Exception as e:
-            self.logger.error(f"Error al procesar subtarea {subtasks}: {e}")
-            return {}
+                try:
+                    # Subtasks' executing
+                    agent_result = agent.run("istockphoto-1346064470-612x612.jpg")
+                    subtask_result[subtask["id"]] = {
+                        "agent_name": agent_name,
+                        "status": "completed",
+                        "result": agent_result,
+                        "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+                    }
+                    self.private_state["agents"][subtask["id"]] = {
+                        "agent_name": agent_name,
+                        "model": agent_info.get("model"),
+                        "hyperparameters": agent_info.get("hyperparameters")
+                    }
+                except Exception as e:
+                    self.logger.error(f"Error processing subtask {subtask['id']}: {e}")
+                    subtask_result[subtask["id"]] = {
+                        "agent_name": agent_name,
+                        "status": "error",
+                        "message": str(e),
+                        "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+                    }
+            result.append(subtask_result)
+
+        # Updates the subtask's result in the state
+        self.private_state["subtask_results"].setdefault(task_id, {})[subtask["id"]] = result
+
+        return {
+            "status": "completed",
+            "message": "Subtasks processed successfully.",
+            "result": result,
+            "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+        }
 
     def execute_task(self, task):
         """Execute all subtasks of a task, respecting dependencies and parallelizing subtasks of the same order."""
         self.logger.info(f"Executing task {task['id']} - {task['name']}...")
-        subtasks = task.get("subtasks", {})
-        completed = {}  # Store results of completed subtasks
+        task_id = task["id"]
 
-        # Run subtasks in order
-        result = {}
-        for order in sorted(subtasks.keys()):
-            ready_subtask = subtasks[order]
-            subtask_result = self._process_subtask(ready_subtask)
-            result[order] = subtask_result
-            self.logger.info(f"Subtask {order} completed with result: {subtask_result}")
+        subtasks_ordered = sorted(task.get("subtasks", []).items())
+        task_result = self._process_subtask(subtasks_ordered, task_id)
 
-            # Process subtasks of the same order in parallel
-            # with concurrent.futures.ThreadPoolExecutor() as executor:
-            #     futures = {executor.submit(self._process_subtask, subtask): subtask for subtask in ready_subtask}
-            #     for future in concurrent.futures.as_completed(futures):
-            #         subtask_id, result = future.result()
-            #         completed[subtask_id] = result
-            #         self.logger.info(f"Subtask {subtask_id} completed with result: {result}")
+        self.private_state["task_details"][task_id] = {
+            "name": task["name"],
+            "status": task_result["status"],
+            "timestamp": task_result["timestamp"]
+        }
+        self.logger.info(f"Task {task_id} completed.")
+        return task_result
 
-        return completed
+        # subtasks = task.get("subtasks", {})
+        #
+        # # Run subtasks in order
+        # result = {}
+        # for order in sorted(subtasks.keys()):
+        #     ready_subtask = subtasks[order]
+        #     subtask_result = self._process_subtask(ready_subtask)
+        #     result[order] = subtask_result
+        #     self.logger.info(f"Subtask {order} completed with result: {subtask_result}")
+        #
+        #     # Process subtasks of the same order in parallel
+        #     # with concurrent.futures.ThreadPoolExecutor() as executor:
+        #     #     futures = {executor.submit(self._process_subtask, subtask): subtask for subtask in ready_subtask}
+        #     #     for future in concurrent.futures.as_completed(futures):
+        #     #         subtask_id, result = future.result()
+        #     #         completed[subtask_id] = result
+        #     #         self.logger.info(f"Subtask {subtask_id} completed with result: {result}")
+        #
+        # return result
 
     def run(self):
         """Executes all tasks and their associated subtasks in the crew."""
-        results = {}
-
-        # Run each task sequentially
         for task in self.tasks:
-            task_id, task_results = task["id"], self.execute_task(task)
-            results[task_id] = task_results
+            self.execute_task(task)
 
         self.logger.info("SwarmAgent execution completed.")
-        return results
+        final_state = self.private_state
+        timestamp = datetime.datetime.now(madrid_tz).strftime("%Y%m%d_%H%M%S")
+        log_filename = f"private_state_{self.name}_{timestamp}.json"
+        try:
+            with open(log_filename, "w") as f:
+                json.dump(final_state, f, indent=2, default=str)
+            self.logger.info(f"Private state logged in {log_filename}")
+        except Exception as e:
+            self.logger.error(f"Error writing private state to file: {e}")
+
+        return final_state
+
+
+        # results = {}
+        #
+        # # Run each task sequentially
+        # for task in self.tasks:
+        #     task_id, task_results = task["id"], self.execute_task(task)
+        #     results[task_id] = task_results
+        #
+        # self.logger.info("SwarmAgent execution completed.")
+        #
+        # # Escribir el estado en un archivo JSON (log)
+        # timestamp = datetime.datetime.now(madrid_tz).strftime("%Y%m%d_%H%M%S")
+        # log_filename = f"private_state_{self.name}_{timestamp}.json"
+        # try:
+        #     with open(log_filename, "w") as f:
+        #         json.dump(private_state, f, indent=2, default=str)
+        #     self.logger.info(f"Private state logged in {log_filename}")
+        # except Exception as e:
+        #     self.logger.error(f"Error writing private state to file: {e}")
+        #
+        # return private_state
+        #
+        # return results
 
 if __name__ == "__main__":
 

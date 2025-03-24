@@ -14,13 +14,13 @@ AGENT_METADATA = {
         {
             "name": "yolo11n",
             "hyperparameters": {
-                "classes": [1,5]
+                "classes": []
             }
         },
         {
             "name": "yolov8n",
             "hyperparameters": {
-                "classes": [5,8]
+                "classes": []
             }
         },
         {

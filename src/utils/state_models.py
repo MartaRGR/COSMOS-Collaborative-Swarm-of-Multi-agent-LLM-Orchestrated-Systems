@@ -26,6 +26,7 @@ class PrivateState(TypedDict):
     Communication state for individual subtasks in LangGraph.
     Tracks crews, agents, dependencies, and results of subtasks.
     """
+    task_details: Annotated[dict, operator.add] # Task details
     crew_details: Annotated[dict, operator.add]  # Details about the crews (i.e, number, composition...)
     agents: Annotated[dict, operator.add]  # Agents assigned to each subtask
     dependencies: Annotated[dict, operator.add]  # Subtasks' dependencies

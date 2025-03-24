@@ -1,8 +1,8 @@
 {
     "default-LLM.py": {
-        "function": "Detect objects in an image",
-        "input": "image",
-        "output": "list of detected objects",
+        "function": "Default LLM agent.",
+        "input": "",
+        "output": "text result of the agent's action.",
         "class": "DefaultLlmAgent",
         "models": []
     },
@@ -15,19 +15,13 @@
             {
                 "name": "yolo11n",
                 "hyperparameters": {
-                    "classes": [
-                        1,
-                        5
-                    ]
+                    "classes": []
                 }
             },
             {
                 "name": "yolov8n",
                 "hyperparameters": {
-                    "classes": [
-                        5,
-                        8
-                    ]
+                    "classes": []
                 }
             },
             {
