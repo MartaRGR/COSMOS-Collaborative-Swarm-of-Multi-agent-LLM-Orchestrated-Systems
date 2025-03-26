@@ -7,7 +7,12 @@ from src.utils.base_agent import BaseAgent
 
 AGENT_METADATA = {
     "function": "Detect objects in an image",
-    "input": "image",
+    "required_inputs": [
+         {
+            "variable": "image_path",
+            "prompt": "Please provide the path to the image:"
+         }
+    ],
     "output": "list of detected objects",
     "class": "ObjectDetectionAgent",
     "models": [
@@ -49,16 +54,16 @@ class ObjectDetectionAgent(BaseAgent):
         else:
             raise ValueError(f"Unsupported model: {model_name}")
 
-    def run(self, path: str):
+    def run(self, input_data, task_definition: str = None):
         """
         Execute the object detection agent logic:
         - Load the image.
         - Make the prediction.
         - Return the results.
         """
-        self.logger.info(f"Running object detection agent on image: {path}")
-        image = self.load_image(path)
-        self.logger.info(f"Image loaded: {path}")
+        self.logger.info(f"Running object detection agent on image: {input_data}")
+        image = self.load_image(input_data)
+        self.logger.info(f"Image loaded: {input_data}")
         results = self.predict(image, **self.hyperparameters)
         return results
 

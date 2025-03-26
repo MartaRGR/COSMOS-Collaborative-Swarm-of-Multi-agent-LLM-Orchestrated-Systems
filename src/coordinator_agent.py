@@ -8,13 +8,13 @@ import uuid
 import importlib.util
 import concurrent.futures
 from dotenv import load_dotenv, find_dotenv
-from langchain_core.runnables.graph import MermaidDrawMethod
 
 from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.runnables.config import RunnableConfig
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
@@ -22,7 +22,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
 from utils.task_models import TaskPlan
-from utils.state_models import OverallState, PrivateState
+from utils.state_models import OverallState, InputState, OutputState
 
 from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
@@ -155,6 +155,10 @@ class TaskPlanner:
         )
         return default_agent
 
+    # TODO: definir la lógica para que el LLM pregunte al usuario acerca de los inputs del agente para la tarea
+    def _get_agents_task_inputs(self):
+        pass
+
     @staticmethod
     def _order_tasks(task_plan):
         """Orders the subtasks of each task by their order attribute, returning a structured JSON plan."""
@@ -255,8 +259,6 @@ class CrewManager:
         return {
             "id": str(uuid.uuid4()),
             "name": selected_agent,
-            # TODO: Me hace falta la clase para el swarm_intelligence?? Si no, quitar esta parte
-            "class": agent_info["class"],
             "model": selected_model.get("name"),
             "hyperparameters": hyperparameters}
 
@@ -297,6 +299,8 @@ class CoordinatorAgent:
         # Configuration handling
         self.config_manager = ConfigManager(user_config)
         self.config = self.config_manager.config
+        self.crew_manager = None
+        self.agentic_modules = None
 
         # Set attributes from configuration
         ca_config = self.config.get("coordinator_agent", {})
@@ -333,6 +337,10 @@ class CoordinatorAgent:
         self.user_memory = []
         self.agents = {}
 
+        # Feedback restriction
+        self.feedback_attempts = 0
+        self.max_feedback_attempts = 2
+
     async def setup(self):
         """Performs asynchronous initialization steps."""
         await self._initialize_agents()
@@ -361,58 +369,101 @@ class CoordinatorAgent:
     # ==========================
     # TASK SEGMENTATION & CREW CREATION
     # ==========================
-    def ask_user_task(self, state: OverallState) -> OverallState:
-        user_task = input("Enter your task: ")
-        self.user_memory.append(user_task)
-        state["user_task"] = user_task
-        return state
+    @staticmethod
+    def ask_user_task(overall_state: OverallState) -> OverallState:
+        input_state: InputState = {"user_task": input("Enter your task: ")}
+        overall_state.update(input_state)
+        return overall_state
 
-    def task_planner(self, state: OverallState) -> OverallState:
+    def task_planner(self, overall_state: OverallState) -> OverallState:
         self.logger.info("Starting task planner...")
         planner = TaskPlanner(self.llm, self.agents, self.logger)
-        state["task_plan"] = planner.segment_task(state["user_task"], self.default_agent)
-        return state
+        task_plan = planner.segment_task(overall_state["user_task"], self.default_agent)
+        overall_state["task_plan"] = task_plan
+        return overall_state
 
-    def initialize_crews(self, state: OverallState) -> OverallState:
-        self.logger.info("Crews' Configuration...")
-        crew_manager = CrewManager(self.num_crews, self.agents, self.folder, state["task_plan"], self.logger)
-        state["agentic_modules"] = crew_manager.initialize_agents()
-        state["crews_plan"] = crew_manager.create_crews_plan()
-        return state
+    def initialize_crews(self, overall_state: OverallState) -> OverallState:
+        self.logger.info("Initializing crews...")
+        if "crews_plan" not in overall_state or not overall_state["crews_plan"]:
+            self.logger.info("Creating CrewManager and initializing agents...")
+            self.crew_manager = CrewManager(self.num_crews, self.agents, self.folder, overall_state["task_plan"], self.logger)
+            self.agentic_modules = self.crew_manager.initialize_agents()
+        # Updating crews' plan
+        overall_state["crews_plan"] = self.crew_manager.create_crews_plan()
+        # Deleting private_states if they exist
+        if overall_state.get("private_states"):
+            self.logger.warning("Deleting previous private states from memory.")
+            overall_state["private_states"] = []
+        return overall_state
 
-    def swarm_intelligence(self, state: OverallState, config: RunnableConfig) -> PrivateState:
+    def swarm_intelligence(self, overall_state: OverallState, config: RunnableConfig) -> OverallState | None:
         """Function to handle swarm intelligence execution."""
         crew_name = config["metadata"]["langgraph_node"]
         self.logger.info(f"Executing crew: {crew_name}")
-
         # Getting dict with node crew detail
-        crew_detail = next((c for c in state["crews_plan"] if c["name"] == crew_name), {})
+        crew_detail = next((c for c in overall_state["crews_plan"] if c["name"] == crew_name), {})
         if not crew_detail:
             self.logger.warning(f"Crew {crew_name} not found.")
-            return PrivateState(crew_details={
-                "crew_name": crew_name,
-                "crew_status": {"status": "error", "detail": "Crew not found in crews plan."},
-                "crew_results": {}
-            })
+            return overall_state  # No state modification if crew does not exist
         self.logger.info(f"Crew {crew_name} details: {crew_detail}")
-        # SwarmAgent execution
-        swarm_agent = SwarmAgent(crew_detail, state["agentic_modules"])
-        crew_results = swarm_agent.run()
-        return PrivateState(crew_details={
-            "crew_name": crew_name,
-            "crew_status": {"status": "completed" if crew_results else "error", "detail": "Processing completed."},
-            "crew_results": crew_results})
+        swarm_agent = SwarmAgent(crew_detail, self.agentic_modules)
+        private_state = swarm_agent.run()
+        if "private_states" not in overall_state:
+            overall_state["private_states"] = []
+        return overall_state["private_states"].append(private_state)
 
-    def coordinated_response(self, state: PrivateState) -> OverallState:
+    @staticmethod
+    def _unify_crews_responses(overall_state):
+        """
+        Unifies the responses from all crews into a single dictionary.
+        """
+        unified_responses = []
+
+        for crew in overall_state["private_states"]:
+            crew_id = crew["id"]
+            tasks = crew.get("task_plan", {}).get("tasks", [])
+            for task in tasks:
+                task_id = task["id"]
+                subtasks = task.get("subtasks", {})
+                for subtask_order, subtask_results in subtasks.items():
+                    for result in subtask_results:
+                        unified_responses.append({
+                            "crew_id": crew_id,
+                            "crew_name": crew["name"],
+                            "task_id": task_id,
+                            "task_name": task["name"],
+                            "order": subtask_order,
+                            "id": result["id"],
+                            "name": result["name"],
+                            "dependencies": result["subtask_dependencies"],
+                            "agent": {k: v for k,v in result["agent"].items() if k in [
+                                "hyperparameters", "model", "name", "id"
+                            ]},
+                            "status": result["agent"]["status"],
+                            "result": result["agent"]["result"],
+                            "timestamp": result["agent"]["timestamp"],
+                        })
+        return unified_responses
+
+    def coordinated_response(self, overall_state: OverallState) -> OverallState:
         self.logger.info("Starting coordinated response...")
         # TODO: Implement coordinated response logic
-        return state
+        unified_responses = self._unify_crews_responses(overall_state)
+        answer = f"Final results: {json.dumps(unified_responses, indent=4)}"
+        overall_state["answer"] = answer
+        return overall_state
 
-    def human_feedback(self, state: dict) -> dict:
-        feedback = input("Are you satisfied with the answer? (yes/no): ")
-        state["user_feedback"] = feedback
-        state["finished"] = feedback.lower() == "yes"
-        return state
+    def human_feedback(self, overall_state: OverallState) -> OverallState:
+        if self.feedback_attempts < self.max_feedback_attempts:
+            self.logger.info(f"{self.feedback_attempts}/{self.max_feedback_attempts} feedback attempts.")
+            feedback = input("Are you satisfied with the answer? (yes/no): ")
+            overall_state["user_feedback"] = feedback
+            overall_state["finished"] = feedback.lower().strip('\'\"') == "yes"
+            self.feedback_attempts += 1
+        else:
+            self.logger.warning("Maximum feedback attempts reached. Ending execution.")
+            overall_state["finished"] = True
+        return overall_state
 
     # ==========================
     # GRAPH & EXECUTION FLOW
@@ -420,7 +471,7 @@ class CoordinatorAgent:
     def create_graph(self, save_graph=False):
         """Creates the execution graph for coordinator execution."""
         self.logger.info("Creating execution graph...")
-        graph = StateGraph(OverallState)
+        graph = StateGraph(OverallState, output=OutputState)
 
         # Initial configuration for the start node
         graph.add_node("ask_user_task", self.ask_user_task)
@@ -429,6 +480,7 @@ class CoordinatorAgent:
         graph.add_node("task_planner", self.task_planner)
         graph.add_node("initialize_crews", self.initialize_crews)
         graph.add_node("coordinated_response", self.coordinated_response)
+
         graph.add_node("human_feedback", self.human_feedback)
         for crew_num in range(self.num_crews):
             node_name = f"crew_{crew_num + 1}"
@@ -440,7 +492,7 @@ class CoordinatorAgent:
         graph.add_edge("coordinated_response", "human_feedback")
         graph.add_conditional_edges(
             "human_feedback",
-            lambda s: END if s["finished"] else "initialize_crews",
+            lambda state: END if state.get("finished", False) else "initialize_crews",
             [END, "initialize_crews"]
         )
         compiled_graph = graph.compile(checkpointer=self.memory)
@@ -455,13 +507,14 @@ class CoordinatorAgent:
         self.logger.info(f"Coordinator Graph successfully saved")
 
     def run(self):
+        """Execute the entire graph"""
         graph = self.create_graph()
-        state = OverallState(finished=False)
+        overall_state = OverallState(finished=False)
         thread = {"configurable": {"thread_id": "1"}}
-        while not state.get("finished"):
-            for event in graph.stream(state, thread, stream_mode="values"):
+        while not overall_state.get("finished"):
+            for event in graph.stream(overall_state, thread, stream_mode="values"):
                 print(event)
-                state = event
+                overall_state = event
 
 
 if __name__ == "__main__":

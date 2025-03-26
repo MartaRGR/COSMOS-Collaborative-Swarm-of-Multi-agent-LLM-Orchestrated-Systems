@@ -10,7 +10,7 @@ madrid_tz = pytz.timezone("Europe/Madrid")
 import concurrent.futures
 
 from utils.setup_logger import get_agent_logger
-from utils.state_models import OverallState, PrivateState
+from utils.state_models import PrivateState
 
 
 class SwarmAgent:
@@ -31,149 +31,137 @@ class SwarmAgent:
         self.modules = agentic_modules
 
         self.private_state: PrivateState = {
-            "task_details": {},
-            "crew_details": crew_detail,
-            "agents": {},
-            "dependencies": {},
-            "subtask_results": {},
-            "message_exchange": {}
+            "id": crew_detail.get("id", "unknown"),
+            "name": crew_detail.get("name", "unknown"),
+            "task_plan": crew_detail.get("task_plan", {}),
         }
 
-    def _process_subtask(self, subtasks, task_id):
+    def get_dependency_input(self, dependency_ids, processed_subtasks_by_order):
+        """
+        Collects the results of the subtasks whose IDs are in dependency_ids.
+        Returns a dictionary where each key is the dependency and the value is its result.
+        """
+        dependency_inputs = {}
+        for dep_id in dependency_ids:
+            found = False
+            for order, results_list in processed_subtasks_by_order.items():
+                for res in results_list:
+                    if res["id"] == dep_id:
+                        dependency_inputs[dep_id] = res.get("agent", {}).get("result")
+                        found = True
+                        break
+                if found:
+                    break
+            if not found:
+                dependency_inputs[dep_id] = None
+        return dependency_inputs
+
+    def _process_subtask(self, subtasks, processed_subtasks_by_order):
         """Process the ordered subtasks by running the corresponding agents."""
         # TODO: se puede paralelizar tareas con mismo orden
-        result = []
-        # TODO: meter dependencias para coger como input el resultado de esa tarea
-        for order, elm in subtasks:
-            subtask_result = {}
-            for subtask in elm:
-                self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
-                # Load and configure the agent
-                agent_info = subtask.get("agent")
-                agent_name = agent_info.get("name")
-                agent_module = self.modules.get(agent_name)
-                if not agent_module:
-                    self.logger.error(f"Module for agent {agent_name} not found.")
-                    continue
-                agent = agent_module(
-                    config={
-                        "model": agent_info.get("model"),
-                        "hyperparameters": agent_info.get("hyperparameters")
-                    },
-                    crew_id=self.name
-                )
+        processed_subtasks = []
+        for subtask in subtasks:
+            self.logger.info(f"Processing subtask {subtask['id']} - {subtask['name']}...")
+            # subtask info
+            processed = {
+                "id": subtask["id"],
+                "name": subtask["name"],
+                "subtask_dependencies": subtask.get("subtask_dependencies", [])
+            }
+            agent_info = subtask.get("agent")
+            agent_name = agent_info.get("name")
+            agent_module = self.modules.get(agent_name)
+            if not agent_module:
+                self.logger.error(f"Module for agent {agent_name} not found.")
+                processed["agent"] = {
+                    **agent_info,
+                    "status": "error",
+                    "result": None,
+                    "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+                }
+                processed_subtasks.append(processed)
+                continue
 
-                try:
-                    # Subtasks' executing
-                    agent_result = agent.run("istockphoto-1346064470-612x612.jpg")
-                    subtask_result[subtask["id"]] = {
-                        "agent_name": agent_name,
-                        "status": "completed",
-                        "result": agent_result,
-                        "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
-                    }
-                    self.private_state["agents"][subtask["id"]] = {
-                        "agent_name": agent_name,
-                        "model": agent_info.get("model"),
-                        "hyperparameters": agent_info.get("hyperparameters")
-                    }
-                except Exception as e:
-                    self.logger.error(f"Error processing subtask {subtask['id']}: {e}")
-                    subtask_result[subtask["id"]] = {
-                        "agent_name": agent_name,
-                        "status": "error",
-                        "message": str(e),
-                        "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
-                    }
-            result.append(subtask_result)
+            # Agent instance with its configurations
+            agent_instance = agent_module(
+                config={
+                    "model": agent_info.get("model"),
+                    "hyperparameters": agent_info.get("hyperparameters")
+                },
+                crew_id=self.name
+            )
 
-        # Updates the subtask's result in the state
-        self.private_state["subtask_results"].setdefault(task_id, {})[subtask["id"]] = result
+            # Checking subtask's dependencies
+            if subtask.get("subtask_dependencies"):
+                dependency_input = self.get_dependency_input(subtask["subtask_dependencies"], processed_subtasks_by_order)
+                input_data = dependency_input
+                self.logger.info(f"Subtask {subtask['id']} has dependencies; using dependency results as input.")
+            else:
+                # TODO: meter lógica para coger como input el user_input de esa tarea
+                input_data = "istockphoto-1346064470-612x612.jpg"
 
-        return {
-            "status": "completed",
-            "message": "Subtasks processed successfully.",
-            "result": result,
-            "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
-        }
+            try:
+                # Execution of Agent's logit
+                agent_result = agent_instance.run(input_data, task_definition=subtask["name"])
+                processed["agent"] = {
+                    **agent_info,  # id, name, class, model, hyperparameters included
+                    "status": "completed",
+                    "result": agent_result,
+                    "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+                }
+            except Exception as e:
+                self.logger.error(f"Error processing subtask {subtask['id']}: {e}")
+                processed["agent"] = {
+                    **agent_info,
+                    "status": "error",
+                    "result": str(e),
+                    "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
+                }
+            processed_subtasks.append(processed)
+        return processed_subtasks
 
     def execute_task(self, task):
         """Execute all subtasks of a task, respecting dependencies and parallelizing subtasks of the same order."""
         self.logger.info(f"Executing task {task['id']} - {task['name']}...")
         task_id = task["id"]
 
-        subtasks_ordered = sorted(task.get("subtasks", []).items())
-        task_result = self._process_subtask(subtasks_ordered, task_id)
+        subtasks_dict = task.get("subtasks", {})
+        processed_subtasks_by_order = {}
+        for order in sorted(subtasks_dict.keys(), key=lambda o: int(o)):
+            group = subtasks_dict[order]
+            processed_group = self._process_subtask(group, processed_subtasks_by_order)
+            processed_subtasks_by_order[str(order)] = processed_group
 
-        self.private_state["task_details"][task_id] = {
-            "name": task["name"],
-            "status": task_result["status"],
-            "timestamp": task_result["timestamp"]
-        }
+        # Updating the structure of the task_plan.
+        for t in self.private_state["task_plan"]["tasks"]:
+            if t["id"] == task_id:
+                t["subtasks"] = processed_subtasks_by_order
+
         self.logger.info(f"Task {task_id} completed.")
-        return task_result
+        return processed_subtasks_by_order
 
-        # subtasks = task.get("subtasks", {})
-        #
-        # # Run subtasks in order
-        # result = {}
-        # for order in sorted(subtasks.keys()):
-        #     ready_subtask = subtasks[order]
-        #     subtask_result = self._process_subtask(ready_subtask)
-        #     result[order] = subtask_result
-        #     self.logger.info(f"Subtask {order} completed with result: {subtask_result}")
-        #
-        #     # Process subtasks of the same order in parallel
-        #     # with concurrent.futures.ThreadPoolExecutor() as executor:
-        #     #     futures = {executor.submit(self._process_subtask, subtask): subtask for subtask in ready_subtask}
-        #     #     for future in concurrent.futures.as_completed(futures):
-        #     #         subtask_id, result = future.result()
-        #     #         completed[subtask_id] = result
-        #     #         self.logger.info(f"Subtask {subtask_id} completed with result: {result}")
-        #
-        # return result
-
-    def run(self):
-        """Executes all tasks and their associated subtasks in the crew."""
-        for task in self.tasks:
-            self.execute_task(task)
-
-        self.logger.info("SwarmAgent execution completed.")
-        final_state = self.private_state
+    def _write_private_state_logs(self):
         timestamp = datetime.datetime.now(madrid_tz).strftime("%Y%m%d_%H%M%S")
         log_filename = f"private_state_{self.name}_{timestamp}.json"
         try:
             with open(log_filename, "w") as f:
-                json.dump(final_state, f, indent=2, default=str)
+                json.dump(self.private_state, f, indent=2, default=str)
             self.logger.info(f"Private state logged in {log_filename}")
         except Exception as e:
             self.logger.error(f"Error writing private state to file: {e}")
 
-        return final_state
+    def run(self, save_state=False) -> PrivateState:
+        """Executes all tasks and their associated subtasks in the crew."""
+        for task in self.tasks:
+            self.execute_task(task)
+        self.logger.info("SwarmAgent execution completed.")
+        # final_state = self.private_state
+        if save_state:
+            self.logger.info("Saving private state...")
+            self._write_private_state_logs()
 
+        return self.private_state
 
-        # results = {}
-        #
-        # # Run each task sequentially
-        # for task in self.tasks:
-        #     task_id, task_results = task["id"], self.execute_task(task)
-        #     results[task_id] = task_results
-        #
-        # self.logger.info("SwarmAgent execution completed.")
-        #
-        # # Escribir el estado en un archivo JSON (log)
-        # timestamp = datetime.datetime.now(madrid_tz).strftime("%Y%m%d_%H%M%S")
-        # log_filename = f"private_state_{self.name}_{timestamp}.json"
-        # try:
-        #     with open(log_filename, "w") as f:
-        #         json.dump(private_state, f, indent=2, default=str)
-        #     self.logger.info(f"Private state logged in {log_filename}")
-        # except Exception as e:
-        #     self.logger.error(f"Error writing private state to file: {e}")
-        #
-        # return private_state
-        #
-        # return results
 
 if __name__ == "__main__":
 
@@ -249,8 +237,6 @@ if __name__ == "__main__":
                     "name": "yolov8n",
                     "hyperparameters": {
                         "classes": [
-                            5,
-                            8
                         ]
                     }
                 },

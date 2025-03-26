@@ -10,7 +10,12 @@ from src.utils.base_agent import BaseAgent
 
 AGENT_METADATA = {
     "function": "Default LLM agent.",
-    "input": "",
+    "required_inputs": [
+         {
+            "variable": "task_definition",
+            "prompt": "Please provide the task definition:"
+         }
+    ],
     "output": "text result of the agent's action.",
     "class": "DefaultLlmAgent",
     "models": [
@@ -31,10 +36,10 @@ class DefaultLlmAgent(BaseAgent):
         self.logger = get_agent_logger(f"Default LLM - Crew {crew_id}")
         self.model_name = model_name
 
-    def run(self, task: str):
+    def run(self, user_input, task_definition: str = None):
         """Execute the default LLM agent logic"""
         llm_model = self._initialize_llm(**self.config.get("hyperparameters", {}))
-        result = self._run_llm(task, llm_model)
+        result = self._run_llm(user_input, task_definition, llm_model)
         self.logger.info(f">>> Task result:\n{result.content}")
         return result.content
 
@@ -55,15 +60,16 @@ class DefaultLlmAgent(BaseAgent):
             self.logger.error(error_message)
             raise RuntimeError(error_message)
 
-    def _run_llm(self, task: str, llm):
+    def _run_llm(self, input_data, task_definition, llm):
         try:
             messages = [
                 ("system", "You are an AI assistant that can solve tasks and use external tools when necessary.."),
-                ("human", "{user_task}")]
+                ("human", "Please, resolve this task {user_task} with the following input: {input_data}"),]
             prompt = ChatPromptTemplate.from_messages(messages)
             chain = prompt | llm
             return chain.invoke({
-                "user_task": task
+                "user_task": task_definition,
+                "input_data": input_data
             })
         except Exception as e:
             error_message = f"Failed to run AzureChatOpenAI: {e}"
