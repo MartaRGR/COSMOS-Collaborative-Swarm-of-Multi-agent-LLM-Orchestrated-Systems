@@ -1,0 +1,1179 @@
+{
+  "user_task": "Detects objects into istockphoto-1346064470-612x612.jpg and summarize its content",
+  "task_plan": [
+    {
+      "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+      "name": "Detect objects in image and summarize content",
+      "subtasks": {
+        "1": [
+          {
+            "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+            "name": "Detect objects in the image",
+            "agents": [
+              "name='object_detection_agent.py' required_inputs=[RequiredInput(variable='image_path', description='The path or file of the image to be analyzed.', value='istockphoto-1346064470-612x612.jpg')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ],
+        "2": [
+          {
+            "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+            "name": "Summarize the detected content",
+            "agents": [
+              "name='default-LLM.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Summarize the detected content')]"
+            ],
+            "dependencies": [
+              "id='f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6' name='Detect objects in the image'"
+            ],
+            "status": "pending"
+          }
+        ]
+      }
+    }
+  ],
+  "crews_plan": [
+    {
+      "id": "8464cf2f-669e-4d4c-9e6b-c3ceb8acb855",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "d14f9386-b9aa-49c4-b8e9-ca90560c0e61",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.35
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "dfa4cc95-6450-475e-97db-0a1242a7298a",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The input detected a content item classified as a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "bb817ff8-b7e4-4aec-8205-e6a85443d6d4",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0f398717-7c1b-476d-a71b-9c93078b8006",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.99
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c15f5a0b-afd5-4225-a7c2-facd91667529",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content indicates the presence of a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1ff00e8b-5bb4-4c33-8a3d-7b412c65fc68",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "835471e2-8468-46c0-aba1-47aeefe04a7c",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "8275fcc2-e455-44ce-81ca-47aafbfd2586",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes a person and a donut. The person has a high confidence level of approximately 88.3% and occupies a large area (219,456 pixels) with a bounding box defined by coordinates [17, 22, 593, 403]. The donut has a moderate confidence level of about 60.0% and occupies a smaller area (16,958 pixels) with a bounding box defined by coordinates [216, 220, 338, 359].",
+                    "timestamp": "2025-03-27 17:00:07"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "36fdc53f-67f7-49e6-a890-5fde8452ae00",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "021fd17f-6512-4e9a-bd59-f17dd8ee90cf",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "9aea2a7d-bdbb-4861-8da1-bbc117ea5d3d",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two main classes: \n\n1. **Person**: \n   - Confidence Level: 88.3%\n   - Area: 219,456 pixels\n   - Bounding Box: Positioned at [17, 22] with a width of 593 pixels and height of 403 pixels.\n\n2. **Donut**: \n   - Confidence Level: 60.0%\n   - Area: 16,958 pixels\n   - Bounding Box: Positioned at [216, 220] with a width of 122 pixels and height of 139 pixels.\n\nOverall, the scene features a person prominently, with a donut present as well.",
+                    "timestamp": "2025-03-27 17:00:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5c400092-a3a9-49e0-bb9f-94be3d4d8399",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a32b2e54-6c26-4b7e-8fba-3b32fd74b2fa",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c2966052-e96a-4911-aa63-102a3e2ab7b1",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two primary objects:\n\n1. A **person** with a confidence level of approximately 88.3%. The area occupied by the person is 219,456 pixels, and their bounding box coordinates are [17, 22, 593, 403].\n\n2. A **donut** with a confidence level of about 60.0%. The area of the donut is 16,958 pixels, and its bounding box coordinates are [216, 220, 338, 359]. \n\nOverall, the scene contains a person and a donut, with the person being the more confidently detected object.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "private_states": [
+    {
+      "id": "1ff00e8b-5bb4-4c33-8a3d-7b412c65fc68",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "835471e2-8468-46c0-aba1-47aeefe04a7c",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "8275fcc2-e455-44ce-81ca-47aafbfd2586",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes a person and a donut. The person has a high confidence level of approximately 88.3% and occupies a large area (219,456 pixels) with a bounding box defined by coordinates [17, 22, 593, 403]. The donut has a moderate confidence level of about 60.0% and occupies a smaller area (16,958 pixels) with a bounding box defined by coordinates [216, 220, 338, 359].",
+                    "timestamp": "2025-03-27 17:00:07"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "bb817ff8-b7e4-4aec-8205-e6a85443d6d4",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0f398717-7c1b-476d-a71b-9c93078b8006",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.99
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c15f5a0b-afd5-4225-a7c2-facd91667529",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content indicates the presence of a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "8464cf2f-669e-4d4c-9e6b-c3ceb8acb855",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "d14f9386-b9aa-49c4-b8e9-ca90560c0e61",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.35
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "dfa4cc95-6450-475e-97db-0a1242a7298a",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The input detected a content item classified as a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5c400092-a3a9-49e0-bb9f-94be3d4d8399",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a32b2e54-6c26-4b7e-8fba-3b32fd74b2fa",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c2966052-e96a-4911-aa63-102a3e2ab7b1",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two primary objects:\n\n1. A **person** with a confidence level of approximately 88.3%. The area occupied by the person is 219,456 pixels, and their bounding box coordinates are [17, 22, 593, 403].\n\n2. A **donut** with a confidence level of about 60.0%. The area of the donut is 16,958 pixels, and its bounding box coordinates are [216, 220, 338, 359]. \n\nOverall, the scene contains a person and a donut, with the person being the more confidently detected object.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "36fdc53f-67f7-49e6-a890-5fde8452ae00",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "021fd17f-6512-4e9a-bd59-f17dd8ee90cf",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "9aea2a7d-bdbb-4861-8da1-bbc117ea5d3d",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two main classes: \n\n1. **Person**: \n   - Confidence Level: 88.3%\n   - Area: 219,456 pixels\n   - Bounding Box: Positioned at [17, 22] with a width of 593 pixels and height of 403 pixels.\n\n2. **Donut**: \n   - Confidence Level: 60.0%\n   - Area: 16,958 pixels\n   - Bounding Box: Positioned at [216, 220] with a width of 122 pixels and height of 139 pixels.\n\nOverall, the scene features a person prominently, with a donut present as well.",
+                    "timestamp": "2025-03-27 17:00:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1ff00e8b-5bb4-4c33-8a3d-7b412c65fc68",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "835471e2-8468-46c0-aba1-47aeefe04a7c",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "8275fcc2-e455-44ce-81ca-47aafbfd2586",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes a person and a donut. The person has a high confidence level of approximately 88.3% and occupies a large area (219,456 pixels) with a bounding box defined by coordinates [17, 22, 593, 403]. The donut has a moderate confidence level of about 60.0% and occupies a smaller area (16,958 pixels) with a bounding box defined by coordinates [216, 220, 338, 359].",
+                    "timestamp": "2025-03-27 17:00:07"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "bb817ff8-b7e4-4aec-8205-e6a85443d6d4",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0f398717-7c1b-476d-a71b-9c93078b8006",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.99
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c15f5a0b-afd5-4225-a7c2-facd91667529",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content indicates the presence of a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "8464cf2f-669e-4d4c-9e6b-c3ceb8acb855",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "d14f9386-b9aa-49c4-b8e9-ca90560c0e61",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": 1.35
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:08"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "dfa4cc95-6450-475e-97db-0a1242a7298a",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The input detected a content item classified as a \"burrito\" with a confidence level of approximately 13.47%.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5c400092-a3a9-49e0-bb9f-94be3d4d8399",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a32b2e54-6c26-4b7e-8fba-3b32fd74b2fa",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "c2966052-e96a-4911-aa63-102a3e2ab7b1",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two primary objects:\n\n1. A **person** with a confidence level of approximately 88.3%. The area occupied by the person is 219,456 pixels, and their bounding box coordinates are [17, 22, 593, 403].\n\n2. A **donut** with a confidence level of about 60.0%. The area of the donut is 16,958 pixels, and its bounding box coordinates are [216, 220, 338, 359]. \n\nOverall, the scene contains a person and a donut, with the person being the more confidently detected object.",
+                    "timestamp": "2025-03-27 17:00:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "36fdc53f-67f7-49e6-a890-5fde8452ae00",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e",
+            "name": "Detect objects in image and summarize content",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6",
+                  "name": "Detect objects in the image",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "021fd17f-6512-4e9a-bd59-f17dd8ee90cf",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-03-27 17:00:05"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+                  "name": "Summarize the detected content",
+                  "subtask_dependencies": [
+                    "f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6"
+                  ],
+                  "agent": {
+                    "id": "9aea2a7d-bdbb-4861-8da1-bbc117ea5d3d",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Summarize the detected content"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 1,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "The detected content includes two main classes: \n\n1. **Person**: \n   - Confidence Level: 88.3%\n   - Area: 219,456 pixels\n   - Bounding Box: Positioned at [17, 22] with a width of 593 pixels and height of 403 pixels.\n\n2. **Donut**: \n   - Confidence Level: 60.0%\n   - Area: 16,958 pixels\n   - Bounding Box: Positioned at [216, 220] with a width of 122 pixels and height of 139 pixels.\n\nOverall, the scene features a person prominently, with a donut present as well.",
+                    "timestamp": "2025-03-27 17:00:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "answer": "Final results: [\n    {\n        \"crew_id\": \"1ff00e8b-5bb4-4c33-8a3d-7b412c65fc68\",\n        \"crew_name\": \"crew_3\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"1\",\n        \"id\": \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\",\n        \"name\": \"Detect objects in the image\",\n        \"dependencies\": [],\n        \"agent\": {\n            \"id\": \"835471e2-8468-46c0-aba1-47aeefe04a7c\",\n            \"name\": \"object_detection_agent.py\",\n            \"model\": \"yolo11n\",\n            \"hyperparameters\": {\n                \"classes\": []\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": [\n            {\n                \"class\": \"person\",\n                \"confidence\": 0.8834756016731262,\n                \"area\": 219456,\n                \"bbox\": [\n                    17,\n                    22,\n                    593,\n                    403\n                ]\n            },\n            {\n                \"class\": \"donut\",\n                \"confidence\": 0.5999522805213928,\n                \"area\": 16958,\n                \"bbox\": [\n                    216,\n                    220,\n                    338,\n                    359\n                ]\n            }\n        ],\n        \"timestamp\": \"2025-03-27 17:00:05\"\n    },\n    {\n        \"crew_id\": \"1ff00e8b-5bb4-4c33-8a3d-7b412c65fc68\",\n        \"crew_name\": \"crew_3\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"2\",\n        \"id\": \"g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2\",\n        \"name\": \"Summarize the detected content\",\n        \"dependencies\": [\n            \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\"\n        ],\n        \"agent\": {\n            \"id\": \"8275fcc2-e455-44ce-81ca-47aafbfd2586\",\n            \"name\": \"default-LLM.py\",\n            \"model\": \"gpt-4o-mini\",\n            \"hyperparameters\": {\n                \"temperature\": 1,\n                \"api_version\": \"2023-03-15-preview\",\n                \"deployment_name\": \"gpt-4o-mini\"\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": \"The detected content includes a person and a donut. The person has a high confidence level of approximately 88.3% and occupies a large area (219,456 pixels) with a bounding box defined by coordinates [17, 22, 593, 403]. The donut has a moderate confidence level of about 60.0% and occupies a smaller area (16,958 pixels) with a bounding box defined by coordinates [216, 220, 338, 359].\",\n        \"timestamp\": \"2025-03-27 17:00:07\"\n    },\n    {\n        \"crew_id\": \"bb817ff8-b7e4-4aec-8205-e6a85443d6d4\",\n        \"crew_name\": \"crew_2\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"1\",\n        \"id\": \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\",\n        \"name\": \"Detect objects in the image\",\n        \"dependencies\": [],\n        \"agent\": {\n            \"id\": \"0f398717-7c1b-476d-a71b-9c93078b8006\",\n            \"name\": \"object_detection_agent.py\",\n            \"model\": \"resnet50\",\n            \"hyperparameters\": {\n                \"weights\": 1.99\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": [\n            {\n                \"class\": \"burrito\",\n                \"confidence\": 0.13473793864250183\n            }\n        ],\n        \"timestamp\": \"2025-03-27 17:00:08\"\n    },\n    {\n        \"crew_id\": \"bb817ff8-b7e4-4aec-8205-e6a85443d6d4\",\n        \"crew_name\": \"crew_2\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"2\",\n        \"id\": \"g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2\",\n        \"name\": \"Summarize the detected content\",\n        \"dependencies\": [\n            \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\"\n        ],\n        \"agent\": {\n            \"id\": \"c15f5a0b-afd5-4225-a7c2-facd91667529\",\n            \"name\": \"default-LLM.py\",\n            \"model\": \"gpt-4o-mini\",\n            \"hyperparameters\": {\n                \"temperature\": 1,\n                \"api_version\": \"2023-03-15-preview\",\n                \"deployment_name\": \"gpt-4o-mini\"\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": \"The detected content indicates the presence of a \\\"burrito\\\" with a confidence level of approximately 13.47%.\",\n        \"timestamp\": \"2025-03-27 17:00:09\"\n    },\n    {\n        \"crew_id\": \"8464cf2f-669e-4d4c-9e6b-c3ceb8acb855\",\n        \"crew_name\": \"crew_1\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"1\",\n        \"id\": \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\",\n        \"name\": \"Detect objects in the image\",\n        \"dependencies\": [],\n        \"agent\": {\n            \"id\": \"d14f9386-b9aa-49c4-b8e9-ca90560c0e61\",\n            \"name\": \"object_detection_agent.py\",\n            \"model\": \"resnet50\",\n            \"hyperparameters\": {\n                \"weights\": 1.35\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": [\n            {\n                \"class\": \"burrito\",\n                \"confidence\": 0.13473793864250183\n            }\n        ],\n        \"timestamp\": \"2025-03-27 17:00:08\"\n    },\n    {\n        \"crew_id\": \"8464cf2f-669e-4d4c-9e6b-c3ceb8acb855\",\n        \"crew_name\": \"crew_1\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"2\",\n        \"id\": \"g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2\",\n        \"name\": \"Summarize the detected content\",\n        \"dependencies\": [\n            \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\"\n        ],\n        \"agent\": {\n            \"id\": \"dfa4cc95-6450-475e-97db-0a1242a7298a\",\n            \"name\": \"default-LLM.py\",\n            \"model\": \"gpt-4o-mini\",\n            \"hyperparameters\": {\n                \"temperature\": 1,\n                \"api_version\": \"2023-03-15-preview\",\n                \"deployment_name\": \"gpt-4o-mini\"\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": \"The input detected a content item classified as a \\\"burrito\\\" with a confidence level of approximately 13.47%.\",\n        \"timestamp\": \"2025-03-27 17:00:09\"\n    },\n    {\n        \"crew_id\": \"5c400092-a3a9-49e0-bb9f-94be3d4d8399\",\n        \"crew_name\": \"crew_5\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"1\",\n        \"id\": \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\",\n        \"name\": \"Detect objects in the image\",\n        \"dependencies\": [],\n        \"agent\": {\n            \"id\": \"a32b2e54-6c26-4b7e-8fba-3b32fd74b2fa\",\n            \"name\": \"object_detection_agent.py\",\n            \"model\": \"yolo11n\",\n            \"hyperparameters\": {\n                \"classes\": []\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": [\n            {\n                \"class\": \"person\",\n                \"confidence\": 0.8834756016731262,\n                \"area\": 219456,\n                \"bbox\": [\n                    17,\n                    22,\n                    593,\n                    403\n                ]\n            },\n            {\n                \"class\": \"donut\",\n                \"confidence\": 0.5999522805213928,\n                \"area\": 16958,\n                \"bbox\": [\n                    216,\n                    220,\n                    338,\n                    359\n                ]\n            }\n        ],\n        \"timestamp\": \"2025-03-27 17:00:05\"\n    },\n    {\n        \"crew_id\": \"5c400092-a3a9-49e0-bb9f-94be3d4d8399\",\n        \"crew_name\": \"crew_5\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"2\",\n        \"id\": \"g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2\",\n        \"name\": \"Summarize the detected content\",\n        \"dependencies\": [\n            \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\"\n        ],\n        \"agent\": {\n            \"id\": \"c2966052-e96a-4911-aa63-102a3e2ab7b1\",\n            \"name\": \"default-LLM.py\",\n            \"model\": \"gpt-4o-mini\",\n            \"hyperparameters\": {\n                \"temperature\": 1,\n                \"api_version\": \"2023-03-15-preview\",\n                \"deployment_name\": \"gpt-4o-mini\"\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": \"The detected content includes two primary objects:\\n\\n1. A **person** with a confidence level of approximately 88.3%. The area occupied by the person is 219,456 pixels, and their bounding box coordinates are [17, 22, 593, 403].\\n\\n2. A **donut** with a confidence level of about 60.0%. The area of the donut is 16,958 pixels, and its bounding box coordinates are [216, 220, 338, 359]. \\n\\nOverall, the scene contains a person and a donut, with the person being the more confidently detected object.\",\n        \"timestamp\": \"2025-03-27 17:00:09\"\n    },\n    {\n        \"crew_id\": \"36fdc53f-67f7-49e6-a890-5fde8452ae00\",\n        \"crew_name\": \"crew_4\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"1\",\n        \"id\": \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\",\n        \"name\": \"Detect objects in the image\",\n        \"dependencies\": [],\n        \"agent\": {\n            \"id\": \"021fd17f-6512-4e9a-bd59-f17dd8ee90cf\",\n            \"name\": \"object_detection_agent.py\",\n            \"model\": \"yolo11n\",\n            \"hyperparameters\": {\n                \"classes\": []\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": [\n            {\n                \"class\": \"person\",\n                \"confidence\": 0.8834756016731262,\n                \"area\": 219456,\n                \"bbox\": [\n                    17,\n                    22,\n                    593,\n                    403\n                ]\n            },\n            {\n                \"class\": \"donut\",\n                \"confidence\": 0.5999522805213928,\n                \"area\": 16958,\n                \"bbox\": [\n                    216,\n                    220,\n                    338,\n                    359\n                ]\n            }\n        ],\n        \"timestamp\": \"2025-03-27 17:00:05\"\n    },\n    {\n        \"crew_id\": \"36fdc53f-67f7-49e6-a890-5fde8452ae00\",\n        \"crew_name\": \"crew_4\",\n        \"task_id\": \"b7f1c5e2-9c9f-4f4e-9b6c-1f8e8c5e7c3e\",\n        \"task_name\": \"Detect objects in image and summarize content\",\n        \"order\": \"2\",\n        \"id\": \"g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2\",\n        \"name\": \"Summarize the detected content\",\n        \"dependencies\": [\n            \"f1a2b3c4-d5e6-7f8g-9h0i-j1k2l3m4n5o6\"\n        ],\n        \"agent\": {\n            \"id\": \"9aea2a7d-bdbb-4861-8da1-bbc117ea5d3d\",\n            \"name\": \"default-LLM.py\",\n            \"model\": \"gpt-4o-mini\",\n            \"hyperparameters\": {\n                \"temperature\": 1,\n                \"api_version\": \"2023-03-15-preview\",\n                \"deployment_name\": \"gpt-4o-mini\"\n            }\n        },\n        \"status\": \"completed\",\n        \"result\": \"The detected content includes two main classes: \\n\\n1. **Person**: \\n   - Confidence Level: 88.3%\\n   - Area: 219,456 pixels\\n   - Bounding Box: Positioned at [17, 22] with a width of 593 pixels and height of 403 pixels.\\n\\n2. **Donut**: \\n   - Confidence Level: 60.0%\\n   - Area: 16,958 pixels\\n   - Bounding Box: Positioned at [216, 220] with a width of 122 pixels and height of 139 pixels.\\n\\nOverall, the scene features a person prominently, with a donut present as well.\",\n        \"timestamp\": \"2025-03-27 17:00:10\"\n    }\n]",
+  "finished": true,
+  "user_feedback": "'yes'"
+}
