@@ -10,9 +10,9 @@ default:
     run_in_parallel: True   # Indicates if crews should run tasks simultaneously (True) or sequentially (False)
   # Coordinator Agent Parameters
   coordinator_agent:
-    model_name: 'gpt-4o-mini'  # The name of the model used by the coordinator agent
-    deployment_name: 'gpt-4o-mini'  # Name or ID of the OpenAI deployment (used for custom deployments or Azure OpenAI)
-    api_version: "2024-08-01-preview"  # Version of the OpenAI API to interact with (e.g., '2023-06-01-preview' for Azure OpenAI)
+    model_name: 'o3-mini' #'gpt-4o-mini'  # The name of the model used by the coordinator agent
+    deployment_name: 'o3-mini' #'gpt-4o-mini'  # Name or ID of the OpenAI deployment (used for custom deployments or Azure OpenAI)
+    api_version: '2024-12-01-preview' #"2024-08-01-preview"  # Version of the OpenAI API to interact with (e.g., '2023-06-01-preview' for Azure OpenAI)
     temperature: 0.2  # Controls randomness/creativity of the model output (lower = more deterministic) (must be between 0 and 1)
     auto_register: False   # Determines if the coordinator agent should auto-register agents on initialization (True) or loading agents directly from registry_file (False)
   # OpenAI settings

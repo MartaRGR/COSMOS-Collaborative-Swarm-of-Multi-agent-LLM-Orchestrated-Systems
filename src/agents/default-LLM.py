@@ -13,7 +13,7 @@ AGENT_METADATA = {
     "required_inputs": [
          {
             "variable": "task_definition",
-            "prompt": "Please provide the task definition:"
+            "description": "The description of the task to be solved by the LLM agent."
          }
     ],
     "output": "text result of the agent's action.",

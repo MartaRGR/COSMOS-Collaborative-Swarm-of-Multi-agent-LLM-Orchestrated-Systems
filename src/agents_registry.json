@@ -1,14 +1,36 @@
 {
     "default-LLM.py": {
         "function": "Default LLM agent.",
-        "input": "",
+        "required_inputs": [
+            {
+                "variable": "task_definition",
+                "description": "The description of the task to be solved by the LLM agent."
+            }
+        ],
         "output": "text result of the agent's action.",
         "class": "DefaultLlmAgent",
-        "models": []
+        "models": [
+            {
+                "name": "gpt-4o-mini",
+                "hyperparameters": {
+                    "temperature": [
+                        0,
+                        1
+                    ],
+                    "api_version": "2023-03-15-preview",
+                    "deployment_name": "gpt-4o-mini"
+                }
+            }
+        ]
     },
     "object_detection_agent.py": {
         "function": "Detect objects in an image",
-        "input": "image",
+        "required_inputs": [
+            {
+                "variable": "image_path",
+                "description": "The path or file of the image to be analyzed."
+            }
+        ],
         "output": "list of detected objects",
         "class": "ObjectDetectionAgent",
         "models": [

@@ -10,7 +10,7 @@ AGENT_METADATA = {
     "required_inputs": [
          {
             "variable": "image_path",
-            "prompt": "Please provide the path to the image:"
+            "description": "The path or file of the image to be analyzed."
          }
     ],
     "output": "list of detected objects",
@@ -61,9 +61,14 @@ class ObjectDetectionAgent(BaseAgent):
         - Make the prediction.
         - Return the results.
         """
-        self.logger.info(f"Running object detection agent on image: {input_data}")
-        image = self.load_image(input_data)
-        self.logger.info(f"Image loaded: {input_data}")
+        # Getting image_path from input data
+        image_path = input_data.get("image_path")
+        if not image_path:
+            self.logger.error("No image path provided.")
+            return None
+        self.logger.info(f"Running object detection agent on image: {image_path}")
+        image = self.load_image(image_path)
+        self.logger.info(f"Image loaded: {image_path}")
         results = self.predict(image, **self.hyperparameters)
         return results
 

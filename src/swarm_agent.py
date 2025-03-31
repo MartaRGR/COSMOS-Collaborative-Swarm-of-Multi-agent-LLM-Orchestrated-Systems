@@ -98,13 +98,13 @@ class SwarmAgent:
                 self.logger.info(f"Subtask {subtask['id']} has dependencies; using dependency results as input.")
             else:
                 # TODO: meter lógica para coger como input el user_input de esa tarea
-                input_data = "istockphoto-1346064470-612x612.jpg"
+                input_data = agent_info.get("required_inputs")
 
             try:
                 # Execution of Agent's logit
                 agent_result = agent_instance.run(input_data, task_definition=subtask["name"])
                 processed["agent"] = {
-                    **agent_info,  # id, name, class, model, hyperparameters included
+                    **agent_info,  # id, name, required_inputs, model, hyperparameters included
                     "status": "completed",
                     "result": agent_result,
                     "timestamp": datetime.datetime.now(madrid_tz).strftime("%Y-%m-%d %H:%M:%S")
@@ -268,7 +268,7 @@ if __name__ == "__main__":
                         'agent': {
                             'id': '1ee11178-00bc-4988-bc2c-1b86c89a4134',
                             'name': 'object_detection_agent.py',
-                            'class': 'ObjectDetectionAgent',
+                            'required_inputs': {'image_path': 'istockphoto-1346064470-612x612.jpg'},
                             'model': "yolov8n",
                             'hyperparameters': {}
                         }
@@ -280,7 +280,7 @@ if __name__ == "__main__":
                         'agent': {
                             'id': '2ff56196-b422-4e95-8abb-db4309b188be',
                             'name': 'default-LLM.py',
-                            'class': 'DefaultLlmAgent',
+                            'required_inputs': {'task_definition': 'Summarize the content of the detected objects'},
                             'model': "gpt-4o-mini",
                             'hyperparameters': {}
                         }

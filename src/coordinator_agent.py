@@ -1,5 +1,7 @@
 import os
 import sys
+import datetime
+import pytz
 import json
 import asyncio
 import copy
@@ -7,6 +9,7 @@ import random
 import uuid
 import importlib.util
 import concurrent.futures
+from collections import defaultdict
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
@@ -111,14 +114,14 @@ class TaskPlanner:
         Returns a structured JSON plan.
         """
         try:
-            automatic_task_segmentation = self._intelligent_task_segmentation(user_task)
-            checked_tasks = self._task_agents_check(automatic_task_segmentation, default_agent)
+            automatic_task_segmentation = self._intelligent_task_segmentation(user_task, default_agent)
+            checked_tasks = self._missing_inputs_check(automatic_task_segmentation.tasks)
             return self._order_tasks(checked_tasks)
         except Exception as e:
             self.logger.error(f"Error segmenting tasks: {e}")
             raise RuntimeError(f"Error segmenting tasks: {e}")
 
-    def _intelligent_task_segmentation(self, user_task):
+    def _intelligent_task_segmentation(self, user_task, default_agent):
         """Call OpenAI to segment the user task into subtasks and dependencies."""
         messages = [
             ("system", CoordinatorAgent.SYSTEM_PROMPT),
@@ -128,42 +131,55 @@ class TaskPlanner:
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | tasks_parser
         return chain.invoke({
+            "default_agent": default_agent,
             "agents_info": json.dumps(self.agents),
             "format_instructions": tasks_parser.get_format_instructions(),
             "user_task": user_task
         })
 
-    def _task_agents_check(self, automatic_task_segmentation, default_agent):
-        """Checks the validity of the agents and fix the plan if needed."""
-        for task in automatic_task_segmentation.tasks:
-             for subtask in task.subtasks:
-                 if not subtask.agents:
-                     self.logger.warning(
-                         f"Subtask '{subtask.name}' does not have any associated agent. "
-                         f"Selecting default agent: {default_agent}.")
-                     subtask.agents = [default_agent]
-                 subtask.agents = [
-                     (agent if agent in self.agents else self._log_and_replace_agent(agent, default_agent))
-                     for agent in subtask.agents
-                 ]
-        return automatic_task_segmentation
+    # TODO: ahora mismo suponemos que las descripciones de los inputs de 2 o más agentes
+    #  que hacen lo mismo son iguales, sino habría que sustituir esta lógica por un LLM
+    @staticmethod
+    def _group_missing_inputs(tasks):
+        """Groups missing inputs by description and returns a dictionary of missing variables grouped by description."""
+        missing_vars = defaultdict(list)
+        for task in tasks:
+            for subtask in task.subtasks:
+                for agent in subtask.agents:
+                    for req_input in agent.required_inputs:
+                        if req_input.value == "missing":
+                            missing_vars[req_input.description].append(req_input.variable)
+        return missing_vars
 
-    def _log_and_replace_agent(self, agent, default_agent):
-        """Logs a message and returns the default agent."""
-        self.logger.warning(
-            f"Agent '{agent}' not found in the registry. Selecting default agent: {default_agent}."
-        )
-        return default_agent
+    @staticmethod
+    def _distribute_user_inputs(user_inputs, tasks):
+        for task in tasks:
+            for subtask in task.subtasks:
+                for agent in subtask.agents:
+                    for req_input in agent.required_inputs:
+                        if req_input.value == "missing":
+                            description = req_input.description
+                            if description in user_inputs:
+                                req_input.value = user_inputs[description]
+        return tasks
 
-    # TODO: definir la lógica para que el LLM pregunte al usuario acerca de los inputs del agente para la tarea
-    def _get_agents_task_inputs(self):
-        pass
+    def _missing_inputs_check(self, tasks):
+        """Function to check if the user task contains all necessary inputs. If not, ask the user to provide them."""
+        missing_vars = self._group_missing_inputs(tasks)
+        if missing_vars:
+            print("The system needs additional information to proceed:\n")
+            user_inputs = {}
+            for description, variable in missing_vars.items():
+                user_inputs[description] = input(
+                    f"- {description} ({variable}):\nPlease provide the necessary details: ").strip('\'\"')
+            return self._distribute_user_inputs(user_inputs, tasks)
+        return tasks
 
     @staticmethod
     def _order_tasks(task_plan):
         """Orders the subtasks of each task by their order attribute, returning a structured JSON plan."""
         ordered_plan = []
-        for task in task_plan.tasks:
+        for task in task_plan:
             subtasks_by_order = {
                 order: [
                     {k: v for k, v in subtask.__dict__.items() if k != 'order'}
@@ -195,7 +211,7 @@ class CrewManager:
         try:
             agent_modules = {}
             subtask_list = [subtask for task in self.task_plan for subtasks in task['subtasks'].values() for subtask in subtasks]
-            unique_subtask_agents = list({agent for subtask in subtask_list if subtask["agents"] for agent in subtask["agents"]})
+            unique_subtask_agents = list({agent.name for subtask in subtask_list if subtask["agents"] for agent in subtask["agents"]})
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 future_to_agent = {executor.submit(self._load_agent, agent): agent for agent in unique_subtask_agents}
                 for future in concurrent.futures.as_completed(future_to_agent):
@@ -253,12 +269,13 @@ class CrewManager:
     def get_agent_details(self, subtask):
         """Selects an agent for a subtask and returns its configuration."""
         selected_agent = subtask["agents"][0] if len(subtask["agents"]) == 1 else random.choice(subtask["agents"])
-        agent_info = self.agents[selected_agent]
+        agent_info = self.agents[selected_agent.name]
         selected_model = random.choice(agent_info.get("models", {})) if agent_info.get("models") else {}
         hyperparameters = self.randomize_hyperparameters(selected_model.get("hyperparameters", {}))
         return {
             "id": str(uuid.uuid4()),
-            "name": selected_agent,
+            "name": selected_agent.name,
+            "required_inputs": {r_input.variable:r_input.value for r_input in selected_agent.required_inputs},
             "model": selected_model.get("name"),
             "hyperparameters": hyperparameters}
 
@@ -288,8 +305,12 @@ class CoordinatorAgent:
         "Segment the user's task into subtasks and define dependencies.\n"
         "- Identify which subtasks can be executed in parallel and which require sequential execution.\n"
         "- Assign ALL agents from the available agent list that have the capability to solve each subtask.\n"
-        "- If no suitable agent exists, assign the subtask to \"default_agent\".\n"
+        "- If no suitable agent exists, assign the subtask to the default agent \"{default_agent}\".\n"
         "- Assign unique IDs to each task and subtask using UUID format.\n"
+        "- For each assigned agent, extract the required inputs based on its metadata.\n"  
+        "- If the user's task already provides a required input, extract its value and include it in the response.\n"  
+        "- If the required input is \"task_definition\", set its value as the name of the subtask.\n"
+        "- If the required input is not provided, mark it explicitly with \"value\": \"missing\".\n"
         "- Return a structured JSON plan."
     )
 
@@ -371,7 +392,7 @@ class CoordinatorAgent:
     # ==========================
     @staticmethod
     def ask_user_task(overall_state: OverallState) -> OverallState:
-        input_state: InputState = {"user_task": input("Enter your task: ")}
+        input_state: InputState = {"user_task": input("Enter your task: ").strip('\'\"')}
         overall_state.update(input_state)
         return overall_state
 
@@ -453,7 +474,7 @@ class CoordinatorAgent:
         overall_state["answer"] = answer
         return overall_state
 
-    def human_feedback(self, overall_state: OverallState) -> OverallState:
+    def human_feedback(self, overall_state: OverallState, save_result=True) -> OverallState:
         if self.feedback_attempts < self.max_feedback_attempts:
             self.logger.info(f"{self.feedback_attempts}/{self.max_feedback_attempts} feedback attempts.")
             feedback = input("Are you satisfied with the answer? (yes/no): ")
@@ -463,6 +484,11 @@ class CoordinatorAgent:
         else:
             self.logger.warning("Maximum feedback attempts reached. Ending execution.")
             overall_state["finished"] = True
+        if overall_state["finished"] and save_result:
+            file_name = f"overall_state_{datetime.datetime.now(pytz.timezone('Europe/Madrid')).strftime('%Y%m%d_%H%M%S')}.json"
+            with open(file_name, "w") as f:
+                json.dump(overall_state, f, indent=2, default=str)
+            self.logger.info(f"Overall state saved to {file_name}.")
         return overall_state
 
     # ==========================
