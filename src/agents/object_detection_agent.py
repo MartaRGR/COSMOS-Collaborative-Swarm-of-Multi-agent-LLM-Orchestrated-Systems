@@ -1,6 +1,7 @@
 import torch
 import cv2
 
+from src.utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
 from src.utils.setup_logger import get_agent_logger
 from src.utils.base_agent import BaseAgent
 
@@ -8,10 +9,7 @@ from src.utils.base_agent import BaseAgent
 AGENT_METADATA = {
     "function": "Detect objects in an image",
     "required_inputs": [
-         {
-            "variable": "image_path",
-            "description": "The path or file of the image to be analyzed."
-         }
+        REQUIRED_INPUTS_CATALOG["image_path"]
     ],
     "output": "list of detected objects",
     "class": "ObjectDetectionAgent",

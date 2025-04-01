@@ -1,9 +1,11 @@
 from dotenv import load_dotenv, find_dotenv
+
 load_dotenv(find_dotenv())
 
 from langchain_openai import AzureChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 
+from src.utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
 from src.utils.setup_logger import get_agent_logger
 from src.utils.base_agent import BaseAgent
 
@@ -11,10 +13,7 @@ from src.utils.base_agent import BaseAgent
 AGENT_METADATA = {
     "function": "Default LLM agent.",
     "required_inputs": [
-         {
-            "variable": "task_definition",
-            "description": "The description of the task to be solved by the LLM agent."
-         }
+        REQUIRED_INPUTS_CATALOG["task_definition"]
     ],
     "output": "text result of the agent's action.",
     "class": "DefaultLlmAgent",

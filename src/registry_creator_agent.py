@@ -4,6 +4,7 @@ import time
 import asyncio
 import aiofiles
 
+from utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
 
@@ -75,6 +76,13 @@ class AgentRegistry:
         import re
         import json
 
+        def catalog_repl(match_obj):
+            key = match_obj.group(1)
+            value = REQUIRED_INPUTS_CATALOG.get(key)
+            if value is None:
+                return 'null'
+            return json.dumps(value)
+
         def extract_agent_metadata(text):
             # IMPORTANT TO NOTE: every agent MUST have AGENT_METADATA variable to be processed
             # Searching the beginning of AGENT_METADATA. If literal not found, then return None
@@ -95,7 +103,9 @@ class AgentRegistry:
                     if stack == 0:  # block completely closed
                         end = i + 1
                         break
-            return json.loads(text[start:end])
+            metadata_str = text[start:end]
+            metadata_str = re.sub(r'REQUIRED_INPUTS_CATALOG\["([^"]+)"\]', catalog_repl, metadata_str)
+            return json.loads(metadata_str)
 
         try:
             agent_file = os.path.join(os.path.abspath(self.agents_folder), module_name)

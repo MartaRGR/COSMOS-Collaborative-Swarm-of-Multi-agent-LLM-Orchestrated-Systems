@@ -1,11 +1,3 @@
-class RequiredInput:
-    def __init__(self, variable: str, description: str):
-        self.variable = variable
-        self.description = description
-
-    def to_dict(self):
-        return {"variable": self.variable, "description": self.description}
-
 # Required inputs dictionary
 # TODO: change or complete if needed
 REQUIRED_INPUTS_CATALOG = {
@@ -22,7 +14,3 @@ REQUIRED_INPUTS_CATALOG = {
         "description": "The path of the video file to process."
     }
 }
-
-def get_required_inputs(*keys):
-    """Returns a list of required inputs from the catalog."""
-    return [REQUIRED_INPUTS_CATALOG[key].to_dict() for key in keys if key in REQUIRED_INPUTS_CATALOG]
