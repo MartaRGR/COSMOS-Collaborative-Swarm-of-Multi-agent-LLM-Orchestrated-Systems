@@ -17,5 +17,5 @@ default:
     auto_register: False   # Determines if the coordinator agent should auto-register agents on initialization (True) or loading agents directly from registry_file (False)
   # OpenAI settings
   openai:
-    api_key: ${OPENAI_API_KEY}  # Environmental variable defined with that EXACT name into .env file - OpenAI API key for authentication defined in .env
-    api_base: ${OPENAI_API_BASE}  # Environmental variable defined with that EXACT name into .env file - Base URL or endpoint for the OpenAI API (e.g., 'https://api.openai.com/v1/' or Azure-specific URL)
+    api_key: ${AZURE_OPENAI_API_KEY}  # Environmental variable defined with that EXACT name into .env file - OpenAI API key for authentication defined in .env
+    api_base: ${AZURE_OPENAI_ENDPOINT}  # Environmental variable defined with that EXACT name into .env file - Base URL or endpoint for the OpenAI API (e.g., 'https://api.openai.com/v1/' or Azure-specific URL)

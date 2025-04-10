@@ -33,7 +33,8 @@ class Task(BaseModel):
 class TaskPlan(BaseModel):
     tasks: List[Task] = Field(description="List of tasks in the plan")
 
-# class MissingInputsResponse(BaseModel):
-#     missing_inputs: Dict[str, List[RequiredInput]]
+class AggResponse(BaseModel):
+    response: dict = Field(description="Description of the aggregated response to the task")
+    explanation: Optional[str] = Field(description="Explanation of the reasoning")
 
 

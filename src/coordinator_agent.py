@@ -24,7 +24,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
-from utils.task_models import TaskPlan
+from utils.task_models import TaskPlan, AggResponse
 from utils.state_models import OverallState, InputState, OutputState
 
 from registry_creator_agent import AgentRegistry
@@ -32,8 +32,9 @@ from swarm_agent import SwarmAgent
 
 # Read OpenAI configuration from environment variables
 load_dotenv(find_dotenv())  # read local .env file
-# Initialize tasks parser
+# Initialize tasks and response parsers
 tasks_parser = PydanticOutputParser(pydantic_object=TaskPlan)
+response_parser = PydanticOutputParser(pydantic_object=AggResponse)
 
 
 # ==========================
@@ -124,7 +125,7 @@ class TaskPlanner:
     def _intelligent_task_segmentation(self, user_task, default_agent):
         """Call OpenAI to segment the user task into subtasks and dependencies."""
         messages = [
-            ("system", CoordinatorAgent.SYSTEM_PROMPT),
+            ("system", CoordinatorAgent.SYSTEM_PROMPT["task_segmentation"]),
             ("system", "Available agents: {agents_info}"),
             ("system", "Respond with a JSON that follows this format: {format_instructions}"),
             ("human", "{user_task}")]
@@ -301,18 +302,43 @@ class CrewManager:
 # ==========================
 class CoordinatorAgent:
     """High-level orchestrator that segments tasks, assigns agents, and structures execution plans."""
-    SYSTEM_PROMPT = (
-        "Segment the user's task into subtasks and define dependencies.\n"
-        "- Identify which subtasks can be executed in parallel and which require sequential execution.\n"
-        "- Assign ALL agents from the available agent list that have the capability to solve each subtask.\n"
-        "- If no suitable agent exists, assign the subtask to the default agent \"{default_agent}\".\n"
-        "- Assign unique IDs to each task and subtask using UUID format.\n"
-        "- For each assigned agent, extract the required inputs based on its metadata.\n"  
-        "- If the user's task already provides a required input, extract its value and include it in the response.\n"  
-        "- If the required input is \"task_definition\", set its value as the name of the subtask.\n"
-        "- If the required input is not provided, mark it explicitly with \"value\": \"missing\".\n"
-        "- Return a structured JSON plan."
-    )
+    SYSTEM_PROMPT = {
+        "task_segmentation": (
+            "Segment the user's task into subtasks and define dependencies.\n"
+            "- Identify which subtasks can be executed in parallel and which require sequential execution.\n"
+            "- Assign ALL agents from the available agent list that have the capability to solve each subtask.\n"
+            "- If no suitable agent exists, assign the subtask to the default agent \"{default_agent}\".\n"
+            "- Assign unique IDs to each task and subtask using UUID format.\n"
+            "- For each assigned agent, extract the required inputs based on its metadata.\n"  
+            "- If the user's task already provides a required input, extract its value and include it in the response.\n"  
+            "- If the required input is \"task_definition\", set its value as the name of the subtask.\n"
+            "- If the required input is not provided, mark it explicitly with \"value\": \"missing\".\n"
+            "- Return a structured JSON plan."
+        ),
+        "response_aggregation": (
+            "You are a reasoning engine that aggregates responses from multiple experts (agents).\n"
+            "Each agent may return text, numbers, classifications, or mixed-format answers.\n"
+            "Your job is to generate a final, unified answer for the task by integrating and synthesizing the information from all responses, applying the specified aggregation method: \"{aggregation_method}\".\n\n"
+            "There are three aggregation methods:\n"
+            "1. majority_vote:\n"
+            "   - Select the components of the response that occurs most frequently or has the highest consensus.\n"
+            "   - In case of ties, explain the situation and justify your choice.\n\n"
+            "2. weighted_average:\n"
+            "   - If responses are numerical, compute the weighted average.\n"
+            "   - If some weights are missing, assume a default weight of 1.\n"
+            "   - If the values are not purely numeric, extract and average the values that make sense.\n\n"
+            "3. llm_synthesis:\n"
+            "   - Identify the common points of agreement among the responses.\n"
+            "   - Summarize any discrepancies and explain why differences may exist.\n"
+            "   - Propose a final answer that integrates the best of each perspective, in clear and natural language.\n\n"
+            "IMPORTANT:\n"
+            "- Do not repeat the list of individual responses or raw data.\n"
+            "- Your final answer MUST be a coherent and unified text that explains the situation in a way that a human can understand.\n"
+            "- For example, if the task involves object detection in an image, the answer could be:\n"
+            "  'The image contains a person detected with 88.59% confidence and a sandwich detected with X% confidence. However, the classification of the sandwich is unclear, as some experts identified it as a burrito or donut with lower confidence levels.'\n\n"
+            "Explain in detail how you applied the method and present the final answer clearly."
+        )
+    }
 
     def __init__(self, user_config=None):
         self.logger = get_agent_logger("CoordinatorAgent")
@@ -377,11 +403,16 @@ class CoordinatorAgent:
     def _initialize_llm(self):
         """Initializes the language model (LLM)."""
         try:
-            return AzureChatOpenAI(
-                deployment_name=self.deployment_name,
-                model_name=self.model_name,
-                api_version=self.api_version,
-                temperature=self.temperature)
+            model_config = {
+                "deployment_name": self.deployment_name,
+                "model_name": self.model_name,
+                "api_version": self.api_version
+            }
+            if "mini" not in self.model_name:
+                model_config["temperature"] = self.temperature
+            else:
+                self.logger.info(f"Model '{self.model_name}' does not allow 'temperature' configuration.")
+            return AzureChatOpenAI(**model_config)
         except Exception as e:
             error_message = f"Failed to initialize AzureChatOpenAI: {e}"
             self.logger.error(error_message)
@@ -399,8 +430,8 @@ class CoordinatorAgent:
     def task_planner(self, overall_state: OverallState) -> OverallState:
         self.logger.info("Starting task planner...")
         planner = TaskPlanner(self.llm, self.agents, self.logger)
-        task_plan = planner.segment_task(overall_state["user_task"], self.default_agent)
-        overall_state["task_plan"] = task_plan
+        overall_state["task_plan"] = planner.segment_task(overall_state["user_task"], self.default_agent)
+        self.logger.info(f"Task Plan: \n {overall_state['task_plan']}")
         return overall_state
 
     def initialize_crews(self, overall_state: OverallState) -> OverallState:
@@ -411,6 +442,7 @@ class CoordinatorAgent:
             self.agentic_modules = self.crew_manager.initialize_agents()
         # Updating crews' plan
         overall_state["crews_plan"] = self.crew_manager.create_crews_plan()
+        self.logger.info(f"Crews Plan: \n {overall_state['crews_plan']}")
         # Deleting private_states if they exist
         if overall_state.get("private_states"):
             self.logger.warning("Deleting previous private states from memory.")
@@ -435,11 +467,8 @@ class CoordinatorAgent:
 
     @staticmethod
     def _unify_crews_responses(overall_state):
-        """
-        Unifies the responses from all crews into a single dictionary.
-        """
+        """Unifies the responses from all crews into a single dictionary."""
         unified_responses = []
-
         for crew in overall_state["private_states"]:
             crew_id = crew["id"]
             tasks = crew.get("task_plan", {}).get("tasks", [])
@@ -453,25 +482,80 @@ class CoordinatorAgent:
                             "crew_name": crew["name"],
                             "task_id": task_id,
                             "task_name": task["name"],
-                            "order": subtask_order,
-                            "id": result["id"],
+                            # "order": subtask_order,
+                            # "id": result["id"],
                             "name": result["name"],
-                            "dependencies": result["subtask_dependencies"],
-                            "agent": {k: v for k,v in result["agent"].items() if k in [
-                                "hyperparameters", "model", "name", "id"
-                            ]},
-                            "status": result["agent"]["status"],
+                            # "dependencies": result["subtask_dependencies"],
+                            # "agent": {k: v for k,v in result["agent"].items() if k in [
+                            #     "hyperparameters", "model", "name", "id"
+                            # ]},
+                            # "status": result["agent"]["status"],
                             "result": result["agent"]["result"],
-                            "timestamp": result["agent"]["timestamp"],
+                            # "timestamp": result["agent"]["timestamp"],
                         })
         return unified_responses
 
+    def _llm_aggregation(self, task_results, aggregation_method):
+        """Uses LLM to aggregate responses according to the specified method."""
+
+        def stringify_result(res):
+            result = res["result"]
+            if isinstance(result, (dict, list)):
+                try:
+                    result_str = json.dumps(result, indent=2, ensure_ascii=False)
+                except Exception:
+                    result_str = str(result)
+            else:
+                result_str = str(result)
+            # Escaping keys to avoid ChatPromptTemplate input errors
+            return result_str.replace("{", "{{").replace("}", "}}")
+
+        formatted_results = "\n".join(
+            f"- Crew {res['crew_name']} responded for Subtask '{res['name']}':\n{stringify_result(res)}"
+            for res in task_results
+        )
+        messages = [
+            ("system", self.SYSTEM_PROMPT["response_aggregation"]),
+            # ("system", "Respond with a human-readable explanation and a final answer."),
+            ("system", "Respond with a JSON that follows this format: {format_instructions}"),
+            ("human", f"Aggregation method: {aggregation_method}\n\nAgent responses:\n{formatted_results}")
+        ]
+        prompt = ChatPromptTemplate.from_messages(messages)
+        chain = prompt | self.llm | response_parser
+        return chain.invoke({
+            "aggregation_method": aggregation_method,
+            "format_instructions": response_parser.get_format_instructions()
+        })
+
+    def _aggregate_responses(self, unified_responses, aggregation_method='llm_synthesis'):
+        """Aggregates the responses from all crews into a single output state."""
+        if aggregation_method not in ["llm_synthesis", "majority_vote", "weighted_average"]:
+            self.logger.warning(f"Unsupported aggregation method: {aggregation_method}. Using default 'llm_synthesis'.")
+            aggregation_method = "llm_synthesis"
+
+        tasks_answers = []
+        for task_id in {response["task_id"] for response in unified_responses}:
+            task_name = {x["task_name"] for x in unified_responses if x["task_id"]==task_id}.pop()
+            task_results = [response for response in unified_responses if response["task_id"] == task_id]
+            task_answer = self._llm_aggregation(task_results, aggregation_method).model_dump()
+            tasks_answers.append({"task_id": task_id, "task_name": task_name, "result": task_answer})
+        return tasks_answers
+
     def coordinated_response(self, overall_state: OverallState) -> OverallState:
         self.logger.info("Starting coordinated response...")
-        # TODO: Implement coordinated response logic
         unified_responses = self._unify_crews_responses(overall_state)
-        answer = f"Final results: {json.dumps(unified_responses, indent=4)}"
-        overall_state["answer"] = answer
+        agg_response = self._aggregate_responses(unified_responses, aggregation_method='llm_synthesis')
+        overall_state["answer"] = agg_response
+
+        # Showing the final answer
+        self.logger.info(">>> FINAL ANSWER <<< \n")
+        for task in overall_state['answer']:
+            self.logger.info(f">>> Task - {task['task_name']} ({task['task_id']})\n")
+            self.logger.info(f">>> Response: \n {task['result'].get('response')}\n")
+            self.logger.info(f">>> Explanation: \n {task['result'].get('explanation')}\n\n")
+
+        # TODO: check how to return output state
+        # OutputState: agg_response
         return overall_state
 
     def human_feedback(self, overall_state: OverallState, save_result=True) -> OverallState:
@@ -539,7 +623,7 @@ class CoordinatorAgent:
         thread = {"configurable": {"thread_id": "1"}}
         while not overall_state.get("finished"):
             for event in graph.stream(overall_state, thread, stream_mode="values"):
-                print(event)
+                # print(event)
                 overall_state = event
 
 

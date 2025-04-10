@@ -11,7 +11,7 @@ class OutputState(TypedDict):
     """
     Output state for individual tasks in LangGraph.
     """
-    answer: str
+    answer: list
 
 class OverallState(TypedDict):
     """
@@ -22,7 +22,7 @@ class OverallState(TypedDict):
     task_plan: list
     crews_plan: list
     private_states: Annotated[list, operator.add]
-    answer: str  # Final answer
+    answer: list  # Final answer
     finished: bool  # Marks whether the entire network has been completed
     user_feedback: str # TODO: se puede tener un detalle más específico del feedback del usuario y pasárselo al crewManager
 
