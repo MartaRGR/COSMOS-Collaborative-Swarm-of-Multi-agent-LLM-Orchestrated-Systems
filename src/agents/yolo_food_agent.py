@@ -1,21 +1,18 @@
 import torch
 import cv2
 
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
-
 from src.utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
 from src.utils.setup_logger import get_agent_logger
 from src.utils.base_agent import BaseAgent
 
 
 AGENT_METADATA = {
-    "function": "Detect objects in an image",
+    "function": "Food recognition",
     "required_inputs": [
         REQUIRED_INPUTS_CATALOG["image_path"]
     ],
-    "output": "list of detected objects",
-    "class": "ObjectDetectionAgent",
+    "output": "list of detected food items",
+    "class": "FoodRecognitionAgent",
     "models": [
         {
             "name": "yolo11n",
@@ -32,26 +29,14 @@ AGENT_METADATA = {
         {
             "name": "resnet50",
             "hyperparameters": {
-                "weights": []
-            }
-        },
-        {
-            "name": "Llama-3.2-11B-Vision-Instruct",
-            "hyperparameters": {
-                "temperature": [0, 1]
-            }
-        },
-        {
-            "name": "Phi-3.5-vision-instruct",
-            "hyperparameters": {
-                "temperature": [0, 1]
+                "weights": [1.0, 5.0]
             }
         }
     ]
 }
 
 
-class ObjectDetectionAgent(BaseAgent):
+class FoodRecognitionAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
         self.logger = get_agent_logger(f"Object Detection - Crew {crew_id}")
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -60,18 +45,13 @@ class ObjectDetectionAgent(BaseAgent):
         if "yolo" in model_name.lower():
             from ultralytics import YOLO
             self.model = YOLO(f"{model_name.lower()}.pt").to(self.device)
+            # Train the model
+            results = self.model.train(data="lvis.yaml", epochs=100, imgsz=640)
+
         elif model_name.lower() == "resnet50":
             import torchvision.models as models
             self.model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(self.device)
             self.model.eval()
-        elif model_name.lower() in ["llama-3.2-11b-vision-instruct", "phi-3.5-vision-instruct"]:
-            import os
-            from azure.ai.inference import ChatCompletionsClient
-            from azure.core.credentials import AzureKeyCredential
-            self.model = ChatCompletionsClient(
-                endpoint=os.getenv("AZURE_INFERENCE_SDK_ENDPOINT"),
-                credential=AzureKeyCredential(os.getenv("AZURE_INFERENCE_SDK_KEY"))
-            )
         else:
             raise ValueError(f"Unsupported model: {model_name}")
 
@@ -93,17 +73,9 @@ class ObjectDetectionAgent(BaseAgent):
         results = self.predict(image, **self.hyperparameters)
         return results
 
-    def load_image(self, path: str):
+    @staticmethod
+    def load_image(path: str):
         """Load an image using OpenCV."""
-        if self.model_name.lower() in ["llama-3.2-11b-vision-instruct", "phi-3.5-vision-instruct"]:
-            import base64
-            import os
-            # For Llama and Phi vision models, load the image and codify in base64
-            with open(path, "rb") as f:
-                image_bytes = f.read()
-            image_data = base64.b64encode(image_bytes).decode("utf-8")
-            image_format = "jpeg" if os.path.splitext(path) == "jpg" else "png"
-            return f"data:image/{image_format};base64,{image_data}"
         return cv2.imread(path)
 
     def predict(self, frame, **kwargs):
@@ -119,12 +91,8 @@ class ObjectDetectionAgent(BaseAgent):
             return self._predict_yolo(frame, classes, conf)
         elif self.model_name.lower() == "resnet50":
             return self._predict_resnet50(frame)
-        elif self.model_name.lower() in ["llama-3.2-11b-vision-instruct", "phi-3.5-vision-instruct"]:
-            temperature = kwargs.get("temperature", 0)
-            return self._predict_vision_model(frame, temperature)
         else:
             raise ValueError(f"Model {self.model_name} not supported for prediction.")
-
     def _predict_yolo(self, frame, classes, conf):
         """Runs YOLO object detection."""
         self.logger.info(">>> Running YOLO object detection...")
@@ -154,34 +122,6 @@ class ObjectDetectionAgent(BaseAgent):
         objects = [{"class": predicted_label, "confidence": confidence.item()}]
         self.logger.info(f"Detected objects: {objects}")
         return objects
-
-    def _predict_vision_model(self, frame, temperature):
-        """Runs object detection using Llama or Phi vision model."""
-        import json
-        from azure.ai.inference.models import SystemMessage, UserMessage, TextContentItem, ImageContentItem, ImageUrl
-
-        self.logger.info(f">>> Running {self.model_name} vision model...")
-        # Prepare the request to the Azure Vision model
-        system_prompt = (
-            "You are an object detection assistant. "
-            "Given an image, return a JSON array of objects. "
-            "Return ONLY a valid JSON array. No text before or after. No bullet points. No explanations. "
-            "Each object must include: "
-            "- class (string) "
-            "- confidence (float between 0 and 1) "
-        )
-        vision_resp = self.model.complete(
-            model=self.model_name,
-            messages=[
-                SystemMessage(content=system_prompt),
-                UserMessage(content=[
-                    TextContentItem(text="Detect objects into the following image:"),
-                    ImageContentItem(image_url=ImageUrl(url=frame))
-                ]),
-            ],
-            temperature=temperature
-        )
-        return json.loads(vision_resp.choices[0].message.content)
 
     @staticmethod
     def extract_objects(results):
@@ -271,19 +211,12 @@ class ObjectDetectionAgent(BaseAgent):
 
 if __name__ == "__main__":
     config = {
-        "model": "Llama-3.2-11B-Vision-Instruct",
+        "model": "yolov8n",
         "hyperparameters": {
-            "temperature": 0.5
+            "conf": 0.5,
+            "classes": []
         }
     }
-
-    # config = {
-    #     "model": "yolov8n",
-    #     "hyperparameters": {
-    #         "conf": 0.5,
-    #         "classes": []
-    #     }
-    # }
 
     # config = {
     #     "model": "resnet50",
@@ -293,4 +226,5 @@ if __name__ == "__main__":
     # }
 
     detector = ObjectDetectionAgent("crew_1", config)
-    print(detector.run(input_data={"image_path": "pruebas/istockphoto-1346064470-612x612.jpg"}))
+    image_path = "pruebas/istockphoto-1346064470-612x612.jpg"
+    detector.run(image_path)

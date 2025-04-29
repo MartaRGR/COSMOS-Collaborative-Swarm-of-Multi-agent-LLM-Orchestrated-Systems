@@ -19,3 +19,7 @@ default:
   openai:
     api_key: ${AZURE_OPENAI_API_KEY}  # Environmental variable defined with that EXACT name into .env file - OpenAI API key for authentication defined in .env
     api_base: ${AZURE_OPENAI_ENDPOINT}  # Environmental variable defined with that EXACT name into .env file - Base URL or endpoint for the OpenAI API (e.g., 'https://api.openai.com/v1/' or Azure-specific URL)
+  # Azure Vision Models
+  azure:
+    api_key: ${AZURE_INFERENCE_SDK_KEY}  # Environmental variable defined with that EXACT name into .env file - Azure AI Foundry key for authentication defined in .env
+    api_base: ${AZURE_INFERENCE_SDK_ENDPOINT}  # Environmental variable defined with that EXACT name into .env file - Base URL or endpoint for the Azure AI Foundry API (e.g., 'https://count_name.cognitiveservices.azure.com/models' or Azure-specific URL)
