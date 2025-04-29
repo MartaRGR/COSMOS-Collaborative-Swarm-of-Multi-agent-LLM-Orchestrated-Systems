@@ -38,13 +38,13 @@ AGENT_METADATA = {
         {
             "name": "Llama-3.2-11B-Vision-Instruct",
             "hyperparameters": {
-                "temperature": [0, 1]
+                "temperature": [0,1]
             }
         },
         {
             "name": "Phi-3.5-vision-instruct",
             "hyperparameters": {
-                "temperature": [0, 1]
+                "temperature": [0,1]
             }
         }
     ]

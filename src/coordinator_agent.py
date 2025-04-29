@@ -285,7 +285,9 @@ class CrewManager:
         randomized = copy.deepcopy(hyperparameters)
         for param, value in randomized.items():
             if isinstance(value, list) and value:
-                if len(value) == 2:
+                if len(value) == 1:
+                    randomized[param] = value[0]
+                elif len(value) == 2:
                     if all(isinstance(v, int) for v in value):
                         randomized[param] = random.randint(value[0], value[1])
                     elif any(isinstance(v, float) for v in value) and not any(isinstance(v, str) for v in value):
