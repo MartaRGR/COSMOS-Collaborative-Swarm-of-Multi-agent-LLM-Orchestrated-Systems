@@ -12,5 +12,13 @@ REQUIRED_INPUTS_CATALOG = {
     "video_path": {
         "variable": "video_path",
         "description": "The path of the video file to process."
+    },
+    "text_input": {
+        "variable": "text_input",
+        "description": "The path, file or text to be analyzed."
+    },
+    "structured_data": {
+        "variable": "structured_data",
+        "description": "The structured data to be processed."
     }
 }

@@ -102,7 +102,7 @@ class SwarmAgent:
 
             try:
                 # Execution of Agent's logit
-                agent_result = agent_instance.run(input_data, task_definition=subtask["name"])
+                agent_result = agent_instance.run(input_data)
                 processed["agent"] = {
                     **agent_info,  # id, name, required_inputs, model, hyperparameters included
                     "status": "completed",

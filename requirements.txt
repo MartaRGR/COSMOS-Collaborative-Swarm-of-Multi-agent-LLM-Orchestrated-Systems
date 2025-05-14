@@ -3,7 +3,7 @@ langchain_community
 langchain_openai
 langgraph~=0.2.61
 
-# YOLO
+#YOLO
 torch~=2.5.1
 opencv-python~=4.10.0.84
 ultralytics~=8.3.58
@@ -23,7 +23,7 @@ pillow~=11.1.0
 pydantic~=2.10.4
 
 aiofiles~=24.1.0
-langchain-core~=0.3.29
+langchain-core~=0.3.51
 typing_extensions~=4.12.2
 langchain-openai~=0.3.12
 requests~=2.32.3
@@ -31,4 +31,8 @@ pytz~=2024.2
 
 transformers >= 4.45.0
 accelerate~=1.6.0
-azure-ai-inference
+azure-ai-inference~=1.0.0b9
+azure-core~=1.33.0
+PyYAML~=6.0.2
+
+python-docx~=1.1.2

@@ -57,25 +57,45 @@ class ObjectDetectionAgent(BaseAgent):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.logger.info(f'Using Device: {self.device}')
         self.model_name = model_name
-        if "yolo" in model_name.lower():
-            from ultralytics import YOLO
-            self.model = YOLO(f"{model_name.lower()}.pt").to(self.device)
-        elif model_name.lower() == "resnet50":
-            import torchvision.models as models
-            self.model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(self.device)
-            self.model.eval()
-        elif model_name.lower() in ["llama-3.2-11b-vision-instruct", "phi-3.5-vision-instruct"]:
-            import os
-            from azure.ai.inference import ChatCompletionsClient
-            from azure.core.credentials import AzureKeyCredential
-            self.model = ChatCompletionsClient(
-                endpoint=os.getenv("AZURE_INFERENCE_SDK_ENDPOINT"),
-                credential=AzureKeyCredential(os.getenv("AZURE_INFERENCE_SDK_KEY"))
-            )
-        else:
-            raise ValueError(f"Unsupported model: {model_name}")
 
-    def run(self, input_data, task_definition: str = None):
+        # Dispatch map for model loaders
+        model_loaders = {
+            "yolo": self._load_yolo,
+            "resnet50": self._load_resnet50,
+            "llama-3.2-11b-vision-instruct": self._load_azure_vision_llm,
+            "phi-3.5-vision-instruct": self._load_azure_vision_llm,
+        }
+
+        # Find and execute the loader
+        model = self.model_name.lower()
+        for key, loader in model_loaders.items():
+            if key in model:
+                self.model = loader()
+                return
+
+        raise ValueError(f"Unsupported model: {self.model_name}")
+
+    def _load_yolo(self):
+        from ultralytics import YOLO
+        return YOLO(f"{self.model_name}.pt").to(self.device)
+
+    def _load_resnet50(self):
+        import torchvision.models as models
+        model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(self.device)
+        model.eval()
+        return model
+
+    @staticmethod
+    def _load_azure_vision_llm():
+        import os
+        from azure.ai.inference import ChatCompletionsClient
+        from azure.core.credentials import AzureKeyCredential
+        return ChatCompletionsClient(
+            endpoint=os.getenv("AZURE_INFERENCE_SDK_ENDPOINT"),
+            credential=AzureKeyCredential(os.getenv("AZURE_INFERENCE_SDK_KEY"))
+        )
+
+    def run(self, input_data):
         """
         Execute the object detection agent logic:
         - Load the image.
@@ -110,20 +130,33 @@ class ObjectDetectionAgent(BaseAgent):
         """
         Run the prediction on the frame.
         The logic here will depend on the model:
-        - For YOLO: run object detection.
+        - For YOLO, Llama and Phi vision models: run object detection.
         - For ResNet50: run classification
         """
-        if "yolo" in self.model_name.lower():
-            classes = kwargs.get("classes", [])
-            conf = kwargs.get("conf", 0.5)
-            return self._predict_yolo(frame, classes, conf)
-        elif self.model_name.lower() == "resnet50":
-            return self._predict_resnet50(frame)
-        elif self.model_name.lower() in ["llama-3.2-11b-vision-instruct", "phi-3.5-vision-instruct"]:
-            temperature = kwargs.get("temperature", 0)
-            return self._predict_vision_model(frame, temperature)
-        else:
-            raise ValueError(f"Model {self.model_name} not supported for prediction.")
+        # Dispatch map definition
+        dispatch_map = {
+            "yolo": lambda: self._predict_yolo(
+                frame,
+                kwargs.get("classes", []),
+                kwargs.get("conf", 0.5)
+            ),
+            "resnet50": lambda: self._predict_resnet50(frame),
+            "llama-3.2-11b-vision-instruct": lambda: self._predict_vision_model(
+                frame,
+                kwargs.get("temperature", 0)
+            ),
+            "phi-3.5-vision-instruct": lambda: self._predict_vision_model(
+                frame,
+                kwargs.get("temperature", 0)
+            )
+        }
+
+        # Match model name to prediction function
+        model = self.model_name.lower()
+        for key, func in dispatch_map.items():
+            if key in model:
+                return func()
+        raise ValueError(f"Model '{self.model_name}' not supported for prediction.")
 
     def _predict_yolo(self, frame, classes, conf):
         """Runs YOLO object detection."""
