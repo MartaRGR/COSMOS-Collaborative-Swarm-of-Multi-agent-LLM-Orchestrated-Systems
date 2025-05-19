@@ -1,15 +1,8 @@
-import os
-
-import torch
-import cv2
-
-from azure.ai.inference import ChatCompletionsClient
-from azure.core.credentials import AzureKeyCredential
-
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from src.utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
+from src.utils.models_catalog import MODELS_CATALOG
 from src.utils.setup_logger import get_agent_logger
 from src.utils.base_agent import BaseAgent
 
@@ -17,94 +10,46 @@ from src.utils.base_agent import BaseAgent
 AGENT_METADATA = {
     "function": "Interpret a combination of images and textual prompts",
     "required_inputs": [
-        REQUIRED_INPUTS_CATALOG["image_path"],
-        REQUIRED_INPUTS_CATALOG["text_input"]
+        REQUIRED_INPUTS_CATALOG["image_path"]
     ],
     "output": "textual interpretation of image + prompt",
     "class": "MultimodalTaskAgent",
     "models": [
-        {
-            "name": "Phi-3.5-vision-instruct",
-            "hyperparameters": {
-                "temperature": [0.0, 1.0],
-                "top_p": [0.1, 1.0],
-                "presence_penalty": [-2.0, 2.0],
-                "frequency_penalty": [-1.0, 1.0]
-            }
-        },
-        {
-            "name": "Llama-3.2-11B-Vision-Instruct",
-            "hyperparameters": {
-                "temperature": [0.0, 1.0],
-                "top_p": [0.1, 1.0],
-                "presence_penalty": [-2.0, 2.0],
-                "frequency_penalty": [-1.0, 1.0]
-            }
-        },
-        {
-            "name": "gpt-4o",
-            "hyperparameters": {
-                "temperature": [0.0, 1.0],
-                "api_version": "2023-03-15-preview", # TODO: revisar
-                "deployment_name": "gpt-4o"
-            }
-        },
-        {
-            "name": "Phi-4-multimodal-instruct",
-            "hyperparameters": {
-                "temperature": [0.0, 1.0],
-                "top_p": [0.1, 1.0],
-                "presence_penalty": [-2.0, 2.0],
-                "frequency_penalty": [-1.0, 1.0]
-            }
-        },
-        {
-            "name": "mistral-medium-3-instruct",
-            "hyperparameters": {
-                "temperature": [0.0, 1.0],
-                "top_p": [0.1, 1.0]
-            }
-        }
+        MODELS_CATALOG["Phi-3.5-vision-instruct"],
+        MODELS_CATALOG["Llama-3.2-11B-Vision-Instruct"],
+        MODELS_CATALOG["gpt-4o"],
+        MODELS_CATALOG["Phi-4-multimodal-instruct"],
+        MODELS_CATALOG["mistral-medium-3-instruct"]
     ]
 }
 
 
 class MultimodalTaskAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Object Detection - Crew {crew_id}")
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.logger.info(f'Using Device: {self.device}')
+        self.logger = get_agent_logger(f"Multimodal Task Agent - Crew {crew_id}")
         self.model_name = model_name
 
-        # Dispatch map for model loaders
-        self.dispatcher = {
-            "phi": {
-                "init": self._init_foundry,
-                "run": self._run_foundry
-            },
-            "llama": {
-                "init": self._init_foundry,
-                "run": self._run_foundry
-            },
-            "gpt": {
-                "init": self._init_openai,
-                "run": self._run_openai
-            },
-            "mistral": {
-                "init": self._init_mistral,
-                "run": self._run_mistral
-            },
-        }
+        self.model = self._initialize()
+        self.system_message = (
+            "You are a multimodal AI assistant that specializes in interpreting images in conjunction with textual prompts.\n"
+            "Your role is to provide reflective, symbolic, critical, or contextual analysis of images when guided by a specific instruction or task.\n"
+            "Use your understanding of visual storytelling, cultural cues, and language to generate thoughtful interpretations."
+        )
+        self.human_message = "Please, resolve this task {user_task} with the following input: {input_data}"
 
-        # Find and execute the loader
-        model = self.model_name.lower()
-        for key, loader in model_loaders.items():
-            if key in model:
-                self.model = loader()
-                return
 
-        raise ValueError(f"Unsupported model: {self.model_name}")
+    def _initialize(self):
+        return self._get_dispatch_entry()["init"]()
 
+
+    def run(self, input_data):
+        try:
+            result = self._get_dispatch_entry()["run"](input_data)
+            self.logger.info(f">>> Task result:\n{result}")
+            return result
+        except Exception as e:
+            self.logger(f"Failed to run {self.model_name}: {e}")
+            raise
 
 
 if __name__ == "__main__":
@@ -115,5 +60,15 @@ if __name__ == "__main__":
         }
     }
 
-    # detector = ObjectDetectionAgent("crew_1", config)
-    # print(detector.run(input_data={"image_path": "pruebas/istockphoto-1346064470-612x612.jpg"}))
+    # config = {
+    #     "model": "gpt-4o",
+    #     "hyperparameters": {
+    #         "temperature": 0.5
+    #     }
+    # }
+
+    detector = MultimodalTaskAgent("crew_1", config)
+    print(detector.run({
+        "task_definition": "describe la siguiente imagen",
+        "image_path": "pruebas/istockphoto-1346064470-612x612.jpg"
+    }))

@@ -1,20 +1,24 @@
 # Required inputs dictionary
 # TODO: change or complete if needed
 REQUIRED_INPUTS_CATALOG = {
-    "image_path": {
-        "variable": "image_path",
-        "description": "The path or file of the image to be analyzed."
-    },
     "task_definition": {
         "variable": "task_definition",
         "description": "The description of the task to be solved by the LLM agent."
+    },
+    "image_path": {
+        "variable": "image_path",
+        "description": "The path or file of the image to be analyzed."
     },
     "video_path": {
         "variable": "video_path",
         "description": "The path of the video file to process."
     },
-    "text_input": {
-        "variable": "text_input",
+    "audio_path": {
+        "variable": "audio_path",
+        "description": "The path of the audio file to process."
+    },
+    "text": {
+        "variable": "text",
         "description": "The path, file or text to be analyzed."
     },
     "structured_data": {

@@ -5,6 +5,7 @@ import asyncio
 import aiofiles
 
 from utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
+from utils.models_catalog import MODELS_CATALOG
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
 
@@ -76,12 +77,12 @@ class AgentRegistry:
         import re
         import json
 
-        def catalog_repl(match_obj):
-            key = match_obj.group(1)
-            value = REQUIRED_INPUTS_CATALOG.get(key)
-            if value is None:
-                return 'null'
-            return json.dumps(value)
+        def make_catalog_replacer(catalog):
+            def catalog_repl(match_obj):
+                key = match_obj.group(1)
+                value = catalog.get(key)
+                return 'null' if value is None else json.dumps(value)
+            return catalog_repl
 
         def extract_agent_metadata(text):
             # IMPORTANT TO NOTE: every agent MUST have AGENT_METADATA variable to be processed
@@ -104,7 +105,8 @@ class AgentRegistry:
                         end = i + 1
                         break
             metadata_str = text[start:end]
-            metadata_str = re.sub(r'REQUIRED_INPUTS_CATALOG\["([^"]+)"\]', catalog_repl, metadata_str)
+            metadata_str = re.sub(r'REQUIRED_INPUTS_CATALOG\["([^"]+)"\]', make_catalog_replacer(REQUIRED_INPUTS_CATALOG), metadata_str)
+            metadata_str = re.sub(r'MODELS_CATALOG\["([^"]+)"\]', make_catalog_replacer(MODELS_CATALOG), metadata_str)
             return json.loads(metadata_str)
 
         try:
