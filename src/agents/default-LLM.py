@@ -3,6 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from src.utils.required_inputs_catalog import REQUIRED_INPUTS_CATALOG
+from src.utils.models_catalog import MODELS_CATALOG
 from src.utils.setup_logger import get_agent_logger
 from src.utils.base_agent import BaseAgent
 
@@ -15,118 +16,43 @@ AGENT_METADATA = {
     "output": "text result of the agent's action",
     "class": "DefaultLlmAgent",
     "models": [
-        {
-            "name": "gpt-4o-mini",
-            "hyperparameters": {
-                "temperature": [0, 1],
-                "api_version": "2023-03-15-preview",
-                "deployment_name": "gpt-4o-mini"
-            }
-        },
-        {
-            "name": "Phi-4-mini-instruct",
-            "hyperparameters": {
-                "temperature": [0, 1],
-                "top_p": [0.1, 1],
-                "presence_penalty": [-2, 2],
-                "frequency_penalty": [-1, 1]
-            }
-        },
-        {
-            "name": "DeepSeek-R1",
-            "hyperparameters": {}
-        }
+        MODELS_CATALOG["gpt-4o-mini"],
+        MODELS_CATALOG["Phi-4-mini-instruct"],
+        MODELS_CATALOG["Llama-3.3-70B-Instruct"],
+        MODELS_CATALOG["DeepSeek-R1"],
+        MODELS_CATALOG["qwen/qwen2.5-coder-32b-instruct"]
     ]
 }
 
 
 class DefaultLlmAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Default LLM - Crew {crew_id}")
+        self.logger = get_agent_logger(f"Language Task Agent - Crew {crew_id}")
         self.model_name = model_name
 
-    def run(self, user_input, task_definition: str = None):
-        """Execute the default LLM agent logic"""
-        llm_model = self._initialize_llm()
-        result = self._run_llm(user_input, task_definition, llm_model)
-        self.logger.info(f">>> Task result:\n{result}")
-        return result
+        self.model = self._initialize()
+        self.system_message = (
+            "You are a highly capable AI assistant designed to interpret and solve any given task across a wide range of domains. "
+            "You can understand, reason, analyze, and generate text based on user-provided instructions. " 
+            "Always provide clear, structured, and relevant outputs tailored to the task. "
+            "If the task requires multiple steps, outline them before presenting your solution. If the task is ambiguous, explain your interpretation before proceeding. "
+            "Respond only to the user instruction and avoid unnecessary elaboration or assumptions."
+        )
+        self.human_message = "Please, resolve this task {user_task} with the following input: {input_data}"
 
-    def _initialize_llm(self):
-        def init_openai():
-            from langchain_openai import AzureChatOpenAI
-            return AzureChatOpenAI(
-                deployment_name=self.hyperparameters.get("deployment_name", self.model_name),
-                model_name=self.model_name,
-                api_version=self.hyperparameters.get("api_version", "2024-08-01-preview"),
-                temperature=self.hyperparameters.get("temperature", 0.2),
-            )
 
-        def init_foundry():
-            import os
-            from azure.ai.inference import ChatCompletionsClient
-            from azure.core.credentials import AzureKeyCredential
-            return ChatCompletionsClient(
-                endpoint=os.getenv("AZURE_INFERENCE_SDK_ENDPOINT"),
-                credential=AzureKeyCredential(os.getenv("AZURE_INFERENCE_SDK_KEY")),
-            )
+    def _initialize(self):
+        return self._get_dispatch_entry()["init"]()
 
-        # Match model name to initializer
-        model = self.model_name.lower()
-        model_dispatch = [
-            ("gpt", init_openai),
-            ("deepseek", init_foundry),
-            ("phi", init_foundry)
-        ]
-        for key, init_func in model_dispatch:
-            if key in model:
-                return init_func()
-        raise ValueError(f"No initializer defined for model: {model}")
 
-    def _run_llm(self, input_data, task_definition, llm):
-        system_message = "You are an AI assistant that can solve tasks and use external tools when necessary."
-        human_message = "Please, resolve this task {user_task} with the following input: {input_data}"
-
-        def run_openai():
-            from langchain.prompts import ChatPromptTemplate
-            messages = [("system", system_message), ("human", human_message)]
-            prompt = ChatPromptTemplate.from_messages(messages)
-            chain = prompt | llm
-            return chain.invoke({"user_task": task_definition, "input_data": input_data}).content
-
-        def run_foundry():
-            from azure.ai.inference.models import SystemMessage, UserMessage
-            import re
-            response = llm.complete(
-                messages=[
-                    SystemMessage(content=system_message),
-                    UserMessage(content=human_message.format(user_task=task_definition, input_data=input_data)),
-                ],
-                temperature=self.hyperparameters.get("temperature", 0.2),
-                top_p=self.hyperparameters.get("top_p", 0.1),
-                presence_penalty=self.hyperparameters.get("presence_penalty", 0.0),
-                frequency_penalty=self.hyperparameters.get("frequency_penalty", 0.0),
-                model=self.model_name
-            )
-            content = response.choices[0].message.content
-            return re.sub(r"<think>.*?</think>\s*", "", content, flags=re.DOTALL) if "deepseek" in self.model_name.lower() else content
-
-        # Dispatcher based on model name
-        model_dispatch = [
-            ("gpt", run_openai),
-            ("deepseek", run_foundry),
-            ("phi", run_foundry)
-        ]
+    def run(self, input_data):
         try:
-            model = self.model_name.lower()
-            for key, func in model_dispatch:
-                if key in model:
-                    return func()
-            raise ValueError(f"No handler defined for model: {self.model_name}")
+            result = self._get_dispatch_entry()["run"](input_data)
+            self.logger.info(f">>> Task result:\n{result}")
+            return result
         except Exception as e:
-            error_message = f"Failed to run {self.model_name}: {e}"
-            self.logger.error(error_message)
-            raise RuntimeError(error_message)
+            self.logger(f"Failed to run {self.model_name}: {e}")
+            raise
 
 
 if __name__ == "__main__":
@@ -156,5 +82,5 @@ if __name__ == "__main__":
 
     # Initialize the object detector
     agent = DefaultLlmAgent(1, config)
-    agent.run("tell me the weather in Madrid")
+    agent.run(input_data={"task_definition": "tell me the weather in Madrid"})
 
