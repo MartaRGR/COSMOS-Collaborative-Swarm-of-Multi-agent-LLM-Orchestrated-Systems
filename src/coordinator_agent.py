@@ -10,6 +10,7 @@ import uuid
 import importlib.util
 import concurrent.futures
 from collections import defaultdict
+
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
@@ -338,7 +339,13 @@ class CoordinatorAgent:
             "- Your final answer MUST be a coherent and unified text that explains the situation in a way that a human can understand.\n"
             "- For example, if the task involves object detection in an image, the answer could be:\n"
             "  'The image contains a person detected with 88.59% confidence and a sandwich detected with X% confidence. However, the classification of the sandwich is unclear, as some experts identified it as a burrito or donut with lower confidence levels.'\n\n"
-            "Explain in detail how you applied the method and present the final answer clearly."
+            "Explain in detail how you applied the method and present the final answer clearly.\n\n"
+            "ADDITIONALLY:\n"
+            "- Report the level of agreement between the agents.\n"
+            "- Provide traceability by indicating which agents (by model name) and crews contributed to each element of the final answer.\n"
+            "- Highlight the items with low agreement or significant disagreement.\n"
+            "- Optionally, assign a final confidence level (e.g., high, medium, low) based on the inter-agent consensus.\n"
+            "- Your reasoning and final output should help improve the interpretability and trust in the final result."
         )
     }
 

@@ -212,7 +212,7 @@ class BaseAgent(ABC):
                 HumanMessage(content=[
                     {"type": "text", "text": self.human_message.format(
                         user_task=input_data.get("task_definition"),
-                        input_data=input_data.get("text")
+                        input_data=input_data.get("text", '')
                     )},
                 ])
             )
@@ -238,6 +238,13 @@ class BaseAgent(ABC):
                 UserMessage(content=self.human_message.format(
                     user_task=input_data["task_definition"],
                     input_data=input_data["text"]
+                ))
+            )
+        else:
+            messages.append(
+                UserMessage(content=self.human_message.format(
+                    user_task=input_data["task_definition"],
+                    input_data=""
                 ))
             )
         # TODO: poner otros formatos de archivo
@@ -273,7 +280,7 @@ class BaseAgent(ABC):
         content = response.choices[0].message.content
         return re.sub(r"<think>.*?</think>\s*", "", content, flags=re.DOTALL)
 
-    def _run_mistral(self, text_input, task_definition, stream=False):
+    def _run_mistral(self, input_data, stream=False):
         import os
         import requests
 
@@ -282,11 +289,16 @@ class BaseAgent(ABC):
             "Accept": "text/event-stream" if stream else "application/json"
         }
 
+        if input_data.get("image_path"):
+            input_data = self._read_input_data(input_data)
+            input_data["text_input"] = '<img src="' + input_data["image_path"] + '" />'
+
         payload = {
             "model": 'mistralai/mistral-medium-3-instruct',
             "messages": [
                 {"role": "system", "content": self.system_message},
-                {"role": "user","content": self.human_message.format(user_task=task_definition, input_data=text_input)}
+                {"role": "user","content": self.human_message.format(
+                    user_task=input_data["task_definition"], input_data=input_data.get("text_input", ''))}
             ],
             "temperature": self.hyperparameters.get("temperature", 0.2),
             "top_p": self.hyperparameters.get("top_p", 0.1),
@@ -295,7 +307,7 @@ class BaseAgent(ABC):
         }
 
         response = requests.post(self.model, headers=headers, json=payload)
-        return response.json()
+        return response.json()["choices"][0]["message"]["content"]
 
     def _run_yolo(self, input_data, save_tagged_img=False):
         import cv2

@@ -9,7 +9,7 @@ from src.utils.base_agent import BaseAgent
 
 
 AGENT_METADATA = {
-    "function": "Perform structured and numerical reasoning by solving STEM problems, interpreting data and providing justifications for logical decisions or predictions.",
+    "function": "Perform structured and numerical reasoning by solving STEM, mathematical or arithmetic multiple-choice question problems, interpreting data and providing justifications for logical decisions or predictions.",
     "required_inputs": [
         REQUIRED_INPUTS_CATALOG["text"]
     ],
@@ -19,14 +19,15 @@ AGENT_METADATA = {
         MODELS_CATALOG["gpt-4o-mini"],
         MODELS_CATALOG["o3-mini"],
         MODELS_CATALOG["DeepSeek-R1"],
-        MODELS_CATALOG["nvidia/llama-3.1-nemotron-nano-8b-v1"]
+        MODELS_CATALOG["Phi-4-mini-instruct"],
+        MODELS_CATALOG["Llama-3.3-70B-Instruct"]
     ]
 }
 
 
 class NumericReasoningAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Numeric Reasoning Agent - Crew {crew_id}")
+        self.logger = get_agent_logger(f"Numeric Reasoning Agent - Crew {crew_id} - Model {model_name} - Hyperparameters {self.hyperparameters}")
         self.model_name = model_name
 
         self.model = self._initialize()
@@ -52,7 +53,7 @@ class NumericReasoningAgent(BaseAgent):
             self.logger.info(f">>> Task result:\n{result}")
             return result
         except Exception as e:
-            self.logger(f"Failed to run {self.model_name}: {e}")
+            self.logger.error(f"Failed to run {self.model_name}: {e}")
             raise
 
 

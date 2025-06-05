@@ -1,0 +1,62 @@
+[
+  {
+    "id": "a1bf0440-84db-4f30-852c-5faf30aa9096",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "The first flight out of Phoenix airport had a late departure. If the next three flights departed on-time, how many subsequent flights need to depart from Phoenix on-time, for the airport's on-time departure rate to be higher than 70%?\nOptions: A)6, B)5, C)8, D)9, E)10",
+    "label": "B"
+  },
+  {
+    "id": "fe4c3b46-80b1-4e9b-8c60-db18673f020b",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "How many integers between 324,700 and 436,600 have tens digit 1 and units digit 3?\nOptions: A)327, B)645, C)987, D)1119, E)1339",
+    "label": "D"
+  },
+  {
+    "id": "47d95104-7ed7-4721-9f5a-626870ef12a9",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "The smallest number which when divided by 20, 25, 35 and 40 leaves a remainder of 14, 19, 29 and 34 respectively is?\nOptions: A)1200, B)1500, C)1700, D)1349, E)1389",
+    "label": "D"
+  },
+  {
+    "id": "173da457-572f-4aa3-9c74-7731f9fa7b16",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "How many positive even integers less than 100 contain digits 3 or 9?\nOptions: A)16, B)17, C)18, D)19, E)10",
+    "label": "E"
+  },
+  {
+    "id": "454fe885-c303-4347-a4aa-f15f777b58ae",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "If (t-8) is a factor of t^2-kt-46, then k=\nOptions: A)16, B)12, C)2, D)6, E)14",
+    "label": "E"
+  },
+  {
+    "id": "c43cbb70-823a-43f0-847c-edc0442cac9b",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "A boat can travel with a speed of 13 km/hr in still water. If the speed of the stream is 4 km/hr. find the time taken by the boat to go 68 km downstream?\nOptions: A)2 hours, B)3 hours, C)4 hours, D)5 hours, E)None",
+    "label": "C"
+  },
+  {
+    "id": "1d8a74f0-f892-483c-afcd-3f0b1e4f5aaa",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "A certain characteristic in a large population has a distribution that is symmetric about the mean m. If 68 percent of the distribution lies within one standard deviation d of the mean, what percent E of the distribution is less than m +d ?\nOptions: A)16%, B)32%, C)48%, D)84%, E)92%",
+    "label": "D"
+  },
+  {
+    "id": "cd6d9375-f6de-4d82-9c00-0c811d84100a",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Ms. Barton has four children. You are told correctly that she has at least two girls but you are not told which two of her four children are those girls. What is the probability that she also has two boys? (Assume that the probability of having a boy is the same as the probability of having a girl.\nOptions: A)1/4, B)3/8, C)5/11, D)1/2, E)6/11",
+    "label": "E"
+  },
+  {
+    "id": "957fa59f-cec4-4715-858d-1ce2be9d72f0",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Ten students in a computer skills company can touch-type and the other 15 can use a particular word processing program. If 13 of the students can neither use the program nor touch-type, then how many students are in the class?\nOptions: A)46, B)42, C)38, D)34, E)19",
+    "label": "D"
+  },
+  {
+    "id": "ffa2ab2a-938d-4867-9281-97da69589c85",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "If k is the sum of the digits of integer m, and m=10n, where n is an integer, which of the following must be true?\nOptions: A)k is not divisible by 9, B)The sum of the digits of k is divisible by 3, C)m is a multiple of 10k, D)k is a multiple of 9, E)k is a multiple of 6",
+    "label": "C"
+  }
+]

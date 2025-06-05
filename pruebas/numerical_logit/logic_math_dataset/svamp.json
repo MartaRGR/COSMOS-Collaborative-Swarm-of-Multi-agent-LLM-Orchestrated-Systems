@@ -1,0 +1,62 @@
+[
+  {
+    "id": "45e12ead-cdf7-469c-9bef-4c221395287c",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Paul had 134 books. After giving 39 books to his friend and selling some books in a garage sale he had 68 books left.\nHow many books did he sell in the garage sale?",
+    "label": "27"
+  },
+  {
+    "id": "22db29db-3c61-4f96-ad7b-d621cc2da454",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "There are 8 different books and 5 different movies in the ' crazy silly school ' series. If you read 19 of the movies and watched 16 of the books\nHow many more movies than books have you read?",
+    "label": "3"
+  },
+  {
+    "id": "bf4e55d2-3093-45d7-bd4a-82883b560a1d",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Allan brought 2 balloons and Jake brought 6 balloons to the park. Allan then bought 3 more balloons at the park.\nHow many more balloons did Jake have than Allan in the park?",
+    "label": "1"
+  },
+  {
+    "id": "74abf393-3a0b-43e6-8dfe-0c41b818be38",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "For the walls of the house he would use 8 large planks of wood. If each plank of wood needs 74 pieces of nails to be secured\nHow many planks does John need for the house wall?",
+    "label": "8"
+  },
+  {
+    "id": "42228518-d038-429d-a4ed-683b66ae5268",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "A chef had 58 apples. After making some pies, he had used 35.\nHow many apples remained?",
+    "label": "23"
+  },
+  {
+    "id": "e12ad89c-9870-4ee4-91bf-91a813bef071",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Kelly has 20 nintendo games and 70 sony games.\nHow many nintendo games does she need to give away so that she will have 12 nintendo games left?",
+    "label": "8"
+  },
+  {
+    "id": "012346b3-a81a-4080-a5d4-5c19ebb0c94a",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Josh had 7 marbles in his collection. He lost 8 marbles and found 10 new ones.\nHow many more marbles did he find than those he lost?",
+    "label": "2"
+  },
+  {
+    "id": "eb1fed16-2cf0-44a1-81bc-fdee515ef96e",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Zachary did 35 push-ups and 3 crunches in gym class today. David did 58 more push-ups but 87 less crunches than zachary.\nHow many more push-ups than crunches did Zachary do?",
+    "label": "32"
+  },
+  {
+    "id": "37dca824-a7c8-44bf-b43f-230e5b29feb5",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Danny collects bottle caps. He found 36 bottle caps at the park while he threw away 35 old ones. Now he has 22 bottle caps in his collection.\nHow many more bottle caps did danny find at the park than those he threw away?",
+    "label": "1"
+  },
+  {
+    "id": "cdba4aac-8d13-41c7-966c-aeb39ecedf74",
+    "task_instruction": "Solve the following math word problem and provide the answer. Answer with a number.",
+    "input_text": "Helen the hippo and her friends are preparing for thanksgiving at Helen's house. Helen baked 19 chocolate chip cookies yesterday and 231 raisin cookies and 237 chocolate chip cookies this morning.\nHow many more chocolate chip cookies than raisin cakes did Helen bake?",
+    "label": "25"
+  }
+]

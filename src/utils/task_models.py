@@ -17,7 +17,7 @@ class SubtaskDependency(BaseModel):
 
 class Subtask(BaseModel):
     id: str = Field(description="Unique identifier for the subtask")
-    name: str = Field(description="Description or name of the subtask")
+    name: str = Field(description="Subtask definition")
     order: int = Field(description="Order of execution of the subtask within the task")
     agents: List[Agent] = Field(description="List of the assigned agents capable of resolving the subtask with their required inputs")
     dependencies: List[SubtaskDependency] = Field(description="List of dependencies")

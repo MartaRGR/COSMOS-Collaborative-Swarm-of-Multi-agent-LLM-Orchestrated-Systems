@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1b7d58a8-013e-4a5e-a9bd-98b8ae5b687d",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "China's available geothermal energy reserves exceed the total energy reserves of all domestic fossil fuels. In some areas, the technology for converting geothermal energy into electricity has become a reality. The possible energy shortage problem in China in the next century will be completely solved by this.\nQuestion: Which of the following, if true, would most weaken the author's view?\n(A) At some point in the next century, the depletion of geothermal heat will force China to rely more on imported energy.\n(B) Any method of producing electricity consumes some energy in the process of producing electricity.\n(C) Long-distance transportation of electricity from geothermal transformation to densely populated and economically developed areas is impractical.\n(D) Some scientists firmly believe that energy shortages can be addressed by improving energy efficiency and encouraging energy conservation.",
+    "label": "A"
+  },
+  {
+    "id": "bc259f73-6da6-4908-aa85-f19654114ad1",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Code-switching: refers to the phenomenon in which speakers use multiple languages or dialects to communicate during the same conversation.\nQuestion: Which of the following are not part of the code conversion.\n(A) Mr. John has lived in China for many years and always insists on using Chinese when talking with his colleagues. Sometimes he really doesn't know how to express his meaning accurately, and he will be mixed with three or two English words.\n(B) Manager Ma received the visiting customers and introduced them to the company in Mandarin. After learning that there were two Shaanxi fellows in the customer, he immediately spoke Shaanxi and talked with them.\n(C) At an international academic conference, Professor Chen brought a thick Sichuan accent when he gave a speech in English, and most of the foreign scholars who attended the conference hardly understood his speech.\n(D) After coming to the international student dormitory, Mr. Fang, the teacher in charge of the class, asked about their daily life. When he found a student showing a puzzled expression, he immediately explained it in English.",
+    "label": "C"
+  },
+  {
+    "id": "1521075e-fbc8-402a-9e3c-db0e220f135b",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Xiao Wang complained that his mother always turned on the TV too much, which affected him to read, and asked his mother to turn off the TV a little. But the mother said that the sound of the TV was not loud, because his father was reading newspapers by his side, Say the TV sound is too loud. So refuse to turn down the TV sound.\nQuestion: Which of the following is true, is that the mother's refusal to turn down the TV sound is wrong?\n(A) Mother never reads, and she does not understand the environment needed to read.\n(B) My father prepared his own earplugs when reading the newspaper.\n(C) Mother only watches TV during dinner.\n(D) Father is old.",
+    "label": "B"
+  },
+  {
+    "id": "1833aa82-003c-40c7-b579-a43b179a1d1a",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Lu Xun's knowledge of natural science is quite rich. This not only adds critical power to his essays, but also greatly enhances his infectivity. Lu Xun is very familiar with entomology, so he can pick the right insects for dissection. In the \"Late Spring Chat\" pointed out that \"this fine-waisted bee is not only an ordinary killer, but also a very cruel killer, but also an anatomist with excellent knowledge and technology. A cheek on the neurosphere, anesthetized it into a semi-dead state, then \"lays bee eggs on it\", and slowly hatches its children, which vividly exposes the \"trick\" of the ruler's use of fools to harm the people.\nQuestion: The essay quotes the words from Lu Xun's essay. The purpose of the quotation is:.\n(A) Explain that Lu Xun's knowledge of nature is quite rich.\n(B) Explains that Lu Xun is very familiar with entomology, and can easily select and dissect it.\n(C) Explain that Lu Xun's use of natural science knowledge makes the essay more critical and appealing.\n(D) Explain that Lu Xun is good at exposing the crimes of the ruler's folly and harming the people.",
+    "label": "C"
+  },
+  {
+    "id": "9494c10e-f71b-4cfa-9c6e-42b01fc8bafc",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "It is necessary to pay attention to avoiding hollowing out in the development of the service industry, but it is wrong and dangerous to think that the rapid development of modern service industry in China's economic growth will definitely lead to a hollowing out of the industry. This view of China will make China's economy lose an important window period for the rapid development of the modern service industry. In fact, the formation of an industrial structure dominated by the service industry does not mean the decline of the status of the manufacturing industry, nor does it mean \"de-industrialization\" \"It is not the same as starting the hollowing out process of the industry.\nQuestion: The main emphasis of this text?\n(A) The rapid development of modern service industry cannot lead to a hollowing out of the industry.\n(B) How to objectively evaluate the advantages and disadvantages of the rapid development of modern service industry.\n(C) Whether it will cause industrial hollowing depends on the prosperity of the manufacturing industry.\n(D) Don't worry about the hollowness of the industry and miss the opportunity to develop the service industry.",
+    "label": "D"
+  },
+  {
+    "id": "3f5b72d8-edb2-4ab7-92c8-6438ce1252bf",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Ecological Fallacy: Inferring individuals based on the results of the overall analysis, arguing that individuals have overall characteristics and attributes.\nQuestion: According to this definition, which of the following is not part of the ecological fallacy.\n(A) Xiaoming just arrived in Shanghai and met five or six Shanghai girls. They are all beautiful, so he thinks all Shanghai girls are beautiful.\n(B) Generally speaking, girls do not perform as well as boys in math, physics and chemistry. Therefore, Shimin, a girl, definitely does not perform well in math, physics and chemistry.\n(C) Tibet and Guizhou's overall economy is backward, so Tibetans and Guizhouese are all very poor.\n(D) The survey found that the more economically developed a place is, the lower its fertility level is. Therefore, it is believed that a high-income family must have fewer children.",
+    "label": "A"
+  },
+  {
+    "id": "0655bd6e-1df1-4a5b-bc3a-48822fe36d29",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Poverty is sometimes not only a low income, but also a lack of ability. The essence of ability is quality. Civilization is also a quality, but also a more important quality. Researchers of \"poor culture\" have long proposed that not only should we pay attention to the living conditions of the poor, but also We must pay attention to their values, attitudes and behavior patterns. Once this \"subculture\" is formed, it will affect them to change the situation of poverty, and it will be passed down from generation to generation to maintain poverty. Mr. Yan Yangchu, the pioneer of the rural construction movement of the Republic of China It is determined that the fundamental strategy of rural construction is to manage \"stupid, poor, weak, private\" in order to cultivate the knowledge, productivity, strong building and solidarity of farmers.\nQuestion: The text is intended to explain:.\n(A) The improvement of national quality lies in the development of civilization.\n(B) Enhancing the development capacity of the poor.\n(C) The foundation of personal ability development is the quality of civilization.\n(D) Improving the quality of civilization of the poor.",
+    "label": "D"
+  },
+  {
+    "id": "82a6a016-4e77-4b64-a675-1f6323795efd",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Both scientific and philosophical thoughts are created by people and not served by people. People-oriented is the common starting point and common destination of both. It is because the main body of scientific and philosophical thoughts are always humans, so both of them are deeply rooted. From the day they were born to the present and in order, they both emit the light of human wisdom and the glory of human nature, which is the unity of science and humanity. The identity of the subject determines the scientific thinking and Philosophy has an inseparable close relationship.\nQuestion: The point that this passage seeks to make is:.\n(A) Scientific thought and philosophy are the unity of science and humanity.\n(B) The subject of scientific thought and philosophy is always human.\n(C) The close relationship between scientific thought and philosophy is determined by the identity of the subject.\n(D) Scientific thought and philosophy are created and served by people.",
+    "label": "C"
+  },
+  {
+    "id": "e5a02d64-d9e4-4a6d-beff-f1e32d6d2030",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The head coach of a basketball team stipulates that if the number one player is on the field and the number three is not on the field, then at least one of the number five and the number seven must be on the field.\nQuestion: If the rules of the head coach are implemented, which of the following is the sufficient condition for the number one player not to play?\n(A) No.3 players play, No.5 and 7 players do not play.\n(B) No.3 players did not play, No.5 and 7 players played.\n(C) No.3, 5 and 7 players did not play.\n(D) No.3 and No.5 players play, No.7 players do not play.",
+    "label": "A"
+  },
+  {
+    "id": "3394f8ad-057e-4d84-8c58-fa26ad0dbe2e",
+    "task_instruction": "Choose the logically correct answer to this multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Social insurance is enforced among all or some nationals through national legislation, while commercial insurance is mainly operated on commercial principles and is a contractual relationship.\nQuestion: This passage mainly supports such a view.\n(A) Social insurance and commercial insurance should not be cross-managed.\n(B) Social insurance and commercial insurance can be cross-managed.\n(C) It is better to unify the management institutions and policies of social security.\n(D) Legalization in social insurance and commercial insurance should be strengthened.",
+    "label": "B"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: That is to say, I did not take sufficient account of the fact that at that time of the day, what Mr Farraday enjoys is a conversation of a lighthearted, humorous sort. Knowing this to be his likely mood when I brought in the tea yesterday afternoon, and being aware of his general propensity to talk with me in a bantering tone at such moments, it would certainly have been wiser not to have mentioned Miss Kenton at all. But you will perhaps understand that there was a natural tendency on my part in asking what was after all a generous favour from my employer to hint that there was a good professional motive behind my request.\nHypothesis: there was a natural tendency on her part to hint that there was a good professional motive behind her request",
+    "label": "entailment"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: He also liked swimming and cycling. He said that he wrote stories, though he had to admit that he had never got further than the first two pages. Willie meanwhile not only remained silent during these conversations but picked his berries slowly so that they might forget that he was there but he reckoned without Zach.\nHypothesis: Willie was there",
+    "label": "entailment"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: A: Well I, uh, when is your next one, uh, scheduled now. B: Well it's like, the last one was my high school graduation the next one was when I graduated from college, so I guess about two more years. A: Yes, well, and do you think you'll have a baby to take back with you.\nHypothesis: speaker B will have a baby to take back with her",
+    "label": "neutral"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: She longed for a weapon, for even a hairpin, and knowing that she did not have one, she knew too that she was totally defenceless, unarmed and alone. She could feel the great flight of the dragon and sensed that she was high in air and travelling fast towards the sunset. She could feel the great muscles of the dragon's wings send ripplings down the stomach walls and she gave herself over to death.\nHypothesis: the great muscles of the dragon's wings sent ripplings down the stomach walls",
+    "label": "entailment"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: B: Oh, well that's good. A: but she really doesn't. Nobody thought she would adjust,\nHypothesis: she would adjust",
+    "label": "contradiction"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: It is all very well, in these changing times, to adapt one's work to take in duties not traditionally within one's realm. But bantering is of another dimension altogether. For one thing how would one know for sure that at any given moment a response of the bantering sort is truly what is expected?\nHypothesis: at any given moment a response of the bantering sort is truly what is expected",
+    "label": "neutral"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: A: I do too. I believe about ten years ago that we went through a terrible time, but I don't, I believe that they're better now, you know, wh-, B: I think so. I don't think they're shoddy\nHypothesis: they're shoddy",
+    "label": "contradiction"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: ``Look, lady, give me a break. I just deliver the stuff, I don't interview it for the Sunday papers.'' He waved the paper at her and even at a distance she could see that it said very little.\nHypothesis: the paper said very little",
+    "label": "entailment"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: B: Well, you've got, well, any of the big cities you've got the different rival gangs and they're having their little turf wars over their little drug kingdoms and such, A: Uh-huh. B: And they get out their little Mac tens, they get out their little uzis and they're going to fight with them. And it doesn't matter what restrictions you put on that type of weapon or a class three firearm. If they want it they'll get it. I don't care if they've got to go down into New Mexico to get it they'll get it and they'll get across the border. Now my position, although, I have absolutely no use for a fully automatic weapon, anyway. A: Uh-huh. B: Since I am a law-abiding citizen and I have never had a felony, if I wanted to buy one, I don't think there should be that big of a restriction on it.\nHypothesis: there should be that big of a restriction on it",
+    "label": "contradiction"
+  },
+  {
+    "task_instruction": "Determine the relationship between the premise and hypothesis: entailment, contradiction, or neutral.",
+    "input_text": "Premise: A: How do you feel about gun control? B: Well, uh, I mean I don't think that guns should be outlawed\nHypothesis: guns should be outlawed",
+    "label": "contradiction"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "a great movie ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "entertaining , if somewhat standardized , action ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "even when there are lulls , the emotions seem authentic , ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "a larger-than-life figure ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "nothing special and , until the final act , nothing ",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "a journey back to your childhood ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "a film that manages to find greatness in the hue of its drastic iconography ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "much funnier film ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "relies on more than special effects ",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Determine if the following sentence expresses a positive or negative sentiment.",
+    "input_text": "the music makes a nice album , ",
+    "label": "positive"
+  }
+]

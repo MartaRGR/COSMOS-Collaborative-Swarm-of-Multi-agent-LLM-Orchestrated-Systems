@@ -1,5 +1,4 @@
 import torch
-import cv2
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
@@ -29,7 +28,7 @@ AGENT_METADATA = {
 
 class ObjectDetectionAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Object Detection - Crew {crew_id}")
+        self.logger = get_agent_logger(f"Object Detection - Crew {crew_id} - Model {model_name} - Hyperparameters {self.hyperparameters}")
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.logger.info(f'Using Device: {self.device}')
         self.model_name = model_name

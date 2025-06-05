@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: In Falluja on Thursday , two grenades were thrown at soldiers from the Third Armored Cavalry Regiment , wounding seven .\nSentence 2: In Al-Fallujah , two grenades were thrown Thursday at soldiers from the 3rd Armored Cavalry Regiment , wounding seven , none seriously .",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: Doctors have speculated that estrogen protects against cell damage and improves blood flow .\nSentence 2: Their belief was based on speculation that estrogen prevents cell damage and improves blood flow .",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: A lawsuit has been filed in an attempt to block the removal of the Ten Commandments monument from the building .\nSentence 2: Supporters asked a federal court Monday to block the removal of a Ten Commandments monument from the Alabama Judicial Building .",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: Sun was the lone major vendor to see its shipments decline , falling 2.9 percent to 59,692 units .\nSentence 2: IBM ( NYSE : IBM ) was the fastest-growing vendor , with sales jumping 37 percent to 220,000 units .",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: \" We disagree with the judge 's decision on notice for Engine Company 261 , \" said a statement by Michael A. Cardozo , the city 's corporation counsel .\nSentence 2: He added that : \" We disagree with the judge 's decision on notice for Engine Company 261 . \"",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: The broader Standard & Poor 's 500 Index .SPX eased 7.57 points , or 0.76 percent , at 990.94 .\nSentence 2: The technology-laced Nasdaq Composite Index was down 25.36 points , or 1.53 percent , at 1,628.26 .",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: Smith said simply \" Oh , my God , \" in the seconds afterward , according to Weinshall .\nSentence 2: In the seconds after the crash , she added , Captain Smith said simply , \" Oh my God . \"",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: She appeared in federal court there Monday and was expected to be transferred to Houston in two weeks .\nSentence 2: Holloway surrendered in Cleveland on Friday and was expected to be transferred to Houston in two weeks .",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: That information was first reported in today 's editions of the New York Times .\nSentence 2: The information was first printed yesterday in the New York Times .",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Determine whether the following two sentences are paraphrases of each other (yes or no).",
+    "input_text": "Sentence 1: Billy Hodge , 11 , is engrossed with the Harry Potter series books .\nSentence 2: Indeed , the Harry Potter series stands in a class by itself .",
+    "label": "no"
+  }
+]

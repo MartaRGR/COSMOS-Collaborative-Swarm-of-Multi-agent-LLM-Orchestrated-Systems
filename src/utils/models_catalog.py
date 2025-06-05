@@ -44,8 +44,8 @@ MODELS_CATALOG = {
         "hyperparameters": {
             "temperature": [0.0, 1.0],
             "top_p": [0.1, 1.0],
-            "presence_penalty": [-2.0, 2.0],
-            "frequency_penalty": [-1.0, 1.0]
+            "presence_penalty": [0.0, 2.0],
+            "frequency_penalty": [0.0, 1.0]
         }
     },
     "Llama-3.2-11B-Vision-Instruct": {
@@ -102,14 +102,14 @@ MODELS_CATALOG = {
         "name": "yolo11n",
         "hyperparameters": {
             "classes": [],
-            "confidence": [0.5, 0.7]
+            "confidence": [0.5]
         }
     },
     "yolov8n": {
         "name": "yolov8n",
         "hyperparameters": {
             "classes": [],
-            "confidence": [0.5, 0.7]
+            "confidence": [0.5]
         }
     },
     "resnet50": {

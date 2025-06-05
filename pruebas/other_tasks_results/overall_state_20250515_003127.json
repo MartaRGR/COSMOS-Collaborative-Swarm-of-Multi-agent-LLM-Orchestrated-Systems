@@ -1,0 +1,604 @@
+{
+  "user_task": "Resumen el contenido del siguiente archivo de texto Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+  "task_plan": [
+    {
+      "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+      "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+      "subtasks": {
+        "1": [
+          {
+            "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+            "name": "Summarize Document Content",
+            "agents": [
+              "name='natural_language_agent.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx'), RequiredInput(variable='text', description='The path, file or text to be analyzed.', value='Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ]
+      }
+    }
+  ],
+  "crews_plan": [
+    {
+      "id": "1fef8b68-61cc-41a3-bc94-8f4ef82b772f",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "eaaff165-2f89-462b-b493-33d310de514a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.86,
+                      "top_p": 0.55,
+                      "presence_penalty": -0.54,
+                      "frequency_penalty": 0.41
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "37e5845b-4860-43db-88e3-2a1f74e2f1c5",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "81b1a53d-64e9-4fa0-85de-3e95fd7f194a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonimizaci\u00f3n de Datos\":**\n\nEl documento aborda la relevancia de la anonimizaci\u00f3n de datos en un contexto donde las empresas recopilan y comparten informaci\u00f3n personal de usuarios, destacando la necesidad de equilibrar su utilidad con la protecci\u00f3n de la privacidad. \n\n1. **Contexto y desaf\u00edos**:  \n   - Las empresas manejan datos sensibles (h\u00e1bitos de compra, preferencias, etc.) que suelen compartirse con terceros o servicios en la nube.  \n   - El riesgo de exposici\u00f3n de informaci\u00f3n personal exige t\u00e9cnicas que permitan su uso sin comprometer la privacidad.  \n\n2. **Definiciones clave**:  \n   - **Datos personales**: Seg\u00fan el RGPD, son cualquier informaci\u00f3n que identifique o permita identificar a una persona f\u00edsica (ej. direcciones IP, n\u00fameros de identificaci\u00f3n).  \n   - **Anonimizaci\u00f3n**: Proceso irreversible que elimina u ofusca datos sensibles para evitar la identificaci\u00f3n individual, permitiendo an\u00e1lisis y transferencia seguras.  \n\n3. **Lecciones de casos reales**:  \n   - El incidente de **AOL (2006)** demostr\u00f3 que medidas superficiales (como reemplazar IDs por n\u00fameros) son insuficientes si se combinan con otros atributos (ej. IP). Esto subraya que la privacidad no se garantiza solo eliminando identificadores directos.  \n\n4. **Riesgos en la anonimizaci\u00f3n**:  \n   - **Singularizaci\u00f3n**: Identificar individuos mediante caracter\u00edsticas \u00fanicas.  \n   - **Vinculabilidad**: Relacionar registros de una misma persona en distintos conjuntos de datos.  \n   - **Inferencia**: Deducir informaci\u00f3n sensible a partir de otros atributos.  \n\n5. **T\u00e9cnicas y limitaciones**:  \n   - **Generalizaci\u00f3n** (ej. K-Anonimato): Transforma datos espec\u00edficos en categor\u00edas amplias (ej. edades en rangos). Mitiga la singularizaci\u00f3n pero requiere combinarse con otras t\u00e9cnicas para evitar inferencias.  \n   - **Aleatorizaci\u00f3n**: Alteraci\u00f3n de datos individuales manteniendo su distribuci\u00f3n global. Reduce vinculabilidad, pero debe complementarse con filtrado de atributos identificadores indirectos.  \n\n6. **Conclusi\u00f3n**:  \n   - Ninguna t\u00e9cnica es infalible; se requiere una **combinaci\u00f3n de m\u00e9todos** (generalizaci\u00f3n, aleatorizaci\u00f3n y filtrado) para garantizar protecci\u00f3n integral.  \n   - Esto permite a las empresas cumplir normativas (como el RGPD), compartir datos de forma segura y mantener la confianza de los usuarios.  \n\n**Mensaje central**: La anonimizaci\u00f3n efectiva exige enfoques multifac\u00e9ticos y rigurosos para evitar brechas de privacidad, especialmente en un entorno donde los datos son un activo cr\u00edtico pero vulnerable.",
+                    "timestamp": "2025-05-15 00:29:19"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "72720ad1-cd02-486d-a67f-d8311e9892c4",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ddf67715-ecd4-4d23-b35f-1578bf62b51d",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.46,
+                      "top_p": 0.4,
+                      "presence_penalty": 1.88,
+                      "frequency_penalty": -0.47
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:31:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1b1c159d-2a6a-41cf-bfc0-aa01e86806bd",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "4ae6ffec-f74c-45c4-aed8-d5666becb6ec",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.87,
+                      "top_p": 0.12
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:29:08"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "77f2ce82-dda9-467b-863a-ec8743d65c06",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bdf1ed44-f501-4bce-b257-7ff545032e95",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.13,
+                      "top_p": 0.62,
+                      "presence_penalty": -1.45,
+                      "frequency_penalty": 0.9
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "private_states": [
+    {
+      "id": "1b1c159d-2a6a-41cf-bfc0-aa01e86806bd",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "4ae6ffec-f74c-45c4-aed8-d5666becb6ec",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.87,
+                      "top_p": 0.12
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:29:08"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "77f2ce82-dda9-467b-863a-ec8743d65c06",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bdf1ed44-f501-4bce-b257-7ff545032e95",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.13,
+                      "top_p": 0.62,
+                      "presence_penalty": -1.45,
+                      "frequency_penalty": 0.9
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1fef8b68-61cc-41a3-bc94-8f4ef82b772f",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "eaaff165-2f89-462b-b493-33d310de514a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.86,
+                      "top_p": 0.55,
+                      "presence_penalty": -0.54,
+                      "frequency_penalty": 0.41
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "37e5845b-4860-43db-88e3-2a1f74e2f1c5",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "81b1a53d-64e9-4fa0-85de-3e95fd7f194a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonimizaci\u00f3n de Datos\":**\n\nEl documento aborda la relevancia de la anonimizaci\u00f3n de datos en un contexto donde las empresas recopilan y comparten informaci\u00f3n personal de usuarios, destacando la necesidad de equilibrar su utilidad con la protecci\u00f3n de la privacidad. \n\n1. **Contexto y desaf\u00edos**:  \n   - Las empresas manejan datos sensibles (h\u00e1bitos de compra, preferencias, etc.) que suelen compartirse con terceros o servicios en la nube.  \n   - El riesgo de exposici\u00f3n de informaci\u00f3n personal exige t\u00e9cnicas que permitan su uso sin comprometer la privacidad.  \n\n2. **Definiciones clave**:  \n   - **Datos personales**: Seg\u00fan el RGPD, son cualquier informaci\u00f3n que identifique o permita identificar a una persona f\u00edsica (ej. direcciones IP, n\u00fameros de identificaci\u00f3n).  \n   - **Anonimizaci\u00f3n**: Proceso irreversible que elimina u ofusca datos sensibles para evitar la identificaci\u00f3n individual, permitiendo an\u00e1lisis y transferencia seguras.  \n\n3. **Lecciones de casos reales**:  \n   - El incidente de **AOL (2006)** demostr\u00f3 que medidas superficiales (como reemplazar IDs por n\u00fameros) son insuficientes si se combinan con otros atributos (ej. IP). Esto subraya que la privacidad no se garantiza solo eliminando identificadores directos.  \n\n4. **Riesgos en la anonimizaci\u00f3n**:  \n   - **Singularizaci\u00f3n**: Identificar individuos mediante caracter\u00edsticas \u00fanicas.  \n   - **Vinculabilidad**: Relacionar registros de una misma persona en distintos conjuntos de datos.  \n   - **Inferencia**: Deducir informaci\u00f3n sensible a partir de otros atributos.  \n\n5. **T\u00e9cnicas y limitaciones**:  \n   - **Generalizaci\u00f3n** (ej. K-Anonimato): Transforma datos espec\u00edficos en categor\u00edas amplias (ej. edades en rangos). Mitiga la singularizaci\u00f3n pero requiere combinarse con otras t\u00e9cnicas para evitar inferencias.  \n   - **Aleatorizaci\u00f3n**: Alteraci\u00f3n de datos individuales manteniendo su distribuci\u00f3n global. Reduce vinculabilidad, pero debe complementarse con filtrado de atributos identificadores indirectos.  \n\n6. **Conclusi\u00f3n**:  \n   - Ninguna t\u00e9cnica es infalible; se requiere una **combinaci\u00f3n de m\u00e9todos** (generalizaci\u00f3n, aleatorizaci\u00f3n y filtrado) para garantizar protecci\u00f3n integral.  \n   - Esto permite a las empresas cumplir normativas (como el RGPD), compartir datos de forma segura y mantener la confianza de los usuarios.  \n\n**Mensaje central**: La anonimizaci\u00f3n efectiva exige enfoques multifac\u00e9ticos y rigurosos para evitar brechas de privacidad, especialmente en un entorno donde los datos son un activo cr\u00edtico pero vulnerable.",
+                    "timestamp": "2025-05-15 00:29:19"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "72720ad1-cd02-486d-a67f-d8311e9892c4",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ddf67715-ecd4-4d23-b35f-1578bf62b51d",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.46,
+                      "top_p": 0.4,
+                      "presence_penalty": 1.88,
+                      "frequency_penalty": -0.47
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:31:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1b1c159d-2a6a-41cf-bfc0-aa01e86806bd",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "4ae6ffec-f74c-45c4-aed8-d5666becb6ec",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.87,
+                      "top_p": 0.12
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:29:08"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "77f2ce82-dda9-467b-863a-ec8743d65c06",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bdf1ed44-f501-4bce-b257-7ff545032e95",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.13,
+                      "top_p": 0.62,
+                      "presence_penalty": -1.45,
+                      "frequency_penalty": 0.9
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "1fef8b68-61cc-41a3-bc94-8f4ef82b772f",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "eaaff165-2f89-462b-b493-33d310de514a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.86,
+                      "top_p": 0.55,
+                      "presence_penalty": -0.54,
+                      "frequency_penalty": 0.41
+                    },
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonim",
+                    "timestamp": "2025-05-15 00:29:10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "37e5845b-4860-43db-88e3-2a1f74e2f1c5",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "81b1a53d-64e9-4fa0-85de-3e95fd7f194a",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Resumen del contenido del archivo \"La Importancia de la Anonimizaci\u00f3n de Datos\":**\n\nEl documento aborda la relevancia de la anonimizaci\u00f3n de datos en un contexto donde las empresas recopilan y comparten informaci\u00f3n personal de usuarios, destacando la necesidad de equilibrar su utilidad con la protecci\u00f3n de la privacidad. \n\n1. **Contexto y desaf\u00edos**:  \n   - Las empresas manejan datos sensibles (h\u00e1bitos de compra, preferencias, etc.) que suelen compartirse con terceros o servicios en la nube.  \n   - El riesgo de exposici\u00f3n de informaci\u00f3n personal exige t\u00e9cnicas que permitan su uso sin comprometer la privacidad.  \n\n2. **Definiciones clave**:  \n   - **Datos personales**: Seg\u00fan el RGPD, son cualquier informaci\u00f3n que identifique o permita identificar a una persona f\u00edsica (ej. direcciones IP, n\u00fameros de identificaci\u00f3n).  \n   - **Anonimizaci\u00f3n**: Proceso irreversible que elimina u ofusca datos sensibles para evitar la identificaci\u00f3n individual, permitiendo an\u00e1lisis y transferencia seguras.  \n\n3. **Lecciones de casos reales**:  \n   - El incidente de **AOL (2006)** demostr\u00f3 que medidas superficiales (como reemplazar IDs por n\u00fameros) son insuficientes si se combinan con otros atributos (ej. IP). Esto subraya que la privacidad no se garantiza solo eliminando identificadores directos.  \n\n4. **Riesgos en la anonimizaci\u00f3n**:  \n   - **Singularizaci\u00f3n**: Identificar individuos mediante caracter\u00edsticas \u00fanicas.  \n   - **Vinculabilidad**: Relacionar registros de una misma persona en distintos conjuntos de datos.  \n   - **Inferencia**: Deducir informaci\u00f3n sensible a partir de otros atributos.  \n\n5. **T\u00e9cnicas y limitaciones**:  \n   - **Generalizaci\u00f3n** (ej. K-Anonimato): Transforma datos espec\u00edficos en categor\u00edas amplias (ej. edades en rangos). Mitiga la singularizaci\u00f3n pero requiere combinarse con otras t\u00e9cnicas para evitar inferencias.  \n   - **Aleatorizaci\u00f3n**: Alteraci\u00f3n de datos individuales manteniendo su distribuci\u00f3n global. Reduce vinculabilidad, pero debe complementarse con filtrado de atributos identificadores indirectos.  \n\n6. **Conclusi\u00f3n**:  \n   - Ninguna t\u00e9cnica es infalible; se requiere una **combinaci\u00f3n de m\u00e9todos** (generalizaci\u00f3n, aleatorizaci\u00f3n y filtrado) para garantizar protecci\u00f3n integral.  \n   - Esto permite a las empresas cumplir normativas (como el RGPD), compartir datos de forma segura y mantener la confianza de los usuarios.  \n\n**Mensaje central**: La anonimizaci\u00f3n efectiva exige enfoques multifac\u00e9ticos y rigurosos para evitar brechas de privacidad, especialmente en un entorno donde los datos son un activo cr\u00edtico pero vulnerable.",
+                    "timestamp": "2025-05-15 00:29:19"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "72720ad1-cd02-486d-a67f-d8311e9892c4",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+            "name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "95dcba96-5d03-4a17-8a67-d36269f9e688",
+                  "name": "Summarize Document Content",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ddf67715-ecd4-4d23-b35f-1578bf62b51d",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+                      "text": "La Importancia de la Anonimizaci\u00f3n de Datos\nEn la era digital actual, donde los datos se han vuelto un recurso esencial para las empresas, la protecci\u00f3n de la informaci\u00f3n personal se ha convertido en una preocupaci\u00f3n constante. \nLas empresas recopilan una gran cantidad de datos de clientes y usuarios, que van desde detalles de contacto hasta h\u00e1bitos de compra y preferencias personales. Pero, eso no es todo. A menudo es necesario compartir este conjunto de datos, ya sea con clientes externos o servicios en la nube, para su procesamiento. Es por ello que se hace vital garantizar la protecci\u00f3n de la informaci\u00f3n sensible y evitar su exposici\u00f3n en estos procesos cr\u00edticos. Pero, \u00bfc\u00f3mo podemos aprovechar esta informaci\u00f3n sin comprometer la privacidad de las personas involucradas?\nLa anonimizaci\u00f3n de datos emerge como una soluci\u00f3n clave en este dilema. Esta t\u00e9cnica es esencial para salvaguardar la privacidad de las personas, al mismo tiempo que permite el an\u00e1lisis y el intercambio de datos de manera segura. \nEn esencia, la anonimizaci\u00f3n de datos permite proteger la informaci\u00f3n de identificaci\u00f3n personal, eliminando u ofuscando los datos sensibles. El objetivo de la privacidad de los datos radica en mantener la protecci\u00f3n total de las personas cuyos datos se incluyen en el conjunto de informaci\u00f3n, y reducir al m\u00e1ximo el riesgo de exponer informaci\u00f3n confidencial o sensible.\nPero, \u00bfqu\u00e9 se entiende por datos personales? El Art\u00edculo 4 del Reglamento General de Protecci\u00f3n de Datos los define como \u201ctoda informaci\u00f3n sobre una persona f\u00edsica identificada o identificable\u201d, aclarando la Directiva 95/46/CE este concepto:\n\u00abDe modo general,\u00a0se puede considerar \"identificada\" a una persona f\u00edsica cuando, dentro de un\u00a0grupo de personas, se la \"distingue\" de todos los dem\u00e1s miembros del grupo. Por consiguiente, la\u00a0persona f\u00edsica es \"identificable\" cuando, aunque no se la haya identificado todav\u00eda, sea posible\u00a0hacerlo.\u00bb \nMuchas empresas entienden que, simplemente desidentificando los datos o usando seud\u00f3nimos, ya se ha alcanzado el objetivo de la anonimizaci\u00f3n. Pero esto queda lejos de la realidad. Un caso curioso fue el de la empresa AOL, anteriormente conocida como America Online, que hizo p\u00fablica en 2006 una base de datos con 20 millones de palabras de b\u00fasqueda y m\u00e1s de 650.000 usuarios, tomando, como \u00fanica medida de anonimizaci\u00f3n de datos la sustituci\u00f3n del identificador de usuario por un n\u00famero. El resultado fue que muchos de los usuarios fueron identificados y localizados en combinaci\u00f3n con otros atributos, como direcciones IP u otros par\u00e1metros de configuraci\u00f3n del cliente. Este incidente dej\u00f3 claro que las implicaciones de la privacidad en la divulgaci\u00f3n de datos no se limitan a la eliminaci\u00f3n de informaci\u00f3n personal como nombre, direcci\u00f3n, IP o n\u00famero de identificaci\u00f3n.\nLa anonimizaci\u00f3n de datos es un proceso complicado, adem\u00e1s de irreversible. Cada t\u00e9cnica tiene sus riesgos:\nSingularizaci\u00f3n: Extracci\u00f3n de caracter\u00edsticas que permiten identificar a individuos.\nVinculabilidad: Relacionar registros de un mismo individuo en diferentes conjuntos de datos.\nInferencia: Deducci\u00f3n de valores de atributos a partir de otros.\nEntre las t\u00e9cnicas de anonimizaci\u00f3n de datos, encontramos las siguientes:\nGeneralizaci\u00f3n: consistente en transformar los datos individuales\u00a0de las personas en datos gen\u00e9ricos, empleando magnitudes o escalas m\u00e1s generales y amplias (por ejemplo, K-Anonimato o L-Diversidad). Con ellas evitamos la singularizaci\u00f3n, pero es necesario aplicar de forma conjunta otras t\u00e9cnicas para garantizar la protecci\u00f3n ante ataques de inferencia o vinculabilidad. \nAleatorizaci\u00f3n:\u00a0se basan en modificar o alterar la veracidad de los datos a nivel individual, respetando la distribuci\u00f3n global de \u00e9stos, consiguiendo reducir as\u00ed la vinculabilidad y la inferencia. La aleatorizaci\u00f3n empleada de forma aislada no es efectiva frente a la singularizaci\u00f3n. Siempre deben combinarse, al menos, con un proceso de filtrado expl\u00edcito de atributos obvios o identificadores indirectos (principio de privacidad por defecto), o indirectamente mediante t\u00e9cnicas de generalizaci\u00f3n.\u00a0\u00a0\u00a0\nSin embargo, como hemos visto, ninguna t\u00e9cnica es infalible y siempre deben combinarse para garantizar la correcta protecci\u00f3n de los datos. Solo as\u00ed las empresas podr\u00e1n compartir y trabajar con datos personales de manera segura, adem\u00e1s de mantenerse a la vanguardia en el cumplimiento de las normativas de privacidad."
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.46,
+                      "top_p": 0.4,
+                      "presence_penalty": 1.88,
+                      "frequency_penalty": -0.47
+                    },
+                    "status": "error",
+                    "result": "'Logger' object is not callable",
+                    "timestamp": "2025-05-15 00:31:09"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "answer": [
+    {
+      "task_id": "f8c3d00f-6e52-4fc2-ac20-6a988e3f74ba",
+      "task_name": "Resumen el contenido del archivo Blog_La_importancia_de_la_anonimizaci\u00f3n_de_datos.docx",
+      "result": {
+        "response": {
+          "aggregated_summary": "The document entitled \"La Importancia de la Anonimizaci\u00f3n de Datos\" explains the critical role of anonymizing personal data in an era where companies collect and share sensitive user information. It emphasizes the need to balance data utility with privacy protection. The summary outlines several key points: first, it discusses the challenges companies face when handling data such as purchase habits and preferences, and the risks associated with sharing this information with third parties or cloud services. It clarifies important definitions, noting that personal data includes any information that can identify an individual (for example, IP addresses or identification numbers) and that true anonymization is an irreversible process that obfuscates sensitive data to prevent re-identification. The document also presents real-life examples, such as the AOL incident, where superficial measures (like merely replacing identifiers) proved insufficient. Furthermore, it reviews the potential risks in data anonymization including singularization, linking records across datasets, and making inferences about sensitive information. Finally, it discusses various techniques like generalization (or k-anonymity) and randomization, stressing that no single technique is foolproof and that a multifaceted approach is necessary to ensure comprehensive privacy protection and compliance with regulations (e.g., the GDPR)."
+        },
+        "explanation": "The synthesis was derived by noting that while two agents (crew_4 and crew_3) returned error messages and two others (crew_1 and crew_5) provided incomplete responses, crew_2 submitted a detailed and structured summary. By integrating the complete content from crew_2 and acknowledging the issues reported by the other agents, the final aggregated answer offers a clear and comprehensive summary of the document's main points."
+      }
+    }
+  ],
+  "finished": true,
+  "user_feedback": "'yes'"
+}

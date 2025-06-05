@@ -97,11 +97,11 @@ class SwarmAgent:
                 input_data = dependency_input
                 self.logger.info(f"Subtask {subtask['id']} has dependencies; using dependency results as input.")
             else:
-                # TODO: meter lógica para coger como input el user_input de esa tarea
                 input_data = agent_info.get("required_inputs")
 
             try:
                 # Execution of Agent's logit
+                input_data["task_definition"] = subtask["name"]
                 agent_result = agent_instance.run(input_data)
                 processed["agent"] = {
                     **agent_info,  # id, name, required_inputs, model, hyperparameters included

@@ -1,0 +1,955 @@
+{
+  "user_task": "Resuelve la operaci\u00f3n matem\u00e1tica 2**30 y crea un poema de 3 l\u00edneas con el nombre Marta",
+  "task_plan": [
+    {
+      "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+      "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+      "subtasks": {
+        "1": [
+          {
+            "id": "a1234567-89ab-cdef-0123-456789abcdef",
+            "name": "Resolver operaci\u00f3n 2**30",
+            "agents": [
+              "name='numerical_logit_agent.py' required_inputs=[RequiredInput(variable='text', description='The path, file or text to be analyzed.', value='2**30')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ],
+        "2": [
+          {
+            "id": "b2345678-90ab-cdef-1234-567890abcdef",
+            "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+            "agents": [
+              "name='natural_language_agent.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Crear un poema de 3 l\u00edneas con el nombre Marta'), RequiredInput(variable='text', description='The path, file or text to be analyzed.', value='Marta')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ]
+      }
+    }
+  ],
+  "crews_plan": [
+    {
+      "id": "0badbf38-a5f1-4d62-a456-6834dc80dee8",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "66b011db-06d3-4340-8eb3-e1090c1f95a9",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "Para resolver 2**30, debemos calcular 2 elevado a la potencia 30.\n\nSabemos que:\n2**30 = 2^30 = 1073741824\n\nAs\u00ed que el resultado es 1073741824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "6f1474e9-696d-4c92-b6d7-1dd289f84f0f",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0.64,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de luna en la noche estrellada,  \ncon risas de viento y sue\u00f1os que abrazan,  \nen tu jard\u00edn florece la esperanza dorada.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "b3c899b1-14da-4584-b8a7-c82da11c05b2",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "06c10827-3d86-4adf-bbb7-95b6408e7925",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can use exponentiation by breaking it into smaller, manageable parts:\n\n1. **Calculate \\(2^{10}\\):**\n   \\[\n   2^{10} = 1024\n   \\]\n\n2. **Square the result to get \\(2^{20}\\):**\n   \\[\n   (2^{10})^2 = 1024^2 = 1,\\!048,\\!576\n   \\]\n\n3. **Multiply by \\(2^{10}\\) again to reach \\(2^{30}\\):**\n   \\[\n   1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n   \\]\n\n**Final Answer:**  \n\\[\n\\boxed{1073741824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:39"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "1816589b-b8d7-4bbb-870d-f2c6d5110bf5",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.44,
+                      "top_p": 0.39,
+                      "presence_penalty": 1.62,
+                      "frequency_penalty": 0.39
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu resuena con fuerza y gracia,\nEn cada paso, su coraz\u00f3n late.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5e672153-36cd-4e1f-aaf4-99f0cca86ea2",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a3f19bfb-cbfe-46c4-afc3-77dad7aba45d",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+                    "hyperparameters": {
+                      "temperature": 0.23,
+                      "top_p": 0.62
+                    },
+                    "status": "completed",
+                    "result": "The result of calculating 2 raised to the 30th power is:\n\n\\boxed{1073741824}",
+                    "timestamp": "2025-05-20 17:29:40"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "c15dfa77-63a8-4439-9928-919afa1674ea",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.76,
+                      "top_p": 0.65
+                    },
+                    "status": "completed",
+                    "result": "Claro, aqu\u00ed tienes un poema de tres l\u00edneas con el nombre Marta:\n\nMarta, luz que ilumina,\nsus risas llenan el alma,\nesperanza en cada sonrisa.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "f80a1432-998e-475c-9de1-41c6ba016a2c",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "550b4e76-1b0c-4b2b-ad3f-4b4bb9b66dd4",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can break it down using known powers of 2:\n\n1. **Known value**: \\(2^{10} = 1024\\).  \n2. **Rewrite \\(2^{30}\\)**:  \n   \\[\n   2^{30} = \\left(2^{10}\\right)^3 = 1024^3\n   \\]  \n3. **Compute \\(1024^3\\)**:  \n   - First, calculate \\(1024^2 = 1,\\!048,\\!576\\).  \n   - Then multiply by \\(1024\\):  \n     \\[\n     1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n     \\]  \n\n**Final Answer**:  \n\\[\n\\boxed{1,\\!073,\\!741,\\!824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ca915148-345a-45fc-a434-138704d15300",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.97,
+                      "top_p": 0.74,
+                      "presence_penalty": -1.24,
+                      "frequency_penalty": 0.0
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de estrellas brillantes,\nIlumina el camino con",
+                    "timestamp": "2025-05-20 17:29:42"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "e3a3642d-2443-4b8d-9cf8-f13769acc2ea",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "e77a679c-374b-4057-a9df-80d222a82c5e",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "We need to calculate 2 raised to the power of 30, denoted as 2**30.\n\nStep 1: Recognize that 2**30 means 2 raised to the 30th power.\n\nStep 2: Use the property: 2^30 = (2^10)^3 because 10 * 3 = 30.\n\nStep 3: We know that 2^10 = 1024.\n\nStep 4: Calculate (1024)^3. This equals 1024 \u00d7 1024 \u00d7 1024, which results in 1,073,741,824.\n\nThus, 2**30 = 1,073,741,824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "714467cc-4492-45de-8f80-d3ed2617a0ae",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.06,
+                      "top_p": 0.6,
+                      "presence_penalty": 0.26,
+                      "frequency_penalty": -0.09
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu, un faro de luz y esperanza,\nEn cada paso, su coraz\u00f3n canta.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "private_states": [
+    {
+      "id": "0badbf38-a5f1-4d62-a456-6834dc80dee8",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "66b011db-06d3-4340-8eb3-e1090c1f95a9",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "Para resolver 2**30, debemos calcular 2 elevado a la potencia 30.\n\nSabemos que:\n2**30 = 2^30 = 1073741824\n\nAs\u00ed que el resultado es 1073741824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "6f1474e9-696d-4c92-b6d7-1dd289f84f0f",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0.64,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de luna en la noche estrellada,  \ncon risas de viento y sue\u00f1os que abrazan,  \nen tu jard\u00edn florece la esperanza dorada.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "e3a3642d-2443-4b8d-9cf8-f13769acc2ea",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "e77a679c-374b-4057-a9df-80d222a82c5e",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "We need to calculate 2 raised to the power of 30, denoted as 2**30.\n\nStep 1: Recognize that 2**30 means 2 raised to the 30th power.\n\nStep 2: Use the property: 2^30 = (2^10)^3 because 10 * 3 = 30.\n\nStep 3: We know that 2^10 = 1024.\n\nStep 4: Calculate (1024)^3. This equals 1024 \u00d7 1024 \u00d7 1024, which results in 1,073,741,824.\n\nThus, 2**30 = 1,073,741,824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "714467cc-4492-45de-8f80-d3ed2617a0ae",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.06,
+                      "top_p": 0.6,
+                      "presence_penalty": 0.26,
+                      "frequency_penalty": -0.09
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu, un faro de luz y esperanza,\nEn cada paso, su coraz\u00f3n canta.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "b3c899b1-14da-4584-b8a7-c82da11c05b2",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "06c10827-3d86-4adf-bbb7-95b6408e7925",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can use exponentiation by breaking it into smaller, manageable parts:\n\n1. **Calculate \\(2^{10}\\):**\n   \\[\n   2^{10} = 1024\n   \\]\n\n2. **Square the result to get \\(2^{20}\\):**\n   \\[\n   (2^{10})^2 = 1024^2 = 1,\\!048,\\!576\n   \\]\n\n3. **Multiply by \\(2^{10}\\) again to reach \\(2^{30}\\):**\n   \\[\n   1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n   \\]\n\n**Final Answer:**  \n\\[\n\\boxed{1073741824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:39"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "1816589b-b8d7-4bbb-870d-f2c6d5110bf5",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.44,
+                      "top_p": 0.39,
+                      "presence_penalty": 1.62,
+                      "frequency_penalty": 0.39
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu resuena con fuerza y gracia,\nEn cada paso, su coraz\u00f3n late.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5e672153-36cd-4e1f-aaf4-99f0cca86ea2",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a3f19bfb-cbfe-46c4-afc3-77dad7aba45d",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+                    "hyperparameters": {
+                      "temperature": 0.23,
+                      "top_p": 0.62
+                    },
+                    "status": "completed",
+                    "result": "The result of calculating 2 raised to the 30th power is:\n\n\\boxed{1073741824}",
+                    "timestamp": "2025-05-20 17:29:40"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "c15dfa77-63a8-4439-9928-919afa1674ea",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.76,
+                      "top_p": 0.65
+                    },
+                    "status": "completed",
+                    "result": "Claro, aqu\u00ed tienes un poema de tres l\u00edneas con el nombre Marta:\n\nMarta, luz que ilumina,\nsus risas llenan el alma,\nesperanza en cada sonrisa.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "f80a1432-998e-475c-9de1-41c6ba016a2c",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "550b4e76-1b0c-4b2b-ad3f-4b4bb9b66dd4",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can break it down using known powers of 2:\n\n1. **Known value**: \\(2^{10} = 1024\\).  \n2. **Rewrite \\(2^{30}\\)**:  \n   \\[\n   2^{30} = \\left(2^{10}\\right)^3 = 1024^3\n   \\]  \n3. **Compute \\(1024^3\\)**:  \n   - First, calculate \\(1024^2 = 1,\\!048,\\!576\\).  \n   - Then multiply by \\(1024\\):  \n     \\[\n     1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n     \\]  \n\n**Final Answer**:  \n\\[\n\\boxed{1,\\!073,\\!741,\\!824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ca915148-345a-45fc-a434-138704d15300",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.97,
+                      "top_p": 0.74,
+                      "presence_penalty": -1.24,
+                      "frequency_penalty": 0.0
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de estrellas brillantes,\nIlumina el camino con",
+                    "timestamp": "2025-05-20 17:29:42"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "0badbf38-a5f1-4d62-a456-6834dc80dee8",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "66b011db-06d3-4340-8eb3-e1090c1f95a9",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "Para resolver 2**30, debemos calcular 2 elevado a la potencia 30.\n\nSabemos que:\n2**30 = 2^30 = 1073741824\n\nAs\u00ed que el resultado es 1073741824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "6f1474e9-696d-4c92-b6d7-1dd289f84f0f",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0.64,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de luna en la noche estrellada,  \ncon risas de viento y sue\u00f1os que abrazan,  \nen tu jard\u00edn florece la esperanza dorada.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "e3a3642d-2443-4b8d-9cf8-f13769acc2ea",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "e77a679c-374b-4057-a9df-80d222a82c5e",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "o3-mini",
+                    "hyperparameters": {
+                      "api_version": "2024-12-01-preview",
+                      "deployment_name": "o3-mini"
+                    },
+                    "status": "completed",
+                    "result": "We need to calculate 2 raised to the power of 30, denoted as 2**30.\n\nStep 1: Recognize that 2**30 means 2 raised to the 30th power.\n\nStep 2: Use the property: 2^30 = (2^10)^3 because 10 * 3 = 30.\n\nStep 3: We know that 2^10 = 1024.\n\nStep 4: Calculate (1024)^3. This equals 1024 \u00d7 1024 \u00d7 1024, which results in 1,073,741,824.\n\nThus, 2**30 = 1,073,741,824.",
+                    "timestamp": "2025-05-20 17:29:33"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "714467cc-4492-45de-8f80-d3ed2617a0ae",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.06,
+                      "top_p": 0.6,
+                      "presence_penalty": 0.26,
+                      "frequency_penalty": -0.09
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu, un faro de luz y esperanza,\nEn cada paso, su coraz\u00f3n canta.",
+                    "timestamp": "2025-05-20 17:29:34"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "b3c899b1-14da-4584-b8a7-c82da11c05b2",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "06c10827-3d86-4adf-bbb7-95b6408e7925",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can use exponentiation by breaking it into smaller, manageable parts:\n\n1. **Calculate \\(2^{10}\\):**\n   \\[\n   2^{10} = 1024\n   \\]\n\n2. **Square the result to get \\(2^{20}\\):**\n   \\[\n   (2^{10})^2 = 1024^2 = 1,\\!048,\\!576\n   \\]\n\n3. **Multiply by \\(2^{10}\\) again to reach \\(2^{30}\\):**\n   \\[\n   1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n   \\]\n\n**Final Answer:**  \n\\[\n\\boxed{1073741824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:39"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "1816589b-b8d7-4bbb-870d-f2c6d5110bf5",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.44,
+                      "top_p": 0.39,
+                      "presence_penalty": 1.62,
+                      "frequency_penalty": 0.39
+                    },
+                    "status": "completed",
+                    "result": "Bajo el cielo azul, Marta se eleva,\nSu esp\u00edritu resuena con fuerza y gracia,\nEn cada paso, su coraz\u00f3n late.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5e672153-36cd-4e1f-aaf4-99f0cca86ea2",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a3f19bfb-cbfe-46c4-afc3-77dad7aba45d",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+                    "hyperparameters": {
+                      "temperature": 0.23,
+                      "top_p": 0.62
+                    },
+                    "status": "completed",
+                    "result": "The result of calculating 2 raised to the 30th power is:\n\n\\boxed{1073741824}",
+                    "timestamp": "2025-05-20 17:29:40"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "c15dfa77-63a8-4439-9928-919afa1674ea",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "qwen/qwen2.5-coder-32b-instruct",
+                    "hyperparameters": {
+                      "temperature": 0.76,
+                      "top_p": 0.65
+                    },
+                    "status": "completed",
+                    "result": "Claro, aqu\u00ed tienes un poema de tres l\u00edneas con el nombre Marta:\n\nMarta, luz que ilumina,\nsus risas llenan el alma,\nesperanza en cada sonrisa.",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "f80a1432-998e-475c-9de1-41c6ba016a2c",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+            "name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1234567-89ab-cdef-0123-456789abcdef",
+                  "name": "Resolver operaci\u00f3n 2**30",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "550b4e76-1b0c-4b2b-ad3f-4b4bb9b66dd4",
+                    "name": "numerical_logit_agent.py",
+                    "required_inputs": {
+                      "text": "2**30",
+                      "task_definition": "Resolver operaci\u00f3n 2**30"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "To calculate \\(2^{30}\\), we can break it down using known powers of 2:\n\n1. **Known value**: \\(2^{10} = 1024\\).  \n2. **Rewrite \\(2^{30}\\)**:  \n   \\[\n   2^{30} = \\left(2^{10}\\right)^3 = 1024^3\n   \\]  \n3. **Compute \\(1024^3\\)**:  \n   - First, calculate \\(1024^2 = 1,\\!048,\\!576\\).  \n   - Then multiply by \\(1024\\):  \n     \\[\n     1,\\!048,\\!576 \\times 1024 = 1,\\!073,\\!741,\\!824\n     \\]  \n\n**Final Answer**:  \n\\[\n\\boxed{1,\\!073,\\!741,\\!824}\n\\]",
+                    "timestamp": "2025-05-20 17:29:41"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "b2345678-90ab-cdef-1234-567890abcdef",
+                  "name": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "ca915148-345a-45fc-a434-138704d15300",
+                    "name": "natural_language_agent.py",
+                    "required_inputs": {
+                      "task_definition": "Crear un poema de 3 l\u00edneas con el nombre Marta",
+                      "text": "Marta"
+                    },
+                    "model": "Llama-3.3-70B-Instruct",
+                    "hyperparameters": {
+                      "temperature": 0.97,
+                      "top_p": 0.74,
+                      "presence_penalty": -1.24,
+                      "frequency_penalty": 0.0
+                    },
+                    "status": "completed",
+                    "result": "Marta, luz de estrellas brillantes,\nIlumina el camino con",
+                    "timestamp": "2025-05-20 17:29:42"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "answer": [
+    {
+      "task_id": "b52e5d7e-68d9-4d5a-bf49-8f9d4e573605",
+      "task_name": "Resolver la operaci\u00f3n 2**30 y crear un poema de 3 l\u00edneas con el nombre Marta",
+      "result": {
+        "response": {
+          "resolver_operacion_2**30": 1073741824,
+          "poema_con_nombre_Marta": "Marta, luz de luna en la noche estrellada,\nBajo el cielo azul, tu esp\u00edritu resuena con fuerza y gracia,\nEn cada paso florece la esperanza."
+        },
+        "explanation": "All agents consistently calculated 2**30 as 1073741824, yielding unanimous agreement for the arithmetic part. For the poem, multiple crews provided three-line poems featuring recurring imagery such as light, hope, and a celestial ambiance. Although one submission was incomplete, the commonly agreed themes allowed synthesizing a final version that integrates elements from crew_1, crew_2, crew_3, and crew_5. The final answer thus reflects a high level of inter-agent consensus and is presented with high confidence."
+      }
+    }
+  ],
+  "finished": true,
+  "user_feedback": "'yes"
+}

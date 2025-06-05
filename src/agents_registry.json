@@ -14,8 +14,8 @@
                 "name": "gpt-4o-mini",
                 "hyperparameters": {
                     "temperature": [
-                        0,
-                        1
+                        0.0,
+                        1.0
                     ],
                     "api_version": "2023-03-15-preview",
                     "deployment_name": "gpt-4o-mini"
@@ -25,26 +25,60 @@
                 "name": "Phi-4-mini-instruct",
                 "hyperparameters": {
                     "temperature": [
-                        0,
-                        1
+                        0.0,
+                        1.0
                     ],
                     "top_p": [
                         0.1,
-                        1
+                        1.0
                     ],
                     "presence_penalty": [
-                        -2,
-                        2
+                        -2.0,
+                        2.0
                     ],
                     "frequency_penalty": [
-                        -1,
-                        1
+                        -1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "name": "Llama-3.3-70B-Instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ],
+                    "presence_penalty": [
+                        -2.0,
+                        2.0
+                    ],
+                    "frequency_penalty": [
+                        -1.0,
+                        1.0
                     ]
                 }
             },
             {
                 "name": "DeepSeek-R1",
                 "hyperparameters": {}
+            },
+            {
+                "name": "qwen/qwen2.5-coder-32b-instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ]
+                }
             }
         ]
     },
@@ -71,11 +105,11 @@
                         1.0
                     ],
                     "presence_penalty": [
-                        -2.0,
+                        0.0,
                         2.0
                     ],
                     "frequency_penalty": [
-                        -1.0,
+                        0.0,
                         1.0
                     ]
                 }
@@ -240,7 +274,7 @@
         ]
     },
     "numerical_logit_agent.py": {
-        "function": "Perform structured and numerical reasoning by solving STEM problems, interpreting data and providing justifications for logical decisions or predictions.",
+        "function": "Perform structured and numerical reasoning by solving STEM, mathematical or arithmetic multiple-choice question problems, interpreting data and providing justifications for logical decisions or predictions.",
         "required_inputs": [
             {
                 "variable": "text",
@@ -273,7 +307,7 @@
                 "hyperparameters": {}
             },
             {
-                "name": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+                "name": "Phi-4-mini-instruct",
                 "hyperparameters": {
                     "temperature": [
                         0.0,
@@ -281,6 +315,35 @@
                     ],
                     "top_p": [
                         0.1,
+                        1.0
+                    ],
+                    "presence_penalty": [
+                        -2.0,
+                        2.0
+                    ],
+                    "frequency_penalty": [
+                        -1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "name": "Llama-3.3-70B-Instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ],
+                    "presence_penalty": [
+                        -2.0,
+                        2.0
+                    ],
+                    "frequency_penalty": [
+                        -1.0,
                         1.0
                     ]
                 }
@@ -301,13 +364,19 @@
             {
                 "name": "yolo11n",
                 "hyperparameters": {
-                    "classes": []
+                    "classes": [],
+                    "confidence": [
+                        0.5
+                    ]
                 }
             },
             {
                 "name": "yolov8n",
                 "hyperparameters": {
-                    "classes": []
+                    "classes": [],
+                    "confidence": [
+                        0.5
+                    ]
                 }
             },
             {
@@ -349,84 +418,11 @@
                         1.0
                     ],
                     "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            }
-        ]
-    },
-    "object_detection_agent_v2.py": {
-        "function": "Detect objects in an image",
-        "required_inputs": [
-            {
-                "variable": "image_path",
-                "description": "The path or file of the image to be analyzed."
-            }
-        ],
-        "output": "list of detected objects",
-        "class": "ObjectDetectionAgent",
-        "models": [
-            {
-                "name": "yolo11n",
-                "hyperparameters": {
-                    "classes": []
-                }
-            },
-            {
-                "name": "yolov8n",
-                "hyperparameters": {
-                    "classes": []
-                }
-            },
-            {
-                "name": "resnet50",
-                "hyperparameters": {
-                    "weights": []
-                }
-            },
-            {
-                "name": "Llama-3.2-11B-Vision-Instruct",
-                "hyperparameters": {
-                    "temperature": [
                         0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
                         2.0
                     ],
                     "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "Phi-3.5-vision-instruct",
-                "hyperparameters": {
-                    "temperature": [
                         0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
                         1.0
                     ]
                 }

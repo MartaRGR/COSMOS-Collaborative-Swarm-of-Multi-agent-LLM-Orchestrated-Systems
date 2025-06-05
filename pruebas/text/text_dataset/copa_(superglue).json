@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The bully stuck his foot out in front of his classmate.\nOption 1: The bully picked up his classmate.\nOption 2: The bully's classmate tripped.",
+    "label": "Option 2"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The man removed his coat.\nOption 1: He entered the house.\nOption 2: He loosened his tie.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The boy felt homesick.\nOption 1: He went away to camp.\nOption 2: He bickered with his sister.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The tenant misplaced his keys to his apartment.\nOption 1: His landlord unlocked the door.\nOption 2: His landlord repaired the door.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The boy was afraid to go to bed.\nOption 1: He turned on his nightlight.\nOption 2: He watched a horror movie.",
+    "label": "Option 2"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The child caught a life-threatening illness.\nOption 1: She didn't get vaccinated.\nOption 2: She was adopted.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The customer thought the souvenir was overpriced.\nOption 1: The vender sold it to him.\nOption 2: He bargained with the vendor.",
+    "label": "Option 2"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The man was bitten by mosquitoes.\nOption 1: He went camping in the woods.\nOption 2: He fell asleep on his couch.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: The doctor x-rayed the patient's arm.\nOption 1: He discovered that the patient's arm was broken.\nOption 2: He put the patient's arm in a cast.",
+    "label": "Option 1"
+  },
+  {
+    "task_instruction": "Choose the most plausible cause or effect for the given premise.",
+    "input_text": "Premise: A group of teenagers crashed the party.\nOption 1: The host of the party kicked them out.\nOption 2: The host of the party invited them in.",
+    "label": "Option 1"
+  }
+]

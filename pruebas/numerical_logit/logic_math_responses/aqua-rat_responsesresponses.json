@@ -1,0 +1,82 @@
+[
+  {
+    "id": "prueba",
+    "response": [
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "llm_synthesis",
+        "result": {
+          "response": {
+            "resultado": "4",
+            "explicacion": "El resultado de la operaci\u00f3n 2 + 2 es 4."
+          },
+          "explanation": "Ambos agentes, crew_1 y crew_2, llegaron de forma independiente a la misma conclusi\u00f3n: la suma de 2 + 2 es 4. No se present\u00f3 ninguna discrepancia en ninguno de los procedimientos realizados y ambos utilizaron un enfoque b\u00e1sico de adici\u00f3n. La alta coherencia entre las respuestas indica que el resultado es indiscutiblemente correcto, con alta confianza en el resultado final."
+        }
+      },
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "majority_vote",
+        "result": {
+          "response": {
+            "final_answer": "2 + 2 = 4",
+            "details": "Ambos agentes (crew_1 y crew_2) calcularon la operaci\u00f3n y obtuvieron el mismo resultado, 4, usando procedimientos similares en los que identificaron y realizaron la operaci\u00f3n de adici\u00f3n de dos n\u00fameros enteros."
+          },
+          "explanation": "Se utiliz\u00f3 el m\u00e9todo de majority_vote ya que ambos agentes aplacaron la misma respuesta. No hubo discrepancias entre las respuestas y por lo tanto se eligi\u00f3 la respuesta mayoritaria (4). La integraci\u00f3n de los dos aportes de crew_1 y crew_2 respalda que el resultado correcto es 4, lo que indica un alto nivel de acuerdo."
+        }
+      },
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "weighted_average",
+        "result": {
+          "response": {
+            "final_answer": 4
+          },
+          "explanation": "Both Crew crew_1 and Crew crew_2 provided a calculation for 2+2 that resulted in 4. Using the weighted_average method, where both responses have equal weight, we arrive at a final result of 4. The inter-agent consensus is very high, with both agents agreeing on the same answer (4), leading to a high confidence level in the final response. Traceability: Crew crew_1 and Crew crew_2 contributed the same result."
+        }
+      }
+    ]
+  },
+  {
+    "id": "prueba",
+    "response": [
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "llm_synthesis",
+        "result": {
+          "response": {
+            "result": "4",
+            "detail": "Both agents performed the simple addition operation 2 + 2 and arrived at the result 4. The calculation was straightforward with no discrepancies between the agents."
+          },
+          "explanation": "The two agents (crew_2 and crew_1) both calculated 2+2 as 4 with identical logical steps. This synthesis identifies full agreement between the agents, leading to a high confidence level in the answer."
+        }
+      },
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "majority_vote",
+        "result": {
+          "response": {
+            "result": 4,
+            "details": "Both crew_2 and crew_1 provided a calculation where 2 + 2 equals 4."
+          },
+          "explanation": "The aggregation was done using the majority_vote method. Both crew_2 and crew_1 reached the same conclusion, therefore, the final answer is 4. There is full agreement between the agents (crew_2 and crew_1), which leads to a high confidence level in this result."
+        }
+      },
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "weighted_average",
+        "result": {
+          "response": {
+            "result": 4
+          },
+          "explanation": "Both agents, crew_2 and crew_1, independently computed the sum 2+2 and arrived at the result 4. Using the weighted_average method with equal weights for both responses, the computed average is 4. There is high inter-agent agreement on this result, and the final confidence level is high."
+        }
+      }
+    ]
+  }
+]

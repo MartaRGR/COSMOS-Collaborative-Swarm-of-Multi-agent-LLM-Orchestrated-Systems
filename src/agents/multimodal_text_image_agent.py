@@ -26,7 +26,7 @@ AGENT_METADATA = {
 
 class MultimodalTaskAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Multimodal Task Agent - Crew {crew_id}")
+        self.logger = get_agent_logger(f"Multimodal Task Agent - Crew {crew_id} - Model {model_name} - Hyperparameters {self.hyperparameters}")
         self.model_name = model_name
 
         self.model = self._initialize()
@@ -54,7 +54,7 @@ class MultimodalTaskAgent(BaseAgent):
 
 if __name__ == "__main__":
     config = {
-        "model": "Llama-3.2-11B-Vision-Instruct",
+        "model": "mistral-medium-3-instruct",
         "hyperparameters": {
             "temperature": 0.5
         }

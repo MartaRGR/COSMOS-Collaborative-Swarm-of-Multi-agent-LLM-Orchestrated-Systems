@@ -1,0 +1,875 @@
+{
+  "user_task": "Detects objects into the image istockphoto-1346064470-612x612.jpg",
+  "task_plan": [
+    {
+      "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+      "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+      "subtasks": {
+        "1": [
+          {
+            "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+            "name": "Object Detection",
+            "agents": [
+              "name='object_detection_agent.py' required_inputs=[RequiredInput(variable='image_path', description='The path or file of the image to be analyzed.', value='istockphoto-1346064470-612x612.jpg')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ]
+      }
+    }
+  ],
+  "crews_plan": [
+    {
+      "id": "61b58541-fedf-4159-83bd-2dca28a12c61",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a80b8ee7-aaa9-477b-8670-8738b74d6ec8",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5734efe2-7c52-42ef-bfd0-7cc95364d539",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "18b78a21-bdab-4db0-8913-0cc17789bd90",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 0
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Burger",
+                        "confidence": 0.85
+                      },
+                      {
+                        "class": "Plant",
+                        "confidence": 0.75
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:03"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "fc57a185-ad55-4ab1-bba1-13f407b22050",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "f21bc5cc-cb40-4188-90d9-9ae1a66f1259",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "2900334c-d7d9-45d3-b828-82b9b24a3730",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0dd7663d-c3c8-418e-acb0-efaf15a3bcf2",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dcfabeda-85ad-4a45-86ef-bcaee0b790d3",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bef808e9-40c9-43ff-8116-4a4cbb7bff8a",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 1
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.98
+                      },
+                      {
+                        "class": "Food",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Restaurant",
+                        "confidence": 0.99
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:04"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "private_states": [
+    {
+      "id": "5734efe2-7c52-42ef-bfd0-7cc95364d539",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "18b78a21-bdab-4db0-8913-0cc17789bd90",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 0
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Burger",
+                        "confidence": 0.85
+                      },
+                      {
+                        "class": "Plant",
+                        "confidence": 0.75
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:03"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dcfabeda-85ad-4a45-86ef-bcaee0b790d3",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bef808e9-40c9-43ff-8116-4a4cbb7bff8a",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 1
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.98
+                      },
+                      {
+                        "class": "Food",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Restaurant",
+                        "confidence": 0.99
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:04"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "61b58541-fedf-4159-83bd-2dca28a12c61",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a80b8ee7-aaa9-477b-8670-8738b74d6ec8",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "fc57a185-ad55-4ab1-bba1-13f407b22050",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "f21bc5cc-cb40-4188-90d9-9ae1a66f1259",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "2900334c-d7d9-45d3-b828-82b9b24a3730",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0dd7663d-c3c8-418e-acb0-efaf15a3bcf2",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "5734efe2-7c52-42ef-bfd0-7cc95364d539",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "18b78a21-bdab-4db0-8913-0cc17789bd90",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 0
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Burger",
+                        "confidence": 0.85
+                      },
+                      {
+                        "class": "Plant",
+                        "confidence": 0.75
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:03"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dcfabeda-85ad-4a45-86ef-bcaee0b790d3",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "bef808e9-40c9-43ff-8116-4a4cbb7bff8a",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "Phi-3.5-vision-instruct",
+                    "hyperparameters": {
+                      "temperature": 1
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "Person",
+                        "confidence": 0.98
+                      },
+                      {
+                        "class": "Food",
+                        "confidence": 0.9
+                      },
+                      {
+                        "class": "Restaurant",
+                        "confidence": 0.99
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:04"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "61b58541-fedf-4159-83bd-2dca28a12c61",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "a80b8ee7-aaa9-477b-8670-8738b74d6ec8",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "fc57a185-ad55-4ab1-bba1-13f407b22050",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "f21bc5cc-cb40-4188-90d9-9ae1a66f1259",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "2900334c-d7d9-45d3-b828-82b9b24a3730",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+            "name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "0dd7663d-c3c8-418e-acb0-efaf15a3bcf2",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 15:43:06"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "answer": [
+    {
+      "task_id": "e3f1c8f9-8a5d-4f2f-9d5a-1c2f3d4e5f60",
+      "task_name": "Detect objects in image istockphoto-1346064470-612x612.jpg",
+      "result": {
+        "response": {
+          "object_detection": {
+            "primary_object": {
+              "class": "Person",
+              "confidence": "High (averaging around 0.88 to 0.98)"
+            },
+            "secondary_object": {
+              "class": "Food item",
+              "possible_labels": [
+                "Burger",
+                "Sandwich",
+                "Donut",
+                "Food"
+              ],
+              "confidence": "Moderate (ranging from about 0.60 to 0.90)"
+            },
+            "other_detections": [
+              {
+                "class": "Plant",
+                "confidence": 0.75
+              },
+              {
+                "class": "Restaurant",
+                "confidence": 0.99
+              }
+            ]
+          }
+        },
+        "explanation": "All agents strongly agree on the presence of a person, with detection confidence consistently high across responses. The food item detection, however, shows variability in its categorization with some agents identifying it as a burger, others as a sandwich or donut, and one agent providing a more general 'Food' label. This variability likely stems from differences in model training or categorization criteria. Additionally, a plant and a restaurant were noted by individual agents but lack sufficient consensus to be considered primary detections."
+      }
+    }
+  ],
+  "finished": true,
+  "user_feedback": "yes"
+}

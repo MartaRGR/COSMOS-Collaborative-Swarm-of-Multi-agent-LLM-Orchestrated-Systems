@@ -1,0 +1,559 @@
+[
+  {
+    "user_task": "Dime el resultado de la operaci\u00f3n matem\u00e1tica 2+2. Solo el resultado, sin explicaciones ni pasos intermedios. Solo el n\u00famero",
+    "aggregation_methods": [
+      "llm_synthesis",
+      "majority_vote",
+      "weighted_average"
+    ],
+    "base_path": "C:\\Users\\rt01306\\OneDrive - Telefonica\\Desktop\\Doc\\Doctorado\\TESIS\\Python_Code\\prueba_langraph\\pruebas\\numerical_logit\\logic_math_responses",
+    "file_name": "aqua-rat_responses",
+    "task_id": "prueba",
+    "task_plan": [
+      {
+        "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "subtasks": {
+          "1": [
+            {
+              "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+              "name": "Calcular operaci\u00f3n 2+2",
+              "agents": [
+                "name='default-LLM.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Calcular operaci\u00f3n 2+2')]"
+              ],
+              "dependencies": [],
+              "status": "pending"
+            }
+          ]
+        }
+      }
+    ],
+    "crews_plan": [
+      {
+        "id": "fecd1cdd-2693-4b35-baec-d9ea683acd08",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "de82953a-1e5a-47c6-b750-0457baf2f949",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Aplicar la adici\u00f3n b\u00e1sica:**  \n   \\( 2 + 2 = 4 \\).\n\n**Respuesta:**  \n\\( \\boxed{4} \\)",
+                      "timestamp": "2025-06-05 10:38:30"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "4c0e51c0-d30c-4deb-9e03-61040034c98c",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "87ee2224-d09e-4f25-b8a7-8e6da31ecca9",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Realizar el c\u00e1lculo:** 2 + 2.\n3. **Obtener el resultado:** 4.\n\n**Respuesta final:**  \n2 + 2 = 4** (dos m\u00e1s dos es igual a cuatro).",
+                      "timestamp": "2025-06-05 10:38:26"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "private_states": [
+      {
+        "id": "4c0e51c0-d30c-4deb-9e03-61040034c98c",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "87ee2224-d09e-4f25-b8a7-8e6da31ecca9",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Realizar el c\u00e1lculo:** 2 + 2.\n3. **Obtener el resultado:** 4.\n\n**Respuesta final:**  \n2 + 2 = 4** (dos m\u00e1s dos es igual a cuatro).",
+                      "timestamp": "2025-06-05 10:38:26"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "fecd1cdd-2693-4b35-baec-d9ea683acd08",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "de82953a-1e5a-47c6-b750-0457baf2f949",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Aplicar la adici\u00f3n b\u00e1sica:**  \n   \\( 2 + 2 = 4 \\).\n\n**Respuesta:**  \n\\( \\boxed{4} \\)",
+                      "timestamp": "2025-06-05 10:38:30"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "4c0e51c0-d30c-4deb-9e03-61040034c98c",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "87ee2224-d09e-4f25-b8a7-8e6da31ecca9",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Realizar el c\u00e1lculo:** 2 + 2.\n3. **Obtener el resultado:** 4.\n\n**Respuesta final:**  \n2 + 2 = 4** (dos m\u00e1s dos es igual a cuatro).",
+                      "timestamp": "2025-06-05 10:38:26"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "fecd1cdd-2693-4b35-baec-d9ea683acd08",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+              "name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "8e4f52c3-6b7c-4a6c-9c5d-3f1a4aad8fd3",
+                    "name": "Calcular operaci\u00f3n 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "de82953a-1e5a-47c6-b750-0457baf2f949",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular operaci\u00f3n 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Procedimiento:**\n1. **Identificar la operaci\u00f3n:** Suma de dos n\u00fameros enteros.\n2. **Aplicar la adici\u00f3n b\u00e1sica:**  \n   \\( 2 + 2 = 4 \\).\n\n**Respuesta:**  \n\\( \\boxed{4} \\)",
+                      "timestamp": "2025-06-05 10:38:30"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "answer": [
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "llm_synthesis",
+        "result": {
+          "response": {
+            "resultado": "4",
+            "explicacion": "El resultado de la operaci\u00f3n 2 + 2 es 4."
+          },
+          "explanation": "Ambos agentes, crew_1 y crew_2, llegaron de forma independiente a la misma conclusi\u00f3n: la suma de 2 + 2 es 4. No se present\u00f3 ninguna discrepancia en ninguno de los procedimientos realizados y ambos utilizaron un enfoque b\u00e1sico de adici\u00f3n. La alta coherencia entre las respuestas indica que el resultado es indiscutiblemente correcto, con alta confianza en el resultado final."
+        }
+      },
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "majority_vote",
+        "result": {
+          "response": {
+            "final_answer": "2 + 2 = 4",
+            "details": "Ambos agentes (crew_1 y crew_2) calcularon la operaci\u00f3n y obtuvieron el mismo resultado, 4, usando procedimientos similares en los que identificaron y realizaron la operaci\u00f3n de adici\u00f3n de dos n\u00fameros enteros."
+          },
+          "explanation": "Se utiliz\u00f3 el m\u00e9todo de majority_vote ya que ambos agentes aplacaron la misma respuesta. No hubo discrepancias entre las respuestas y por lo tanto se eligi\u00f3 la respuesta mayoritaria (4). La integraci\u00f3n de los dos aportes de crew_1 y crew_2 respalda que el resultado correcto es 4, lo que indica un alto nivel de acuerdo."
+        }
+      },
+      {
+        "task_id": "d7b8f2a2-82f5-4c2d-9f36-1f3c605a1d24",
+        "task_name": "Resultado de la operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "weighted_average",
+        "result": {
+          "response": {
+            "final_answer": 4
+          },
+          "explanation": "Both Crew crew_1 and Crew crew_2 provided a calculation for 2+2 that resulted in 4. Using the weighted_average method, where both responses have equal weight, we arrive at a final result of 4. The inter-agent consensus is very high, with both agents agreeing on the same answer (4), leading to a high confidence level in the final response. Traceability: Crew crew_1 and Crew crew_2 contributed the same result."
+        }
+      }
+    ],
+    "finished": true,
+    "user_feedback": "yes"
+  },
+  {
+    "user_task": "Dime el resultado de la operaci\u00f3n matem\u00e1tica 2+2. Solo el resultado, sin explicaciones ni pasos intermedios. Solo el n\u00famero",
+    "aggregation_methods": [
+      "llm_synthesis",
+      "majority_vote",
+      "weighted_average"
+    ],
+    "base_path": "C:\\Users\\rt01306\\OneDrive - Telefonica\\Desktop\\Doc\\Doctorado\\TESIS\\Python_Code\\prueba_langraph\\pruebas\\numerical_logit\\logic_math_responses",
+    "file_name": "aqua-rat_responses",
+    "task_id": "prueba",
+    "task_plan": [
+      {
+        "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "subtasks": {
+          "1": [
+            {
+              "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+              "name": "Calcular 2+2",
+              "agents": [
+                "name='default-LLM.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Calcular 2+2')]"
+              ],
+              "dependencies": [],
+              "status": "pending"
+            }
+          ]
+        }
+      }
+    ],
+    "crews_plan": [
+      {
+        "id": "3d0b13cd-a181-4bf5-8471-b8cd800f4c51",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "ce2e9f28-8133-4c5c-b219-c50935476790",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Solution:**\n\n1. **Identify the numbers to add:**  \n   The expression given is \\(2 + 2\\).\n\n2. **Perform the addition:**  \n   \\(2 + 2 = 4\\).\n\n**Answer:**  \n\\(\\boxed{4}\\)",
+                      "timestamp": "2025-06-05 10:40:43"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "8daab8df-d796-4366-beba-4c16070b9b36",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "551d7af4-3752-44df-a082-1e4296eaa182",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "Phi-4-mini-instruct",
+                      "hyperparameters": {
+                        "temperature": 0.11,
+                        "top_p": 0.95,
+                        "presence_penalty": 1.71,
+                        "frequency_penalty": -0.5
+                      },
+                      "status": "completed",
+                      "result": "Sure, the calculation of 2 + 2 is straightforward:\n\n2 + 2 = 4\n\nSo, the result is 4.",
+                      "timestamp": "2025-06-05 10:40:28"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "private_states": [
+      {
+        "id": "8daab8df-d796-4366-beba-4c16070b9b36",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "551d7af4-3752-44df-a082-1e4296eaa182",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "Phi-4-mini-instruct",
+                      "hyperparameters": {
+                        "temperature": 0.11,
+                        "top_p": 0.95,
+                        "presence_penalty": 1.71,
+                        "frequency_penalty": -0.5
+                      },
+                      "status": "completed",
+                      "result": "Sure, the calculation of 2 + 2 is straightforward:\n\n2 + 2 = 4\n\nSo, the result is 4.",
+                      "timestamp": "2025-06-05 10:40:28"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "3d0b13cd-a181-4bf5-8471-b8cd800f4c51",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "ce2e9f28-8133-4c5c-b219-c50935476790",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Solution:**\n\n1. **Identify the numbers to add:**  \n   The expression given is \\(2 + 2\\).\n\n2. **Perform the addition:**  \n   \\(2 + 2 = 4\\).\n\n**Answer:**  \n\\(\\boxed{4}\\)",
+                      "timestamp": "2025-06-05 10:40:43"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "8daab8df-d796-4366-beba-4c16070b9b36",
+        "name": "crew_2",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "551d7af4-3752-44df-a082-1e4296eaa182",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "Phi-4-mini-instruct",
+                      "hyperparameters": {
+                        "temperature": 0.11,
+                        "top_p": 0.95,
+                        "presence_penalty": 1.71,
+                        "frequency_penalty": -0.5
+                      },
+                      "status": "completed",
+                      "result": "Sure, the calculation of 2 + 2 is straightforward:\n\n2 + 2 = 4\n\nSo, the result is 4.",
+                      "timestamp": "2025-06-05 10:40:28"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "3d0b13cd-a181-4bf5-8471-b8cd800f4c51",
+        "name": "crew_1",
+        "task_plan": {
+          "tasks": [
+            {
+              "id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+              "name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+              "subtasks": {
+                "1": [
+                  {
+                    "id": "b2f6f3e1-8c9d-4a4a-9e7c-0fae53b7f849",
+                    "name": "Calcular 2+2",
+                    "subtask_dependencies": [],
+                    "agent": {
+                      "id": "ce2e9f28-8133-4c5c-b219-c50935476790",
+                      "name": "default-LLM.py",
+                      "required_inputs": {
+                        "task_definition": "Calcular 2+2"
+                      },
+                      "model": "DeepSeek-R1",
+                      "hyperparameters": {},
+                      "status": "completed",
+                      "result": "**Solution:**\n\n1. **Identify the numbers to add:**  \n   The expression given is \\(2 + 2\\).\n\n2. **Perform the addition:**  \n   \\(2 + 2 = 4\\).\n\n**Answer:**  \n\\(\\boxed{4}\\)",
+                      "timestamp": "2025-06-05 10:40:43"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "answer": [
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "llm_synthesis",
+        "result": {
+          "response": {
+            "result": "4",
+            "detail": "Both agents performed the simple addition operation 2 + 2 and arrived at the result 4. The calculation was straightforward with no discrepancies between the agents."
+          },
+          "explanation": "The two agents (crew_2 and crew_1) both calculated 2+2 as 4 with identical logical steps. This synthesis identifies full agreement between the agents, leading to a high confidence level in the answer."
+        }
+      },
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "majority_vote",
+        "result": {
+          "response": {
+            "result": 4,
+            "details": "Both crew_2 and crew_1 provided a calculation where 2 + 2 equals 4."
+          },
+          "explanation": "The aggregation was done using the majority_vote method. Both crew_2 and crew_1 reached the same conclusion, therefore, the final answer is 4. There is full agreement between the agents (crew_2 and crew_1), which leads to a high confidence level in this result."
+        }
+      },
+      {
+        "task_id": "7d4fdecd-0d7a-4f5e-a8d1-1b7d3e6a6a29",
+        "task_name": "Calcular operaci\u00f3n matem\u00e1tica 2+2",
+        "aggregation_method": "weighted_average",
+        "result": {
+          "response": {
+            "result": 4
+          },
+          "explanation": "Both agents, crew_2 and crew_1, independently computed the sum 2+2 and arrived at the result 4. Using the weighted_average method with equal weights for both responses, the computed average is 4. There is high inter-agent agreement on this result, and the final confidence level is high."
+        }
+      }
+    ],
+    "finished": true,
+    "user_feedback": "yes"
+  }
+]

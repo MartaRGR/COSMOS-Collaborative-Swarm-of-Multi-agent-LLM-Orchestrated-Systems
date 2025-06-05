@@ -1,0 +1,1181 @@
+{
+  "user_task": "Detects objects into the image istockphoto-1346064470-612x612.jpg and summarize the image content as a poem",
+  "task_plan": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Detect objects and generate poetic summary of the image",
+      "subtasks": {
+        "1": [
+          {
+            "id": "00000000-0000-0000-0000-000000000002",
+            "name": "Object Detection",
+            "agents": [
+              "name='object_detection_agent.py' required_inputs=[RequiredInput(variable='image_path', description='The path or file of the image to be analyzed.', value='istockphoto-1346064470-612x612.jpg')]"
+            ],
+            "dependencies": [],
+            "status": "pending"
+          }
+        ],
+        "2": [
+          {
+            "id": "00000000-0000-0000-0000-000000000003",
+            "name": "Generate Poetic Summary",
+            "agents": [
+              "name='default-LLM.py' required_inputs=[RequiredInput(variable='task_definition', description='The description of the task to be solved by the LLM agent.', value='Generate Poetic Summary')]"
+            ],
+            "dependencies": [
+              "id='00000000-0000-0000-0000-000000000002' name='Object Detection'"
+            ],
+            "status": "pending"
+          }
+        ]
+      }
+    }
+  ],
+  "crews_plan": [
+    {
+      "id": "3a2a654d-8a20-4d89-9f89-682e5f55cf4a",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "473f4dd3-dd02-4433-a295-40939b4df020",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "de2382e4-08ec-4343-884f-ec7d2a45160e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**\"Whispers of a Burrito\"**  \n\nA shadow stirs in twilight\u2019s glow,  \nA hint of spice, a wraith below\u2014  \nThe lens, unsure, with timid gaze,  \nCatches warmth in fleeting haze.  \n\n*Burrito*\u2014soft, the name implies,  \nA folded dream that dares to rise.  \nYet doubt, like steam, obscures the claim\u2014  \nA ghostly dance, no face, no frame.  \n\nThirteen percent\u2014a fragile thread\u2014  \nA chance, a meal, or wraith instead?  \nThe world holds truths both veiled and spun\u2026  \nA mystery wrapped, but half-undone.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "38fcfa90-da37-48de-aeb2-a65d794411c6",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "82007f92-9b58-4c01-ba4f-3192942a4a21",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "88b1ce3f-5795-4307-8efc-b6032281f3e3",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "top_p": 0.38,
+                      "presence_penalty": -2,
+                      "frequency_penalty": 1
+                    },
+                    "status": "completed",
+                    "result": "In a realm where shadows dance and light does play,\nA figure stands, a silhouette, in the light's soft sway.\nWith confidence, they hold the stage,\nA person, strong and brave, in the frame.\n\nBeside them rests a humble feast,\nA sandwich, simple yet sweet.\nIn confidence's embrace,\nIt rests with quiet grace.\n\nTwo worlds in one frame they lie,\nA person and a sandwich nigh.\nIn this poetic scene they blend,\nA moment captured, where time does bend.",
+                    "timestamp": "2025-04-29 17:45:55"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "35e7a5dd-d47e-4976-92d7-f40bb55a3303",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "24e85eb9-ece3-4073-ac80-b98cfd33f75b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "b2c177b8-282c-4cb9-84b8-c5234c80293f",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\n*In twilight's gaze, a whisper stirs,*  \n*A shadow wraps\u2014burrito blurs.*  \n*The lens, unsure, with timid sight,*  \n*Confides in doubt, not certain light.*  \n\n---  \n*Note:* The poem reflects the AI's low confidence (13.47%) in detecting the burrito, framing uncertainty as a fleeting, half-seen moment.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "00d28ccf-7683-47fe-ab91-41a255fe1529",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "3a3718fb-8f28-401b-9c87-720f54c45f4e",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "36570c6e-6c40-4636-a95a-1dc0f73575a9",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\nIn a frame where shadows softly play,  \nA figure stands, with whispers of certainty (0.88),  \nSpanning the canvas vast (219456)\u2014  \nGuardian of moments, anchored in light.  \n\nBelow, a sweet temptation rests in quiet repose,  \nA donut\u2019s curve, half-believed (0.60),  \nNestled small (16958) in the scene\u2019s embrace\u2014  \nA fleeting joy, crumbs of doubt in its wake.  \n\nTwo worlds collide: the steadfast and the frail,  \nOne claims the stage, the other hides in seams.  \nYet both, in pixels bound, compose a tale\u2014  \nOf presence, hunger, and the space between.  \n\n---  \n*Note: The poem reflects the detected objects (person/donut), their confidence scores, spatial dominance (area/bbox), and the tension between certainty and transience.*",
+                    "timestamp": "2025-04-29 17:45:58"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "9db3f3c9-2f4b-4426-a31c-406d824f0617",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "b8c76b07-7090-4f3e-b2b6-44e504948b6b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "12fd5d65-742a-4bd7-b139-6838c476484e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "In a scene where shadows play,  \nA figure stands, both bold and gray,  \nWith confidence that fills the air,  \nA person poised, beyond compare.  \n\nBeside them rests a tempting sight,  \nA sandwich crafted, pure delight,  \nWith layers stacked, a feast to share,  \nA moment captured, rich and rare.  \n\nTogether they, in harmony,  \nA blend of life and culinary glee,  \nIn this brief glance, a story spun,  \nOf simple joys, two hearts as one.  ",
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "private_states": [
+    {
+      "id": "9db3f3c9-2f4b-4426-a31c-406d824f0617",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "b8c76b07-7090-4f3e-b2b6-44e504948b6b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "12fd5d65-742a-4bd7-b139-6838c476484e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "In a scene where shadows play,  \nA figure stands, both bold and gray,  \nWith confidence that fills the air,  \nA person poised, beyond compare.  \n\nBeside them rests a tempting sight,  \nA sandwich crafted, pure delight,  \nWith layers stacked, a feast to share,  \nA moment captured, rich and rare.  \n\nTogether they, in harmony,  \nA blend of life and culinary glee,  \nIn this brief glance, a story spun,  \nOf simple joys, two hearts as one.  ",
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "38fcfa90-da37-48de-aeb2-a65d794411c6",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "82007f92-9b58-4c01-ba4f-3192942a4a21",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "88b1ce3f-5795-4307-8efc-b6032281f3e3",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "top_p": 0.38,
+                      "presence_penalty": -2,
+                      "frequency_penalty": 1
+                    },
+                    "status": "completed",
+                    "result": "In a realm where shadows dance and light does play,\nA figure stands, a silhouette, in the light's soft sway.\nWith confidence, they hold the stage,\nA person, strong and brave, in the frame.\n\nBeside them rests a humble feast,\nA sandwich, simple yet sweet.\nIn confidence's embrace,\nIt rests with quiet grace.\n\nTwo worlds in one frame they lie,\nA person and a sandwich nigh.\nIn this poetic scene they blend,\nA moment captured, where time does bend.",
+                    "timestamp": "2025-04-29 17:45:55"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "35e7a5dd-d47e-4976-92d7-f40bb55a3303",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "24e85eb9-ece3-4073-ac80-b98cfd33f75b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "b2c177b8-282c-4cb9-84b8-c5234c80293f",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\n*In twilight's gaze, a whisper stirs,*  \n*A shadow wraps\u2014burrito blurs.*  \n*The lens, unsure, with timid sight,*  \n*Confides in doubt, not certain light.*  \n\n---  \n*Note:* The poem reflects the AI's low confidence (13.47%) in detecting the burrito, framing uncertainty as a fleeting, half-seen moment.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "3a2a654d-8a20-4d89-9f89-682e5f55cf4a",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "473f4dd3-dd02-4433-a295-40939b4df020",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "de2382e4-08ec-4343-884f-ec7d2a45160e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**\"Whispers of a Burrito\"**  \n\nA shadow stirs in twilight\u2019s glow,  \nA hint of spice, a wraith below\u2014  \nThe lens, unsure, with timid gaze,  \nCatches warmth in fleeting haze.  \n\n*Burrito*\u2014soft, the name implies,  \nA folded dream that dares to rise.  \nYet doubt, like steam, obscures the claim\u2014  \nA ghostly dance, no face, no frame.  \n\nThirteen percent\u2014a fragile thread\u2014  \nA chance, a meal, or wraith instead?  \nThe world holds truths both veiled and spun\u2026  \nA mystery wrapped, but half-undone.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "00d28ccf-7683-47fe-ab91-41a255fe1529",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "3a3718fb-8f28-401b-9c87-720f54c45f4e",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "36570c6e-6c40-4636-a95a-1dc0f73575a9",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\nIn a frame where shadows softly play,  \nA figure stands, with whispers of certainty (0.88),  \nSpanning the canvas vast (219456)\u2014  \nGuardian of moments, anchored in light.  \n\nBelow, a sweet temptation rests in quiet repose,  \nA donut\u2019s curve, half-believed (0.60),  \nNestled small (16958) in the scene\u2019s embrace\u2014  \nA fleeting joy, crumbs of doubt in its wake.  \n\nTwo worlds collide: the steadfast and the frail,  \nOne claims the stage, the other hides in seams.  \nYet both, in pixels bound, compose a tale\u2014  \nOf presence, hunger, and the space between.  \n\n---  \n*Note: The poem reflects the detected objects (person/donut), their confidence scores, spatial dominance (area/bbox), and the tension between certainty and transience.*",
+                    "timestamp": "2025-04-29 17:45:58"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "9db3f3c9-2f4b-4426-a31c-406d824f0617",
+      "name": "crew_5",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "b8c76b07-7090-4f3e-b2b6-44e504948b6b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "12fd5d65-742a-4bd7-b139-6838c476484e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "gpt-4o-mini",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "api_version": "2023-03-15-preview",
+                      "deployment_name": "gpt-4o-mini"
+                    },
+                    "status": "completed",
+                    "result": "In a scene where shadows play,  \nA figure stands, both bold and gray,  \nWith confidence that fills the air,  \nA person poised, beyond compare.  \n\nBeside them rests a tempting sight,  \nA sandwich crafted, pure delight,  \nWith layers stacked, a feast to share,  \nA moment captured, rich and rare.  \n\nTogether they, in harmony,  \nA blend of life and culinary glee,  \nIn this brief glance, a story spun,  \nOf simple joys, two hearts as one.  ",
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "38fcfa90-da37-48de-aeb2-a65d794411c6",
+      "name": "crew_2",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "82007f92-9b58-4c01-ba4f-3192942a4a21",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolov8n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8883152008056641,
+                        "area": 225234,
+                        "bbox": [
+                          5,
+                          18,
+                          587,
+                          405
+                        ]
+                      },
+                      {
+                        "class": "sandwich",
+                        "confidence": 0.696373462677002,
+                        "area": 10403,
+                        "bbox": [
+                          237,
+                          219,
+                          340,
+                          320
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "88b1ce3f-5795-4307-8efc-b6032281f3e3",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "Phi-4-mini-instruct",
+                    "hyperparameters": {
+                      "temperature": 0,
+                      "top_p": 0.38,
+                      "presence_penalty": -2,
+                      "frequency_penalty": 1
+                    },
+                    "status": "completed",
+                    "result": "In a realm where shadows dance and light does play,\nA figure stands, a silhouette, in the light's soft sway.\nWith confidence, they hold the stage,\nA person, strong and brave, in the frame.\n\nBeside them rests a humble feast,\nA sandwich, simple yet sweet.\nIn confidence's embrace,\nIt rests with quiet grace.\n\nTwo worlds in one frame they lie,\nA person and a sandwich nigh.\nIn this poetic scene they blend,\nA moment captured, where time does bend.",
+                    "timestamp": "2025-04-29 17:45:55"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "35e7a5dd-d47e-4976-92d7-f40bb55a3303",
+      "name": "crew_3",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "24e85eb9-ece3-4073-ac80-b98cfd33f75b",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "b2c177b8-282c-4cb9-84b8-c5234c80293f",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\n*In twilight's gaze, a whisper stirs,*  \n*A shadow wraps\u2014burrito blurs.*  \n*The lens, unsure, with timid sight,*  \n*Confides in doubt, not certain light.*  \n\n---  \n*Note:* The poem reflects the AI's low confidence (13.47%) in detecting the burrito, framing uncertainty as a fleeting, half-seen moment.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "3a2a654d-8a20-4d89-9f89-682e5f55cf4a",
+      "name": "crew_1",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "473f4dd3-dd02-4433-a295-40939b4df020",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "resnet50",
+                    "hyperparameters": {
+                      "weights": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "burrito",
+                        "confidence": 0.13473793864250183
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:52"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "de2382e4-08ec-4343-884f-ec7d2a45160e",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**\"Whispers of a Burrito\"**  \n\nA shadow stirs in twilight\u2019s glow,  \nA hint of spice, a wraith below\u2014  \nThe lens, unsure, with timid gaze,  \nCatches warmth in fleeting haze.  \n\n*Burrito*\u2014soft, the name implies,  \nA folded dream that dares to rise.  \nYet doubt, like steam, obscures the claim\u2014  \nA ghostly dance, no face, no frame.  \n\nThirteen percent\u2014a fragile thread\u2014  \nA chance, a meal, or wraith instead?  \nThe world holds truths both veiled and spun\u2026  \nA mystery wrapped, but half-undone.",
+                    "timestamp": "2025-04-29 17:45:57"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "00d28ccf-7683-47fe-ab91-41a255fe1529",
+      "name": "crew_4",
+      "task_plan": {
+        "tasks": [
+          {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "name": "Detect objects and generate poetic summary of the image",
+            "subtasks": {
+              "1": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000002",
+                  "name": "Object Detection",
+                  "subtask_dependencies": [],
+                  "agent": {
+                    "id": "3a3718fb-8f28-401b-9c87-720f54c45f4e",
+                    "name": "object_detection_agent.py",
+                    "required_inputs": {
+                      "image_path": "istockphoto-1346064470-612x612.jpg"
+                    },
+                    "model": "yolo11n",
+                    "hyperparameters": {
+                      "classes": []
+                    },
+                    "status": "completed",
+                    "result": [
+                      {
+                        "class": "person",
+                        "confidence": 0.8834756016731262,
+                        "area": 219456,
+                        "bbox": [
+                          17,
+                          22,
+                          593,
+                          403
+                        ]
+                      },
+                      {
+                        "class": "donut",
+                        "confidence": 0.5999522805213928,
+                        "area": 16958,
+                        "bbox": [
+                          216,
+                          220,
+                          338,
+                          359
+                        ]
+                      }
+                    ],
+                    "timestamp": "2025-04-29 17:45:50"
+                  }
+                }
+              ],
+              "2": [
+                {
+                  "id": "00000000-0000-0000-0000-000000000003",
+                  "name": "Generate Poetic Summary",
+                  "subtask_dependencies": [
+                    "00000000-0000-0000-0000-000000000002"
+                  ],
+                  "agent": {
+                    "id": "36570c6e-6c40-4636-a95a-1dc0f73575a9",
+                    "name": "default-LLM.py",
+                    "required_inputs": {
+                      "task_definition": "Generate Poetic Summary"
+                    },
+                    "model": "DeepSeek-R1",
+                    "hyperparameters": {},
+                    "status": "completed",
+                    "result": "**Poetic Summary:**  \n\nIn a frame where shadows softly play,  \nA figure stands, with whispers of certainty (0.88),  \nSpanning the canvas vast (219456)\u2014  \nGuardian of moments, anchored in light.  \n\nBelow, a sweet temptation rests in quiet repose,  \nA donut\u2019s curve, half-believed (0.60),  \nNestled small (16958) in the scene\u2019s embrace\u2014  \nA fleeting joy, crumbs of doubt in its wake.  \n\nTwo worlds collide: the steadfast and the frail,  \nOne claims the stage, the other hides in seams.  \nYet both, in pixels bound, compose a tale\u2014  \nOf presence, hunger, and the space between.  \n\n---  \n*Note: The poem reflects the detected objects (person/donut), their confidence scores, spatial dominance (area/bbox), and the tension between certainty and transience.*",
+                    "timestamp": "2025-04-29 17:45:58"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "answer": [
+    {
+      "task_id": "00000000-0000-0000-0000-000000000001",
+      "task_name": "Detect objects and generate poetic summary of the image",
+      "result": {
+        "response": {
+          "object_detection": {
+            "primary_object": {
+              "class": "person",
+              "confidence": 0.888,
+              "bbox": [
+                5,
+                18,
+                587,
+                405
+              ],
+              "notes": "This detection is consistently reported with high confidence by multiple crews."
+            },
+            "secondary_object": {
+              "class": "sandwich",
+              "confidence": 0.696,
+              "bbox": [
+                237,
+                219,
+                340,
+                320
+              ],
+              "notes": "Although one crew identified a donut and another a burrito (with very low confidence), the majority and strongest detection is of a sandwich, with similar bounding box coordination to the donut detection."
+            }
+          },
+          "poetic_summary": "The aggregated poetic view depicts a scene where a decisive figure emerges\u2014a person standing confidently in the light\u2014with a complementary element of culinary delight. Most descriptions resonate with the depiction of a sandwich, evoking imagery of a simple yet tantalizing feast, while alternative renditions hint at a donut or even an uncertain burrito. Overall, the narrative centers on the harmonious blend of human presence and a food item that invites both hunger and wonder."
+        },
+        "explanation": "We synthesized responses from all agents, noting clear agreement on the presence of a person detected with high confidence. The secondary object was variably identified as a sandwich, donut, or burrito. Given that two teams consistently reported a sandwich with similar bounding box parameters and confidence, while the alternative suggestions came with either low confidence or slight variations, we concluded that the dominant evidence supports a sandwich. The poetic summaries, while stylistically unique, largely mirror this interpretation by painting a scene of a figure accompanied by a delectable food item. This integrated perspective informs our final answer."
+      }
+    }
+  ],
+  "finished": true,
+  "user_feedback": "'yes'"
+}

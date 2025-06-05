@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "THIS IS A GREAT CONCEPT BUT THE PAD/SEAT IS SO HARD YOU MAY AS WELL KNEEL ON THE GROUND. THE LEGS/HANDLES HAVE NO PADDING AND IT IS UNCOMFORTABLE TO TRY TO GET UP. VERY DISAPPOINTED IN THIS PRODUCT.",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "Okay first all it only holds 450MB of Media. That's not that bad what makes the product horrible is that when you try to burn it an erro message come up saying the pvd is bad. Okay so I tried anonther one the same thing. I ran through at least 3 boxes before I got it to work, and my cd burner wasnt bad either I tried all of them in differnt cd burner drives nothing. This product is garbage.",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "The dvd played really well and I got it quicker than the expected delivery date. I was expecting the case to be in a little bit better condition than it was in, but it wasn't horrible.",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "This game is old and has never been updated to run on Mac OS X properly.This not not an arcade came, it's a flight simulator, and without special control, you can't expect to operate it from a keyboard and mouse.It's slow, complicated, and very annoying.And then it crashes, repeatedly.Worse, I haven't been able to find any Joy Sticks or controls that work with Mac OS X 10.5 (Leopard).MacPro, 4 Gig RAM, ATI Radeon 2600",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "This is a Christmas present for my husband. I have had problems findingthis scent, Essence, in the stores. So, I was thrilled to see it onAmazon. The product was in brand new condition when I received it. Delivery was prompt. I'm very happy with my purchase. Thank you.",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "When ordering a dvd from an English-language site, it would be reasonable to assume that it would contain English language dialogue or at the very least, subtitles in English especially when one knows that an English language version of the title is available. It mystifies me why a product with neither attribute is offered for sale in Amazon US or UK when there are Amazon sites specifically tailored to process products in foreign languages. At the very least, such dvds should have a notice right at the the top of the product entry informing us that it is not an English-language version or the title should be displayed in a foreign language. For me, ordering this useless article was a complete waste of time.",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "Although it was not as good as the first and second series, it still held my attention and best of all the pace of the story never slows you down. I finished all these books within 2 days. These are the first books the author wrote that I read and it is sad to see so wonderful a book end. Keep it up and I will continue to buy more of your books. Thanks for these beautiful books.",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "A complete waste of money.Not user friendly. Very limited package.Very dissapointed.",
+    "label": "negative"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "Works as advertized. Cleaning of juice separator basket does take some time but can be done effectively. Large mouth reduces need for cutting up items to be juiced.",
+    "label": "positive"
+  },
+  {
+    "task_instruction": "Classify the sentiment of the following product review as positive or negative.",
+    "input_text": "A lot of words defined here, but still not complete. Mine is the 2003 V3.0 version and it does finally include \"internet\" -- but don't bother looking for \"blog\" as it is not there. Could the etymologies and histories be more complete? Yes. Other criticisms I read of this CD are also on the mark, as, for example, the absence of many of the print-version illustrations.There are a lot of search options that could be helpful. One of these claims to find homophones (homonyms). This version will find neither \"bow\" for \"bough\" nor \"ruff\" for \"rough\".Still a useful item for many purposes, but complete or unabridged it's not.",
+    "label": "negative"
+  }
+]

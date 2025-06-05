@@ -1,0 +1,62 @@
+[
+  {
+    "id": "b89914b6-38c0-45ae-8fe3-8c73d85d279f",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: The bald eagle chases the lion. The bald eagle chases the rabbit. The bald eagle is big. The cow needs the bald eagle. The cow needs the rabbit. The lion chases the cow. The lion chases the rabbit. The lion is kind. The lion is not round. The lion needs the bald eagle. The lion does not visit the cow. The lion visits the rabbit. The rabbit chases the bald eagle. The rabbit visits the bald eagle. If someone needs the rabbit then the rabbit chases the lion. If someone is rough and they do not chase the rabbit then they visit the bald eagle. If someone chases the lion then they do not need the cow. If someone needs the bald eagle and the bald eagle chases the cow then the bald eagle is not round. If someone chases the bald eagle and they do not need the cow then they visit the cow. If someone needs the rabbit and the rabbit visits the cow then the rabbit is big. If someone is big then they do not visit the lion.\nStatement: The rabbit does not visit the cow.",
+    "label": "false"
+  },
+  {
+    "id": "db7e9405-fce0-4122-ae40-357622142e8c",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: The bald eagle eats the tiger. The bald eagle is red. The bald eagle likes the rabbit. The bear eats the bald eagle. The bear is rough. The rabbit eats the tiger. The tiger eats the bald eagle. The tiger eats the rabbit. The tiger is kind. The tiger likes the bear. If someone is cold then they see the rabbit. If someone sees the tiger and the tiger is kind then they see the bald eagle. If the rabbit is red and the rabbit is rough then the rabbit likes the bear. If someone sees the rabbit then the rabbit eats the bald eagle. If someone eats the bald eagle then they are cold. If someone sees the bald eagle and they eat the bear then they like the bald eagle.\nStatement: The bald eagle sees the bald eagle.",
+    "label": "unknown"
+  },
+  {
+    "id": "ba8fbdd8-2ee9-476b-ac40-bd0ccb402ecc",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: Anne is cold. Anne is not green. Anne is not kind. Anne is quiet. Anne is round. Bob is kind. Bob is round. Charlie is cold. Charlie is quiet. Charlie is round. Erin is furry. If something is quiet then it is rough. Cold things are round. If something is green then it is quiet. All cold things are quiet. Green things are quiet. If something is kind and green then it is furry. Furry things are green. If Bob is kind then Bob is not rough. If something is rough and green then it is cold.\nStatement: Bob is not quiet.",
+    "label": "unknown"
+  },
+  {
+    "id": "9a4e13f4-0085-43aa-bacd-ee7405fee938",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: Anne is kind. Anne is young. Bob is rough. Charlie is cold. Charlie is kind. Charlie is rough. Charlie is smart. Fiona is kind. Fiona is rough. Fiona is smart. Rough, cold things are smart. All young things are kind. All kind things are blue. Young things are cold. If something is rough then it is cold. All young, blue things are kind. If something is cold and smart then it is young.\nStatement: Bob is young.",
+    "label": "true"
+  },
+  {
+    "id": "0cde2d66-97a8-466e-9fbf-797a9c0a50db",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: The bald eagle is green. The bald eagle needs the lion. The bald eagle sees the cat. The bald eagle sees the lion. The cat sees the bald eagle. The cow sees the bald eagle. The lion needs the bald eagle. If someone sees the cat and the cat is green then they visit the cat. If someone needs the cat and the cat needs the bald eagle then they are blue. If someone is blue and they need the lion then they see the lion. If someone sees the cow then the cow needs the bald eagle. If someone needs the bald eagle then they see the lion. If someone needs the cat then the cat is blue. If someone visits the lion and they are nice then the lion visits the cat. If someone needs the bald eagle and they see the lion then they see the cow.\nStatement: The cow does not need the bald eagle.",
+    "label": "false"
+  },
+  {
+    "id": "571da174-bfaf-4c04-a733-3670756ac0f0",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: The bald eagle is nice. The bald eagle is rough. The bald eagle needs the mouse. The bald eagle needs the squirrel. The mouse is kind. The mouse is young. The mouse likes the tiger. The mouse sees the bald eagle. The squirrel is kind. The squirrel is nice. The squirrel needs the bald eagle. The tiger is kind. If someone likes the bald eagle then they are rough. If someone is blue and they see the tiger then the tiger needs the squirrel. If the mouse needs the bald eagle and the bald eagle likes the mouse then the bald eagle is rough. If the mouse needs the squirrel then the squirrel likes the mouse. If someone is rough then they see the mouse. If someone needs the tiger and the tiger is kind then they like the bald eagle. If someone sees the mouse then they need the squirrel. If someone needs the squirrel and the squirrel is nice then the squirrel needs the tiger.\nStatement: The bald eagle needs the mouse.",
+    "label": "true"
+  },
+  {
+    "id": "553bf4bb-894d-4a44-a847-6dfeefe3f258",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: Anne is big. Anne is furry. Anne is rough. Anne is round. Anne is young. Charlie is big. Charlie is cold. Dave is furry. Dave is young. Harry is furry. Harry is nice. Harry is young. All round things are cold. Cold, furry things are rough. If something is furry and rough then it is round. If Charlie is round and Charlie is furry then Charlie is nice. All round, nice things are rough. Big, cold things are furry. Furry, round things are cold. Nice, round things are young.\nStatement: Anne is not cold.",
+    "label": "false"
+  },
+  {
+    "id": "77ec0f96-d472-4f65-8547-b4b90f84dd86",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: Bob is white. Charlie is furry. Charlie is kind. Dave is cold. Dave is smart. Gary is red. Gary is white. Green, furry things are smart. If Charlie is white then Charlie is green. White things are kind. Cold, smart things are red. All furry things are cold. If Bob is kind and Bob is furry then Bob is smart. If something is cold and kind then it is white.\nStatement: Dave is white.",
+    "label": "unknown"
+  },
+  {
+    "id": "aca97e0c-cc98-45f6-9a22-60e7d0a0646b",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: Anne is nice. Anne is young. Dave is cold. Dave is smart. Dave is white. Fiona is nice. Fiona is not red. Fiona is young. Gary is cold. Gary is red. If someone is smart then they are green. If someone is green then they are nice. Nice people are young. If someone is white then they are young. If someone is cold then they are white. If someone is green and smart then they are white. All young, red people are smart. If Fiona is red then Fiona is green. If Anne is smart then Anne is not green.\nStatement: Dave is nice.",
+    "label": "true"
+  },
+  {
+    "id": "6eb2b7fd-72fd-42a2-8cea-fb935d5cdbad",
+    "task_instruction": "Based on the context, is the following statement true, false, or unknown? Provide your answer as 'true', 'false', or 'unknown'.",
+    "input_text": "Context: The cat chases the dog. The cat is rough. The cat is young. The dog likes the squirrel. The dog sees the tiger. The squirrel chases the tiger. The squirrel is big. The squirrel is green. The squirrel likes the dog. The squirrel sees the dog. The tiger chases the cat. The tiger is green. The tiger likes the dog. The tiger likes the squirrel. If something likes the dog then it chases the tiger. If something is big and it chases the cat then the cat likes the squirrel. If something sees the cat then the cat is big. If something likes the squirrel then it sees the dog. If something is cold and it chases the cat then it sees the cat. If something sees the tiger then the tiger is big. Green, big things are young. Big things are cold.\nStatement: The tiger does not see the tiger.",
+    "label": "unknown"
+  }
+]

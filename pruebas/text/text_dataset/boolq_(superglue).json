@@ -1,0 +1,52 @@
+[
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Epicenter -- In most earthquakes, the epicenter is the point where the greatest damage takes place, but the length of the subsurface fault rupture may indeed be a long one, and damage can be spread on the surface across the entire rupture zone. As an example, in the magnitude 7.9 2002 Denali earthquake in Alaska, the epicenter was at the western end of the rupture, but the greatest damage was about 330 km away at the eastern end. Focal depths of earthquakes occurring in continental crust mostly range from 2 to 20 km.Continental earthquakes below 20 km are rare whereas in subduction zones earthquakes can originate at depths deeper than 600 km.\nQuestion: is the greatest intensity of an earthquake always found at the epicenter",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Shinkansen -- The maximum operating speed is 320 km/h (200 mph) (on a 387.5 km section of the Tōhoku Shinkansen). Test runs have reached 443 km/h (275 mph) for conventional rail in 1996, and up to a world record 603 km/h (375 mph) for maglev trains in April 2015.\nQuestion: is the shinkansen the fastest train in the world",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Mississippi in the American Civil War -- Mississippi was the second southern state to declare its secession from the United States of America, on January 9, 1861. It joined with six other southern slave-holding states to form the Confederacy on February 4, 1861. Mississippi's location along the lengthy Mississippi River made it strategically important to both the Union and the Confederacy; dozens of battles were fought in the state as armies repeatedly clashed near key towns and transportation nodes.\nQuestion: mississippi was the first state to secede from the union",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Meet the Fockers -- Greg and Jack's relationship goes off with a bang when Greg is left alone to babysit Little Jack, whom Jack has been raising via the Ferber method. Despite Jack's instructions to leave Little Jack to self-soothe, Greg is unable to stand listening to Little Jack's cries and tends to the boy to cheer him up by hugging him, letting him watch TV, acting funny, and inadvertently teaching Little Jack the word ``asshole.'' Disaster strikes when Greg answers a brief phone call from Roz, which is long enough for Little Jack to wander out of his playpen (after being opened by Jinx), put on Scarface and glue his hands to a bottle of rum. After a furious argument with the Fockers and his own family (though amends are quickly made), Jack resumes his spying on Greg and sends Greg and Jorge's hair samples for a DNA test, while inviting Jorge to the Fockers' planned engagement party in the hope of getting Greg to admit he is Jorge's father. At the engagement party, Jack, who automatically assumes that Greg knew about Jorge and has deliberately been keeping him a secret from Pam, introduces Greg to Jorge. Later, when Greg denies knowing anything about Jorge, Jack still refuses to believe him and drugs him with truth serum to make him talk. On stage, Greg uncontrollably blurts out that Pam is pregnant and that Jorge is his son in a Darth Vader-esqe matter before immediately losing consciousness.\nQuestion: in meet the fockers is jorge greg son",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: An Inspector Calls -- The play is a three-act drama, which takes place on a single night in April 1912, focusing on the prosperous upper middle-class Birling family, who live in a comfortable home in the fictional town of Brumley, ``an industrial city in the north Midlands''. The family is visited by a man calling himself Inspector Goole, who questions the family about the suicide of a young working-class woman, Eva Smith (also known as Daisy Renton). Long considered part of the repertory of classic ``drawing room'' theatre, the play has also been hailed as a scathing criticism of the hypocrisies of Victorian and Edwardian English society and as an expression of Priestley's socialist political principles. The play is studied in many schools in the UK as one of the prescribed texts for the English Literature GCSE (General Certificate of Secondary Education) examination.\nQuestion: is an inspector calls set in the victorian era",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Offside (association football) -- There is no offside offence if a player receives the ball directly from a goal kick, a corner kick, a throw-in, or a dropped-ball. It is also not an offence if the ball was last deliberately played by an opponent (except for a deliberate save). In this context, according to the IFAB, ``A 'save' is when a player stops, or attempts to stop, a ball which is going into or very close to the goal with any part of the body except the hands/arms (unless the goalkeeper within the penalty area).''\nQuestion: can you get offside from a throw in",
+    "label": "no"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Raise Your Voice -- The soundtrack was planned to be debuting before the movie, but was never released because Duff released her eponymous second album with the songs featured on the film. Three Days Grace also contributed the songs ``Are You Ready'' and ``Home'' to the movie, the latter from their self-titled debut album. The upbeat ``Lift Off'' by Tina Sugandh.\nQuestion: does hilary duff sing in raise your voice",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Priest–penitent privilege in England -- The doctrine of priest--penitent privilege does not appear to apply in English law. The orthodox view is that under the law of England and Wales privileged communication exists only in the context of legal advice obtained from a professional adviser. A statement of the law on priest--penitent privilege is contained in the nineteenth century case of Wheeler v. Le Marchant:\nQuestion: can a priest tell the police a confession uk",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Pregnancy over age 50 -- Pregnancy over age 50 has, over recent years, become possible for more women, and more easily achieved for many, due to recent advances in assisted reproductive technology, in particular egg donation. Typically, a woman's fecundity ends with menopause, which by definition is 12 consecutive months without having had any menstrual flow at all. During perimenopause, the menstrual cycle and the periods become irregular and eventually stop altogether, but even when periods are still regular, the egg quality of women in their forties is lower than in younger women, making the likelihood of conceiving a healthy baby also reduced, particularly after age 42. It is important to note, that the female biological clock can vary greatly from woman to woman. A woman's individual level of fertility can be tested through a variety of methods.\nQuestion: can a woman give birth at 50 years",
+    "label": "yes"
+  },
+  {
+    "task_instruction": "Answer whether the given question is true based on the provided passage. Reply 'yes' or 'no'.",
+    "input_text": "Passage: Postal holiday -- Part 608, section 3.2 of the DMM (U.S. Domestic Mail Manual) groups holidays into ``Widely Observed'' and ``Not Widely Observed''. Holidays ``Widely Observed'' include New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, and Christmas Day. Holidays ``Not Widely Observed'' are Martin Luther King, Jr.'s Birthday; Presidents Day; Columbus Day; and Veterans Day.\nQuestion: is mail delivered on saturday before memorial day",
+    "label": "yes"
+  }
+]
