@@ -21,8 +21,16 @@ REQUIRED_INPUTS_CATALOG = {
         "variable": "text",
         "description": "The path, file or text to be analyzed."
     },
+    "query": {
+        "variable": "query",
+        "description": "The question or search query to be answered based on the provided input file or text."
+    },
     "structured_data": {
         "variable": "structured_data",
         "description": "The structured data to be processed."
+    },
+    "forecast_horizon_min": {
+        "variable": "forecast_horizon_min",
+        "description": "The horizon number in minutes for the occupancy forecast."
     }
 }

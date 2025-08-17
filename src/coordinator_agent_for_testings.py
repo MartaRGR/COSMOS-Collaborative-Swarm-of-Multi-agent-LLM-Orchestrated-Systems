@@ -1,6 +1,8 @@
 import os
 import sys
 import datetime
+
+import numpy as np
 import pytz
 import json
 import asyncio
@@ -26,10 +28,11 @@ from langgraph.checkpoint.memory import MemorySaver
 from utils.setup_logger import get_agent_logger
 from utils.config_loader import load_default_config
 from utils.task_models import TaskPlan, AggResponse
-from utils.state_models import OverallState, InputState, OutputState
+from utils.state_models import OverallStateTesting, InputState, OutputState
 
 from registry_creator_agent import AgentRegistry
 from swarm_agent import SwarmAgent
+
 
 # Read OpenAI configuration from environment variables
 load_dotenv(find_dotenv())  # read local .env file
@@ -316,14 +319,6 @@ class CoordinatorAgent:
             "- If the user's task already provides a required input, extract its value and include it in the response.\n"  
             "- If the required input is \"task_definition\", set its value as the name of the subtask.\n"
             "- If the required input is not provided, mark it explicitly with \"value\": \"missing\".\n"
-            "- **If the user's task is a question that requires retrieving information from documents (RAG), then:**\n"
-            "- Create subtask 'Embedding retrieval' assigned to the embedding agent with inputs: query and document file.\n"
-            "- Create subtask 'Contextual answer generation' assigned to the contextual answer generation agent. Important to name the task_name with the question done by the user.\n"
-            "- Mark dependency: 'Contextual answer generation' depends on 'Embedding retrieval'.\n"
-            "- **If the user's task involves the DistanceCalculationAgent:** \n"
-            "- First, create a subtask for object detection using the ObjectDetectionAgent with the required inputs. \n"
-            "- Then, create a subtask for distance calculation using the DistanceCalculationAgent. \n"
-            "- Mark the distance calculation subtask as depending on the object detection subtask. \n"
             "- Return a structured JSON plan."
         ),
         "response_aggregation": (
@@ -403,7 +398,7 @@ class CoordinatorAgent:
 
         # Feedback restriction
         self.feedback_attempts = 0
-        self.max_feedback_attempts = 2
+        self.max_feedback_attempts = 100000
 
     async def setup(self):
         """Performs asynchronous initialization steps."""
@@ -438,20 +433,15 @@ class CoordinatorAgent:
     # ==========================
     # TASK SEGMENTATION & CREW CREATION
     # ==========================
-    @staticmethod
-    def ask_user_task(overall_state: OverallState) -> OverallState:
-        input_state: InputState = {"user_task": input("Enter your task: ").strip('\'\"')}
-        overall_state.update(input_state)
-        return overall_state
 
-    def task_planner(self, overall_state: OverallState) -> OverallState:
+    def task_planner(self, overall_state: OverallStateTesting) -> OverallStateTesting:
         self.logger.info("Starting task planner...")
         planner = TaskPlanner(self.llm, self.agents, self.logger)
         overall_state["task_plan"] = planner.segment_task(overall_state["user_task"], self.default_agent)
         self.logger.info(f"Task Plan: \n {overall_state['task_plan']}")
         return overall_state
 
-    def initialize_crews(self, overall_state: OverallState) -> OverallState:
+    def initialize_crews(self, overall_state: OverallStateTesting) -> OverallStateTesting:
         self.logger.info("Initializing crews...")
         if "crews_plan" not in overall_state or not overall_state["crews_plan"]:
             self.logger.info("Creating CrewManager and initializing agents...")
@@ -466,7 +456,7 @@ class CoordinatorAgent:
             overall_state["private_states"] = []
         return overall_state
 
-    def swarm_intelligence(self, overall_state: OverallState, config: RunnableConfig) -> OverallState | None:
+    def swarm_intelligence(self, overall_state: OverallStateTesting, config: RunnableConfig) -> OverallStateTesting | None:
         """Function to handle swarm intelligence execution."""
         crew_name = config["metadata"]["langgraph_node"]
         self.logger.info(f"Executing crew: {crew_name}")
@@ -539,29 +529,30 @@ class CoordinatorAgent:
         ]
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.llm | response_parser
-        return chain.invoke({
-            "aggregation_method": aggregation_method,
-            "format_instructions": response_parser.get_format_instructions()
-        })
+        try:
+            return chain.invoke({
+                "aggregation_method": aggregation_method,
+                "format_instructions": response_parser.get_format_instructions()
+            })
+        except Exception as e:
+            self.logger.error(f"Aggregation LLM failed: {e}")
+            return {"response": "Aggregation failed", "explanation": str(e)}
 
-    def _aggregate_responses(self, unified_responses, aggregation_method='llm_synthesis'):
-        """Aggregates the responses from all crews into a single output state."""
-        if aggregation_method not in ["llm_synthesis", "plurality_vote", "weighted_average"]:
-            self.logger.warning(f"Unsupported aggregation method: {aggregation_method}. Using default 'llm_synthesis'.")
-            aggregation_method = "llm_synthesis"
-
+    def _aggregate_responses(self, unified_responses, aggregation_methods):
         tasks_answers = []
-        for task_id in {response["task_id"] for response in unified_responses}:
-            task_name = {x["task_name"] for x in unified_responses if x["task_id"]==task_id}.pop()
-            task_results = [response for response in unified_responses if response["task_id"] == task_id]
-            task_answer = self._llm_aggregation(task_results, aggregation_method).model_dump()
-            tasks_answers.append({"task_id": task_id, "task_name": task_name, "result": task_answer})
+        for agg_method in aggregation_methods:
+            for task_id in {response["task_id"] for response in unified_responses}:
+                task_name = {x["task_name"] for x in unified_responses if x["task_id"]==task_id}.pop()
+                task_results = [response for response in unified_responses if response["task_id"] == task_id]
+                task_answer = self._llm_aggregation(task_results, agg_method).model_dump()
+                self.logger.info(f"Aggregation Method: {agg_method} - Answer {task_answer}")
+                tasks_answers.append({"task_id": task_id, "task_name": task_name, "aggregation_method": agg_method, "result": task_answer})
         return tasks_answers
 
-    def coordinated_response(self, overall_state: OverallState) -> OverallState:
+    def coordinated_response(self, overall_state: OverallStateTesting) -> OverallStateTesting:
         self.logger.info("Starting coordinated response...")
         unified_responses = self._unify_crews_responses(overall_state)
-        agg_response = self._aggregate_responses(unified_responses, aggregation_method='llm_synthesis')
+        agg_response = self._aggregate_responses(unified_responses, overall_state["aggregation_methods"])
         overall_state["answer"] = agg_response
 
         # Showing the final answer
@@ -575,10 +566,10 @@ class CoordinatorAgent:
         # OutputState: agg_response
         return overall_state
 
-    def human_feedback(self, overall_state: OverallState, save_result=True) -> OverallState:
+    def human_feedback(self, overall_state: OverallStateTesting, save_result=True) -> OverallStateTesting:
         if self.feedback_attempts < self.max_feedback_attempts:
             self.logger.info(f"{self.feedback_attempts}/{self.max_feedback_attempts} feedback attempts.")
-            feedback = input("Are you satisfied with the answer? (yes/no): ")
+            feedback = 'yes' #input("Are you satisfied with the answer? (yes/no): ")
             overall_state["user_feedback"] = feedback
             overall_state["finished"] = feedback.lower().strip('\'\"') == "yes"
             self.feedback_attempts += 1
@@ -586,10 +577,55 @@ class CoordinatorAgent:
             self.logger.warning("Maximum feedback attempts reached. Ending execution.")
             overall_state["finished"] = True
         if overall_state["finished"] and save_result:
-            file_name = f"overall_state_{datetime.datetime.now(pytz.timezone('Europe/Madrid')).strftime('%Y%m%d_%H%M%S')}.json"
-            with open(file_name, "w") as f:
-                json.dump(overall_state, f, indent=2, default=str)
-            self.logger.info(f"Overall state saved to {file_name}.")
+            os.makedirs(overall_state["base_path"], exist_ok=True)
+            file_name_overall_state = os.path.join(overall_state["base_path"], f"{overall_state['file_name']}_overall_state.json")
+            file_name_responses = os.path.join(overall_state["base_path"], f"{overall_state['file_name']}_responses.json")
+
+            if os.path.exists(file_name_overall_state):
+                with open(file_name_overall_state, "r", encoding='utf-8') as f:
+                    try:
+                        overall_list = json.load(f)
+                    except json.JSONDecodeError:
+                        overall_list = []
+            else:
+                overall_list = []
+
+            if os.path.exists(file_name_responses):
+                with open(file_name_responses, "r", encoding='utf-8') as f:
+                    try:
+                        responses_list = json.load(f)
+                    except json.JSONDecodeError:
+                        responses_list = []
+            else:
+                responses_list = []
+
+            overall_list.append(overall_state)
+
+            data_response = {
+                "id": overall_state["task_id"],
+                "response": overall_state["answer"]
+            }
+            responses_list.append(data_response)
+
+            with open(file_name_overall_state, "w", encoding='utf-8') as f:
+                json.dump(overall_list, f, indent=2, default=str, ensure_ascii=False)
+            self.logger.info(f"Saved list of overall states to {file_name_overall_state}.")
+
+            with open(file_name_responses, "w", encoding='utf-8') as f:
+                json.dump(responses_list, f, indent=2, default=str, ensure_ascii=False)
+            self.logger.info(f"Saved list of responses to {file_name_responses}.")
+
+            # with open(file_name_overall_state, "a") as f:
+            #     f.write(json.dumps(overall_state, default=str) + "\n")
+            # self.logger.info(f"Appended overall state to {file_name_overall_state}.")
+            #
+            # data_response = {
+            #     "id": overall_state["task_id"],
+            #     "response": overall_state["answer"]
+            # }
+            # with open(file_name_responses, "a") as f:
+            #     f.write(json.dumps(data_response, default=str) + "\n")
+            # self.logger.info(f"Appended response to {file_name_responses}.")
         return overall_state
 
     # ==========================
@@ -598,13 +634,11 @@ class CoordinatorAgent:
     def create_graph(self, save_graph=False):
         """Creates the execution graph for coordinator execution."""
         self.logger.info("Creating execution graph...")
-        graph = StateGraph(OverallState, output=OutputState)
-
-        # Initial configuration for the start node
-        graph.add_node("ask_user_task", self.ask_user_task)
-        graph.set_entry_point("ask_user_task")
+        graph = StateGraph(OverallStateTesting, output=OutputState)
 
         graph.add_node("task_planner", self.task_planner)
+        # Initial configuration for the start node
+        graph.set_entry_point("task_planner")
         graph.add_node("initialize_crews", self.initialize_crews)
         graph.add_node("coordinated_response", self.coordinated_response)
 
@@ -614,7 +648,6 @@ class CoordinatorAgent:
             graph.add_node(node_name, self.swarm_intelligence)
             graph.add_edge("initialize_crews", node_name)
             graph.add_edge(node_name, "coordinated_response")
-        graph.add_edge("ask_user_task", "task_planner")
         graph.add_edge("task_planner", "initialize_crews")
         graph.add_edge("coordinated_response", "human_feedback")
         graph.add_conditional_edges(
@@ -629,27 +662,49 @@ class CoordinatorAgent:
 
     def _save_compiled_graph(self, compiled_graph):
         graph_png_data = compiled_graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.API)
-        with open("coordinator_agent_graph.png", "wb") as file:
+        with open("../pruebas/coordinator_agent_for_testings_graph.png", "wb") as file:
             file.write(graph_png_data)
         self.logger.info(f"Coordinator Graph successfully saved")
 
-    def run(self):
+    def run(self, file_name, base_path, task, aggregation_methods):
         """Execute the entire graph"""
+        # TODO: change commented task_instruction
+        prompt_answer_instruction = "\n IMPORTANT:\n - At the end of your explanation, **include a line exactly like this**:\n <<< FINAL ANSWER: X >>> \n where X is the option chosen (if options are available) or the final result."
+        task_instruction = task["task_instruction"] + "\n Question: \n" + task["input_text"] + prompt_answer_instruction
+        # task_instruction = task
+        # Assign dynamic thread_id
+        thread_id = str(uuid.uuid4())
         graph = self.create_graph()
-        overall_state = OverallState(finished=False)
-        thread = {"configurable": {"thread_id": "1"}}
+        overall_state = OverallStateTesting(
+            user_task=task_instruction,
+            file_name=file_name,
+            base_path=base_path,
+            task_id=task["id"], # TODO: change when testing #"prueba",
+            aggregation_methods=aggregation_methods,
+            finished=False
+        )
+        thread = {"configurable": {"thread_id": thread_id}}
         while not overall_state.get("finished"):
             for event in graph.stream(overall_state, thread, stream_mode="values"):
-                # print(event)
                 overall_state = event
 
 
 if __name__ == "__main__":
     async def main():
+
+        # Define aggregation methods
+        aggregation_methods = ["llm_synthesis", "plurality_vote", "weighted_average"]
+        # Load tasks from JSON file
+        file_name = "logiqa.json"
+        root_path = r"C:\Users\rt01306\OneDrive - Telefonica\Desktop\Doc\Doctorado\TESIS\Python_Code\prueba_langraph\pruebas\numerical_logit\logic_math_dataset"
+        json_path = os.path.join(root_path, file_name)
+        base_path = r"C:\Users\rt01306\OneDrive - Telefonica\Desktop\Doc\Doctorado\TESIS\Python_Code\prueba_langraph\pruebas\numerical_logit\logic_math_responses"
+        with open(json_path, 'r') as f:
+            tasks_input = json.load(f)
         # Initialize the coordinator agent with the test registry
         coordinator = CoordinatorAgent(user_config={})
         await coordinator.setup()
-        # # Simulate a user task
-        # user_task = "Detect objets in the image and summarize its content and tell me the weather in Madrid."
-        coordinator.run()
+        for task in tasks_input:
+            # task = "Dime el resultado de la operación matemática 2+2. Solo el resultado, sin explicaciones ni pasos intermedios. Solo el número"
+            coordinator.run(file_name.split(".")[0], base_path, task, aggregation_methods)
     asyncio.run(main())

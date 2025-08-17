@@ -34,19 +34,34 @@ class ObjectDetectionAgent(BaseAgent):
         self.model_name = model_name
 
         self.model = self._initialize()
+        # self.system_message = (
+        #     "You are an object detection assistant. "
+        #     "Given an image, return a JSON array of objects. "
+        #     "Return ONLY a valid JSON array. No text before or after. No bullet points. No explanations. "
+        #     # f"The image has a resolution of {{image_width}} × {{image_height}} pixels. "
+        #     # "All bbox values must be in absolute pixel coordinates. "
+        #     "Each object must include:\n"
+        #     "- class (string)\n"
+        #     "- confidence (float between 0 and 1)\n"
+        #     # "- bbox (object): with xmin, ymin, xmax, ymax. All in absolute pixel coordinates, not normalized.\n"
+        #     # "Do not return any floating point values for coordinates. Use only pixel units. "
+        #     # "If you are not sure about the coordinates, use an empty list '[]'.\n"
+        #     # "- area (float): computed as (xmax - xmin) × (ymax - ymin), in pixel units of the bbox."
+        # )
+
         self.system_message = (
             "You are an object detection assistant. "
             "Given an image, return a JSON array of objects. "
             "Return ONLY a valid JSON array. No text before or after. No bullet points. No explanations. "
-            # f"The image has a resolution of {{image_width}} × {{image_height}} pixels. "
-            # "All bbox values must be in absolute pixel coordinates. "
+            f"The image has a resolution of {{image_width}} × {{image_height}} pixels. "
+            "All bbox values must be in absolute pixel coordinates. "
             "Each object must include:\n"
             "- class (string)\n"
             "- confidence (float between 0 and 1)\n"
-            # "- bbox (object): with xmin, ymin, xmax, ymax. All in absolute pixel coordinates, not normalized.\n"
-            # "Do not return any floating point values for coordinates. Use only pixel units. "
-            # "If you are not sure about the coordinates, use an empty list '[]'.\n"
-            # "- area (float): computed as (xmax - xmin) × (ymax - ymin), in pixel units of the bbox."
+            "- bbox (object): with xmin, ymin, xmax, ymax. All in absolute pixel coordinates, not normalized.\n"
+            "Do not return any floating point values for coordinates. Use only pixel units. "
+            "If you are not sure about the coordinates, use an empty list '[]'.\n"
+            "- area (float): computed as (xmax - xmin) × (ymax - ymin), in pixel units of the bbox."
         )
         self.human_message = "Please, resolve this task {user_task} with the following input: {input_data}"
 
@@ -62,7 +77,7 @@ class ObjectDetectionAgent(BaseAgent):
             self.logger.info(f">>> Task result:\n{result}")
             return result
         except Exception as e:
-            self.logger(f"Failed to run {self.model_name}: {e}")
+            self.logger.error(f"Failed to run {self.model_name}: {e}")
             raise
 
 

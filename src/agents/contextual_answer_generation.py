@@ -9,13 +9,12 @@ from src.utils.base_agent import BaseAgent
 
 
 AGENT_METADATA = {
-    "function": "Interpret and resolve generic language-based tasks (e.g., summarization, classification, Q&A) not based on files",
+    "function": "Interpret and resolve specific language-based tasks based on text files (i.e, .doc, .txt, .docx, .pdf...)",
     "required_inputs": [
-        REQUIRED_INPUTS_CATALOG["task_definition"],
-        REQUIRED_INPUTS_CATALOG["text"]
+        REQUIRED_INPUTS_CATALOG["task_definition"]
     ],
     "output": "textual response (summary, classification, etc.)",
-    "class": "LanguageTaskAgent",
+    "class": "ContextualAnswerGenerationAgent",
     "models": [
         MODELS_CATALOG["gpt-4o-mini"],
         MODELS_CATALOG["Phi-4-mini-instruct"],
@@ -26,9 +25,9 @@ AGENT_METADATA = {
 }
 
 
-class LanguageTaskAgent(BaseAgent):
+class ContextualAnswerGenerationAgent(BaseAgent):
     def _setup_agent(self, model_name: str, crew_id: int):
-        self.logger = get_agent_logger(f"Language Task Agent - Crew {crew_id} - Model {model_name} - Hyperparameters {self.hyperparameters}")
+        self.logger = get_agent_logger(f"Contextual Answer Generation Agent - Crew {crew_id} - Model {model_name} - Hyperparameters {self.hyperparameters}")
         self.model_name = model_name
 
         self.model = self._initialize()
@@ -94,7 +93,7 @@ if __name__ == "__main__":
     }
 
     # Initialize the object detector
-    agent = LanguageTaskAgent(1, config)
+    agent = ContextualAnswerGenerationAgent(1, config)
     agent.run({
         "task_definition": "resume el siguiente archivo",
         "text": "Blog_La_importancia_de_la_anonimización_de_datos.txt"

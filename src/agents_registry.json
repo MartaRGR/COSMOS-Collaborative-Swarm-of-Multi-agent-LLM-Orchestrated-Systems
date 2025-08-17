@@ -1,4 +1,87 @@
 {
+    "contextual_answer_generation.py": {
+        "function": "Interpret and resolve specific language-based tasks based on text files (i.e, .doc, .txt, .docx, .pdf...)",
+        "required_inputs": [
+            {
+                "variable": "task_definition",
+                "description": "The description of the task to be solved by the LLM agent."
+            }
+        ],
+        "output": "textual response (summary, classification, etc.)",
+        "class": "ContextualAnswerGenerationAgent",
+        "models": [
+            {
+                "name": "gpt-4o-mini",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "api_version": "2023-03-15-preview",
+                    "deployment_name": "gpt-4o-mini"
+                }
+            },
+            {
+                "name": "Phi-4-mini-instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ],
+                    "presence_penalty": [
+                        -2.0,
+                        2.0
+                    ],
+                    "frequency_penalty": [
+                        -1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "name": "Llama-3.3-70B-Instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ],
+                    "presence_penalty": [
+                        -2.0,
+                        2.0
+                    ],
+                    "frequency_penalty": [
+                        -1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "name": "DeepSeek-R1",
+                "hyperparameters": {}
+            },
+            {
+                "name": "qwen/qwen2.5-coder-32b-instruct",
+                "hyperparameters": {
+                    "temperature": [
+                        0.0,
+                        1.0
+                    ],
+                    "top_p": [
+                        0.1,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
     "default-LLM.py": {
         "function": "Default LLM agent",
         "required_inputs": [
@@ -77,6 +160,109 @@
                     "top_p": [
                         0.1,
                         1.0
+                    ]
+                }
+            }
+        ]
+    },
+    "distance_calculation_agent.py": {
+        "function": "Estimate distances to detected objects from an image to determine what is the nearest or farthest objects.",
+        "required_inputs": [
+            {
+                "variable": "image_path",
+                "description": "The path or file of the image to be analyzed."
+            }
+        ],
+        "output": "list of detected objects augmented with distance (meters)",
+        "class": "DistanceCalculationAgent",
+        "models": [
+            {
+                "name": "midas",
+                "hyperparameters": {}
+            },
+            {
+                "name": "dpt_large",
+                "hyperparameters": {}
+            },
+            {
+                "name": "depth_anything",
+                "hyperparameters": {}
+            }
+        ]
+    },
+    "embedding_agent.py": {
+        "function": "When asked a question about specific text or file (not a generic one), this agent is used to locate the answer before passing it on to a natural language agent.",
+        "required_inputs": [
+            {
+                "variable": "query",
+                "description": "The question or search query to be answered based on the provided input file or text."
+            },
+            {
+                "variable": "text",
+                "description": "The path, file or text to be analyzed."
+            }
+        ],
+        "output": "A dictionary containing the list of text parts that answer the question with their scores.",
+        "class": "EmbeddingAgent",
+        "models": [
+            {
+                "name": "text-embedding-ada-002",
+                "hyperparameters": {
+                    "chunk_size": [
+                        600,
+                        1000
+                    ],
+                    "chunk_overlap": [
+                        100,
+                        200
+                    ]
+                }
+            },
+            {
+                "name": "text-embedding-3-large",
+                "hyperparameters": {
+                    "chunk_size": [
+                        800,
+                        1000
+                    ],
+                    "chunk_overlap": [
+                        150,
+                        250
+                    ]
+                }
+            },
+            {
+                "name": "ibm-granite/granite-embedding-107m-multilingual",
+                "hyperparameters": {
+                    "chunk_size": [
+                        300,
+                        600
+                    ],
+                    "chunk_overlap": [
+                        50,
+                        100
+                    ]
+                }
+            },
+            {
+                "name": "sentence-transformers/all-MiniLM-L6-v2",
+                "hyperparameters": {
+                    "chunk_size": [
+                        300,
+                        600
+                    ],
+                    "chunk_overlap": [
+                        50,
+                        100
+                    ]
+                }
+            },
+            {
+                "name": "intfloat/multilingual-e5-small",
+                "hyperparameters": {
+                    "chunk_size": [
+                        400,
+                        512
                     ]
                 }
             }
@@ -187,7 +373,7 @@
         ]
     },
     "natural_language_agent.py": {
-        "function": "Interpret and resolve language-based tasks (e.g., summarization, classification, Q&A)",
+        "function": "Interpret and resolve generic language-based tasks (e.g., summarization, classification, Q&A) not based on files",
         "required_inputs": [
             {
                 "variable": "task_definition",

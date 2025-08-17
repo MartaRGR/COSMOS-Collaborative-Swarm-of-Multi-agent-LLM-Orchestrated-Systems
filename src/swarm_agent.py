@@ -94,7 +94,8 @@ class SwarmAgent:
             # Checking subtask's dependencies
             if subtask.get("subtask_dependencies"):
                 dependency_input = self.get_dependency_input(subtask["subtask_dependencies"], processed_subtasks_by_order)
-                input_data = dependency_input
+                # TODO: revisar lo de values con la lista de listas
+                input_data = list(dependency_input.values())[0]
                 self.logger.info(f"Subtask {subtask['id']} has dependencies; using dependency results as input.")
             else:
                 input_data = agent_info.get("required_inputs")

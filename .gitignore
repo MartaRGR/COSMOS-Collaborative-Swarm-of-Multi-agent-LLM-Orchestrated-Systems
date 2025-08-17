@@ -5,3 +5,6 @@ venv/
 .vscode/
 
 .idea/
+
+*.zip
+/pruebas/objects_recognition/coco/annotations_trainval2017/

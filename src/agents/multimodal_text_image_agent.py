@@ -48,7 +48,7 @@ class MultimodalTaskAgent(BaseAgent):
             self.logger.info(f">>> Task result:\n{result}")
             return result
         except Exception as e:
-            self.logger(f"Failed to run {self.model_name}: {e}")
+            self.logger.error(f"Failed to run {self.model_name}: {e}")
             raise
 
 

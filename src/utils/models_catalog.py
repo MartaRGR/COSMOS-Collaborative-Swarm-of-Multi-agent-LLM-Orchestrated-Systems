@@ -117,5 +117,78 @@ MODELS_CATALOG = {
         "hyperparameters": {
             "weights": []
         }
+    },
+    ### Embeddings ###
+    "text-embedding-3-large": {
+        "name": "text-embedding-3-large",
+        "hyperparameters": {
+            "chunk_size": [800, 1000],
+            "chunk_overlap": [150, 250]
+        }
+    },
+    "text-embedding-ada-002": {
+        "name": "text-embedding-ada-002",
+        "hyperparameters": {
+            "chunk_size": [600, 1000],
+            "chunk_overlap": [100, 200]
+        }
+    },
+    "ibm-granite/granite-embedding-107m-multilingual": {
+        "name": "ibm-granite/granite-embedding-107m-multilingual",
+        "hyperparameters": {
+            "chunk_size": [300, 600],
+            "chunk_overlap": [50, 100]
+        }
+    },
+    "sentence-transformers/all-MiniLM-L6-v2": {
+        "name": "sentence-transformers/all-MiniLM-L6-v2",
+        "hyperparameters": {
+            "chunk_size": [300, 600],
+            "chunk_overlap": [50, 100]
+        }
+    },
+    "intfloat/multilingual-e5-small": {
+        "name": "intfloat/multilingual-e5-small",
+        "hyperparameters": {
+            "chunk_size": [400, 512]
+        }
+    },
+    ### Embedding-Retrievers ###
+    "cosine_similarity_retriever": {
+        "name": "cosine_similarity_retriever",
+        "hyperparameters": {
+            "top_k": [3, 5, 10],
+            "similarity_threshold": [0.0, 1.0]
+        }
+    },
+    "torch_embedding_retriever": {
+        "name": "torch_embedding_retriever",
+        "hyperparameters": {
+            "top_k": [3, 5, 10],
+            "similarity_threshold": [0.0, 1.0]
+        }
+    },
+    ### Distance Calculation ###
+    "midas": {
+        "name": "midas",
+        "hyperparameters": {}
+    },
+    "dpt_large": {
+        "name": "dpt_large",
+        "hyperparameters": {}
+    },
+    "depth_anything": {
+        "name": "depth_anything",
+        "hyperparameters": {}
+    },
+    ### Forecasting ###
+    "prophet": {
+        "name": "prophet",
+        "hyperparameters": {
+            "changepoint_prior_scale": [0.01, 0.5],
+            "seasonality_prior_scale": [0.01, 10.0],
+            "holidays_prior_scale": [0.01, 10.0],
+            "seasonality_mode": ["additive", "multiplicative"]
+        }
     }
 }

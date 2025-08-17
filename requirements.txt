@@ -2,6 +2,8 @@ langchain~=0.3.14
 langchain_community
 langchain_openai
 langgraph~=0.2.61
+langchain-core~=0.3.51
+langchain-openai~=0.3.12
 
 #YOLO
 torch~=2.5.1
@@ -23,11 +25,11 @@ pillow~=11.1.0
 pydantic~=2.10.4
 
 aiofiles~=24.1.0
-langchain-core~=0.3.51
+
 typing_extensions~=4.12.2
-langchain-openai~=0.3.12
 requests~=2.32.3
 pytz~=2024.2
+pymupdf~=1.26.3
 
 transformers >= 4.45.0
 accelerate~=1.6.0
@@ -36,6 +38,17 @@ azure-core~=1.33.0
 PyYAML~=6.0.2
 
 python-docx~=1.1.2
+
+#HuggingFace Transformers
+sentence_transformers~=5.0.0
+
+# For testing the MAS-SI system
+pycocotools~=2.0.6
+matplotlib~=3.10.0
+datasets~=3.6.0
+
+# Time series Forecasting
+prophet~=1.1.7
 
 # For testing the MAS-SI system
 pycocotools~=2.0.6
