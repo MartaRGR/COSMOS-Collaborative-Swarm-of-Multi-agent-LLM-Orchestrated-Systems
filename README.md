@@ -1,3 +1,4 @@
+# Collaborative Swarm of Multi-agent LLM-Orchestrated-Systems (COSMOS)
 # COSMOS Framework
 
 COSMOS is a modular framework designed to integrate and evaluate Multi-agent Systems with Swarm Intelligence. This project is part of a research effort for a scientific paper and a doctoral thesis.
@@ -49,7 +50,7 @@ The framework emphasizes flexibility and scalability, allowing researchers to cu
 
 7. Run the framework:
     ```bash
-    python coordinator_agent.py
+    python coordinator_agent.py 
     ```
 
 ## Project Structure
@@ -57,7 +58,7 @@ The framework emphasizes flexibility and scalability, allowing researchers to cu
 - tools/: Phoenix tracing in case you want to use it.
 - requirements.txt: Project dependencies.
 
-## LICENSE: Project license.
+## Project license
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details. 
 
 ## Contributions
