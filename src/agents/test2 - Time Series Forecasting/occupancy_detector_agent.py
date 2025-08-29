@@ -104,6 +104,6 @@ if __name__ == "__main__":
     detector = OccupancyDetectorAgent("crew_1", config)
     print(detector.run(input_data={
         "task_definition": "Detects people into the image",
-        "image_path": "pruebas/istockphoto-1346064470-612x612.jpg",
+        "image_path": "test_images/istockphoto-1346064470-612x612.jpg",
         "occupancy_time": "2024-01-01 12:00:00"
     }))

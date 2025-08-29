@@ -70,5 +70,5 @@ if __name__ == "__main__":
     detector = MultimodalTaskAgent("crew_1", config)
     print(detector.run({
         "task_definition": "describe la siguiente imagen",
-        "image_path": "pruebas/istockphoto-1346064470-612x612.jpg"
+        "image_path": "test_images/istockphoto-1346064470-612x612.jpg"
     }))

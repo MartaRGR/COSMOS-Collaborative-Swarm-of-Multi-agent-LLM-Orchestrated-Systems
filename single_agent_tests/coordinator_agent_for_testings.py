@@ -1,9 +1,6 @@
 import os
 import sys
-import datetime
 
-import numpy as np
-import pytz
 import json
 import asyncio
 import copy
@@ -16,7 +13,6 @@ from collections import defaultdict
 from dotenv import load_dotenv, find_dotenv
 
 from langchain_openai import AzureChatOpenAI
-from langchain.schema import HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.runnables.config import RunnableConfig
@@ -25,13 +21,14 @@ from langchain_core.runnables.graph import MermaidDrawMethod
 from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
 
-from utils.setup_logger import get_agent_logger
-from utils.config_loader import load_default_config
-from utils.task_models import TaskPlan, AggResponse
-from utils.state_models import OverallStateTesting, InputState, OutputState
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+from src.utils.setup_logger import get_agent_logger
+from src.utils.config_loader import load_default_config
+from src.utils.task_models import TaskPlan, AggResponse
+from src.utils.state_models import OverallStateTesting, InputState, OutputState
 
-from registry_creator_agent import AgentRegistry
-from swarm_agent import SwarmAgent
+from src.registry_creator_agent import AgentRegistry
+from src.swarm_agent import SwarmAgent
 
 # Read OpenAI configuration from environment variables
 load_dotenv(find_dotenv())  # read local .env file
@@ -695,9 +692,9 @@ if __name__ == "__main__":
         aggregation_methods = ["llm_synthesis", "majority_vote", "weighted_average"]
         # Load tasks from JSON file
         file_name = "aqua-rat.json"
-        root_path = r"/pruebas/numerical_logit/logic_math_dataset"
+        root_path = r"/single_agent_tests/numerical_logit/logic_math_dataset"
         json_path = os.path.join(root_path, file_name)
-        base_path = r"/pruebas/numerical_logit/logic_math_responses"
+        base_path = r"/single_agent_tests/numerical_logit/logic_math_responses"
         with open(json_path, 'r') as f:
             tasks_input = json.load(f)
         # Initialize the coordinator agent with the test registry
