@@ -7,4 +7,4 @@ venv/
 .idea/
 
 *.zip
-/single_agent_tests/objects_recognition/coco/annotations_trainval2017/
+/src/agents/test0 - Single Agents Performance/objects_recognition/coco/annotations_trainval2017/

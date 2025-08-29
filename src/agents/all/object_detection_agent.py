@@ -105,4 +105,4 @@ if __name__ == "__main__":
     }
 
     detector = ObjectDetectionAgent("crew_1", config)
-    print(detector.run(input_data={"task_definition": "Detects objects into the image", "image_path": "test_images/istockphoto-1346064470-612x612.jpg"}))
+    print(detector.run(input_data={"task_definition": "Detects objects into the image", "image_path": "test-images/istockphoto-1346064470-612x612.jpg"}))

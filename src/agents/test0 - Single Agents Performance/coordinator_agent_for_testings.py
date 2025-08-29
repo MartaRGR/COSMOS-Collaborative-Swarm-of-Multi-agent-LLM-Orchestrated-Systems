@@ -692,9 +692,9 @@ if __name__ == "__main__":
         aggregation_methods = ["llm_synthesis", "majority_vote", "weighted_average"]
         # Load tasks from JSON file
         file_name = "aqua-rat.json"
-        root_path = r"/single_agent_tests/numerical_logit/logic_math_dataset"
+        root_path = r"/test0 - Single Agents Performance/numerical_logit/logic_math_dataset"
         json_path = os.path.join(root_path, file_name)
-        base_path = r"/single_agent_tests/numerical_logit/logic_math_responses"
+        base_path = r"/test0 - Single Agents Performance/numerical_logit/logic_math_responses"
         with open(json_path, 'r') as f:
             tasks_input = json.load(f)
         # Initialize the coordinator agent with the test registry
