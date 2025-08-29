@@ -92,13 +92,18 @@ class SwarmAgent:
             )
 
             # Checking subtask's dependencies
+            required_inputs = agent_info.get("required_inputs", {})
             if subtask.get("subtask_dependencies"):
                 dependency_input = self.get_dependency_input(subtask["subtask_dependencies"], processed_subtasks_by_order)
-                # TODO: revisar lo de values con la lista de listas
-                input_data = list(dependency_input.values())[0]
+                # Aggregate dependencies and required_inputs
+                input_data = {
+                    **required_inputs,
+                    **{key: value for dep in dependency_input.values() for key, value in dep.items()}
+                }
+                # input_data = list(dependency_input.values())[0]
                 self.logger.info(f"Subtask {subtask['id']} has dependencies; using dependency results as input.")
             else:
-                input_data = agent_info.get("required_inputs")
+                input_data = required_inputs
 
             try:
                 # Execution of Agent's logit

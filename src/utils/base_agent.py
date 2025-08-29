@@ -111,7 +111,7 @@ class BaseAgent(ABC):
                 "run": self._run_depth_anything
             },
             "prophet": {
-                "init": self._init_prophet,
+                "init": '',
                 "run": self._run_prophet
             }
         }
@@ -190,15 +190,14 @@ class BaseAgent(ABC):
         )
 
     def find_text_key(self, data, key_name):
+        if key_name in data:
+            return data[key_name]
         for key, value in data.items():
-            if key == key_name:
-                return value
-            elif isinstance(value, dict):
+            if isinstance(value, dict):
                 result = self.find_text_key(value, key_name)
                 if result is not None:
                     return result
-            else:
-                return False
+        return None
 
     def chunk_text(self, text):
         from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -298,10 +297,6 @@ class BaseAgent(ABC):
             device=0 if self.device == "cuda" else -1
         )
         return depth_pipeline
-
-    def _init_prophet(self):
-        from prophet import Prophet
-        return Prophet(**self.prophet_params)
 
 
     # Run models' functions
@@ -627,13 +622,30 @@ class BaseAgent(ABC):
         return depth
 
     def _run_prophet(self, input_data):
-        m = self.model.fit(input_data["df"])
+        import pandas as pd
+        new_occupancy = input_data["occupancy"]
+        self.logger.info(f"New Occupancy {new_occupancy}")
+        if isinstance(new_occupancy, dict):
+            new_occupancy = [new_occupancy]
 
-        future = m.make_future_dataframe(periods=input_data["periods"], freq=input_data["freq"])
-        forecast = m.predict(future)
+        # Converting occupancy data into dataframe
+        new_data = pd.DataFrame(new_occupancy)
+        new_data['ds'] = pd.to_datetime(new_data['ds'])
 
-        result = forecast.tail(input_data["periods"])[["ds", "yhat", "yhat_lower", "yhat_upper"]].to_dict(orient="records")
-        return result
+        # Concat historical data with the new one
+        combined_data = pd.concat([self.df, new_data]).drop_duplicates(subset="ds").sort_values("ds").reset_index(drop=True)
+
+        for col in [col for col in combined_data.columns if col not in ["ds", "y"]]:
+            self.model.add_regressor(col)
+        self.model.fit(combined_data)
+
+        # Make future dataframe according to input data dataframe
+        forecast_horizon = int(input_data["forecast_horizon"])
+        future = self.model.make_future_dataframe(periods=forecast_horizon, freq='h')
+        forecast = self.model.predict(future[-forecast_horizon:])
+        # Round to nearest integer
+        forecast[['base_occupancy_prediction', 'pessimistic_occupancy_prediction', 'optimistic_occupancy_prediction']] = forecast[['yhat', 'yhat_lower', 'yhat_upper']].round()
+        return {"occupancy_forecast": forecast[['ds', 'base_occupancy_prediction', 'pessimistic_occupancy_prediction', 'optimistic_occupancy_prediction']].to_string(index=False)}
 
     # Abstract methods
     @abstractmethod

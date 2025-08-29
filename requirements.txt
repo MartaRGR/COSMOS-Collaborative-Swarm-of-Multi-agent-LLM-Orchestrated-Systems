@@ -55,3 +55,6 @@ pycocotools~=2.0.6
 matplotlib~=3.10.0
 datasets~=3.6.0
 
+# Solve numeric-text problems of LLMs (not understanding prompt for occupancy detector)
+word2number~=1.1
+

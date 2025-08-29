@@ -1,87 +1,4 @@
 {
-    "contextual_answer_generation.py": {
-        "function": "Interpret and resolve specific language-based tasks based on text files (i.e, .doc, .txt, .docx, .pdf...)",
-        "required_inputs": [
-            {
-                "variable": "task_definition",
-                "description": "The description of the task to be solved by the LLM agent."
-            }
-        ],
-        "output": "textual response (summary, classification, etc.)",
-        "class": "ContextualAnswerGenerationAgent",
-        "models": [
-            {
-                "name": "gpt-4o-mini",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "api_version": "2023-03-15-preview",
-                    "deployment_name": "gpt-4o-mini"
-                }
-            },
-            {
-                "name": "Phi-4-mini-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "Llama-3.3-70B-Instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "DeepSeek-R1",
-                "hyperparameters": {}
-            },
-            {
-                "name": "qwen/qwen2.5-coder-32b-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ]
-                }
-            }
-        ]
-    },
     "default-LLM.py": {
         "function": "Default LLM agent",
         "required_inputs": [
@@ -165,122 +82,41 @@
             }
         ]
     },
-    "distance_calculation_agent.py": {
-        "function": "Estimate distances to detected objects from an image to determine what is the nearest or farthest objects.",
+    "occupancy_detector_agent.py": {
+        "function": "Detects the number of people in an image",
         "required_inputs": [
             {
                 "variable": "image_path",
                 "description": "The path or file of the image to be analyzed."
+            },
+            {
+                "variable": "occupancy_time",
+                "description": "Text with the time at which the occupancy image is taken in the following format YYYY-MM-DD HH:MM:SS."
             }
         ],
-        "output": "list of detected objects augmented with distance (meters)",
-        "class": "DistanceCalculationAgent",
+        "output": "number of detected people",
+        "class": "OccupancyDetectorAgent",
         "models": [
             {
-                "name": "midas",
-                "hyperparameters": {}
-            },
-            {
-                "name": "dpt_large",
-                "hyperparameters": {}
-            },
-            {
-                "name": "depth_anything",
-                "hyperparameters": {}
-            }
-        ]
-    },
-    "embedding_agent.py": {
-        "function": "When asked a question about specific text or file (not a generic one), this agent is used to locate the answer before passing it on to a natural language agent.",
-        "required_inputs": [
-            {
-                "variable": "query",
-                "description": "The question or search query to be answered based on the provided input file or text."
-            },
-            {
-                "variable": "text",
-                "description": "The path, file or text to be analyzed."
-            }
-        ],
-        "output": "A dictionary containing the list of text parts that answer the question with their scores.",
-        "class": "EmbeddingAgent",
-        "models": [
-            {
-                "name": "text-embedding-ada-002",
+                "name": "yolo11n",
                 "hyperparameters": {
-                    "chunk_size": [
-                        600,
-                        1000
-                    ],
-                    "chunk_overlap": [
-                        100,
-                        200
+                    "classes": [],
+                    "confidence": [
+                        0.5
                     ]
                 }
             },
             {
-                "name": "text-embedding-3-large",
+                "name": "yolov8n",
                 "hyperparameters": {
-                    "chunk_size": [
-                        800,
-                        1000
-                    ],
-                    "chunk_overlap": [
-                        150,
-                        250
+                    "classes": [],
+                    "confidence": [
+                        0.5
                     ]
                 }
             },
             {
-                "name": "ibm-granite/granite-embedding-107m-multilingual",
-                "hyperparameters": {
-                    "chunk_size": [
-                        300,
-                        600
-                    ],
-                    "chunk_overlap": [
-                        50,
-                        100
-                    ]
-                }
-            },
-            {
-                "name": "sentence-transformers/all-MiniLM-L6-v2",
-                "hyperparameters": {
-                    "chunk_size": [
-                        300,
-                        600
-                    ],
-                    "chunk_overlap": [
-                        50,
-                        100
-                    ]
-                }
-            },
-            {
-                "name": "intfloat/multilingual-e5-small",
-                "hyperparameters": {
-                    "chunk_size": [
-                        400,
-                        512
-                    ]
-                }
-            }
-        ]
-    },
-    "multimodal_text_image_agent.py": {
-        "function": "Interpret a combination of images and textual prompts",
-        "required_inputs": [
-            {
-                "variable": "image_path",
-                "description": "The path or file of the image to be analyzed."
-            }
-        ],
-        "output": "textual interpretation of image + prompt",
-        "class": "MultimodalTaskAgent",
-        "models": [
-            {
-                "name": "Phi-3.5-vision-instruct",
+                "name": "Llama-3.2-11B-Vision-Instruct",
                 "hyperparameters": {
                     "temperature": [
                         0.0,
@@ -291,17 +127,17 @@
                         1.0
                     ],
                     "presence_penalty": [
-                        0.0,
+                        -2.0,
                         2.0
                     ],
                     "frequency_penalty": [
-                        0.0,
+                        -1.0,
                         1.0
                     ]
                 }
             },
             {
-                "name": "Llama-3.2-11B-Vision-Instruct",
+                "name": "Phi-4-multimodal-instruct",
                 "hyperparameters": {
                     "temperature": [
                         0.0,
@@ -331,285 +167,97 @@
                     "api_version": "2024-12-01-preview",
                     "deployment_name": "gpt-4o"
                 }
-            },
-            {
-                "name": "Phi-4-multimodal-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "mistral-medium-3-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ]
-                }
             }
         ]
     },
-    "natural_language_agent.py": {
-        "function": "Interpret and resolve generic language-based tasks (e.g., summarization, classification, Q&A) not based on files",
+    "occupancy_forecast_agent.py": {
+        "function": "Forecast occupancy based on detected people and historical data",
         "required_inputs": [
             {
                 "variable": "task_definition",
                 "description": "The description of the task to be solved by the LLM agent."
             },
             {
-                "variable": "text",
-                "description": "The path, file or text to be analyzed."
+                "variable": "forecast_horizon",
+                "description": "The horizon number in hours for the forecast (integer)."
             }
         ],
-        "output": "textual response (summary, classification, etc.)",
-        "class": "LanguageTaskAgent",
+        "output": "occupancy_forecast time series",
+        "class": "OccupancyForecastAgent",
         "models": [
             {
-                "name": "gpt-4o-mini",
+                "name": "prophet",
                 "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
+                    "weekly_seasonality": [
+                        false,
+                        true,
+                        "auto"
                     ],
-                    "api_version": "2023-03-15-preview",
-                    "deployment_name": "gpt-4o-mini"
-                }
-            },
-            {
-                "name": "Phi-4-mini-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
+                    "seasonality_prior_scale": [
+                        0.01,
+                        10.0
                     ],
-                    "top_p": [
-                        0.1,
-                        1.0
+                    "changepoint_prior_scale": [
+                        0.01,
+                        0.5
                     ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "Llama-3.3-70B-Instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "DeepSeek-R1",
-                "hyperparameters": {}
-            },
-            {
-                "name": "qwen/qwen2.5-coder-32b-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
+                    "seasonality_mode": [
+                        "additive",
+                        "multiplicative"
                     ]
                 }
             }
         ]
     },
-    "numerical_logit_agent.py": {
-        "function": "Perform structured and numerical reasoning by solving STEM, mathematical or arithmetic multiple-choice question problems, interpreting data and providing justifications for logical decisions or predictions.",
+    "thermodynamic_prediction_agent.py": {
+        "function": "Predict the temperature evolution of a room based on the room's occupancy forecast",
         "required_inputs": [
             {
-                "variable": "text",
-                "description": "The path, file or text to be analyzed."
+                "variable": "task_definition",
+                "description": "The description of the task to be solved by the LLM agent."
+            },
+            {
+                "variable": "forecast_horizon",
+                "description": "The horizon number in hours for the forecast (integer)."
+            },
+            {
+                "variable": "initial_temperature",
+                "description": "The initial temperature of the room in Celsius (float)."
+            },
+            {
+                "variable": "outside_temperature",
+                "description": "The outside temperature in Celsius (float)."
+            },
+            {
+                "variable": "room_volume",
+                "description": "The volume of the room in cubic meters (float)."
             }
         ],
-        "output": "Explanation and solution steps for the given quantitative or logical problem",
-        "class": "NumericReasoningAgent",
+        "output": "temperature evolution",
+        "class": "ThermodynamicPredictionAgent",
         "models": [
             {
-                "name": "gpt-4o-mini",
+                "name": "thermodynamic_prediction",
                 "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
+                    "c_p": [
+                        1000.0,
+                        1010.0
                     ],
-                    "api_version": "2023-03-15-preview",
-                    "deployment_name": "gpt-4o-mini"
-                }
-            },
-            {
-                "name": "o3-mini",
-                "hyperparameters": {
-                    "api_version": "2024-12-01-preview",
-                    "deployment_name": "o3-mini"
-                }
-            },
-            {
-                "name": "DeepSeek-R1",
-                "hyperparameters": {}
-            },
-            {
-                "name": "Phi-4-mini-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
+                    "air_density": [
+                        1.1,
+                        1.3
                     ],
-                    "top_p": [
-                        0.1,
-                        1.0
+                    "person_heat": [
+                        70,
+                        100
                     ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "Llama-3.3-70B-Instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            }
-        ]
-    },
-    "object_detection_agent.py": {
-        "function": "Detect objects in an image",
-        "required_inputs": [
-            {
-                "variable": "image_path",
-                "description": "The path or file of the image to be analyzed."
-            }
-        ],
-        "output": "list of detected objects",
-        "class": "ObjectDetectionAgent",
-        "models": [
-            {
-                "name": "yolo11n",
-                "hyperparameters": {
-                    "classes": [],
-                    "confidence": [
+                    "ACH": [
+                        0.2,
                         0.5
-                    ]
-                }
-            },
-            {
-                "name": "yolov8n",
-                "hyperparameters": {
-                    "classes": [],
-                    "confidence": [
+                    ],
+                    "U": [
+                        0.3,
                         0.5
-                    ]
-                }
-            },
-            {
-                "name": "resnet50",
-                "hyperparameters": {
-                    "weights": []
-                }
-            },
-            {
-                "name": "Llama-3.2-11B-Vision-Instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        -2.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        -1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "name": "Phi-3.5-vision-instruct",
-                "hyperparameters": {
-                    "temperature": [
-                        0.0,
-                        1.0
-                    ],
-                    "top_p": [
-                        0.1,
-                        1.0
-                    ],
-                    "presence_penalty": [
-                        0.0,
-                        2.0
-                    ],
-                    "frequency_penalty": [
-                        0.0,
-                        1.0
                     ]
                 }
             }

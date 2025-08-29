@@ -185,10 +185,22 @@ MODELS_CATALOG = {
     "prophet": {
         "name": "prophet",
         "hyperparameters": {
-            "changepoint_prior_scale": [0.01, 0.5],
+            "weekly_seasonality": [False, True, 'auto'],
             "seasonality_prior_scale": [0.01, 10.0],
-            "holidays_prior_scale": [0.01, 10.0],
+            "changepoint_prior_scale": [0.01, 0.5],
             "seasonality_mode": ["additive", "multiplicative"]
+
+        }
+    },
+    ### Thermodynamic Prediction ###
+    "thermodynamic_prediction": {
+        "name": "thermodynamic_prediction",
+        "hyperparameters": {
+            "c_p": [1000.0, 1010.0],  # Specific heat capacity of air in J/(kg·K)
+            "air_density": [1.1, 1.3], #1.225 Air density in kg/m³ at sea level and 15°C
+            "person_heat": [70, 100],  # Power generated per person in watts
+            "ACH": [0.2, 0.5],  # Air Changes per Hour,
+            "U": [0.3, 0.5]  # W/(m²·K), typical heat transfer coefficient
         }
     }
 }

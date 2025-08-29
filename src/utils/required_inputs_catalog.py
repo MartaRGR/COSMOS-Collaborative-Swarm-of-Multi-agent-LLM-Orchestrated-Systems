@@ -29,8 +29,24 @@ REQUIRED_INPUTS_CATALOG = {
         "variable": "structured_data",
         "description": "The structured data to be processed."
     },
-    "forecast_horizon_min": {
-        "variable": "forecast_horizon_min",
-        "description": "The horizon number in minutes for the occupancy forecast."
+    "occupancy_time": {
+        "variable": "occupancy_time",
+        "description": "Text with the time at which the occupancy image is taken in the following format YYYY-MM-DD HH:MM:SS."
+    },
+    "forecast_horizon": {
+        "variable": "forecast_horizon",
+        "description": "The horizon number in hours for the forecast (integer)."
+    },
+    "initial_temperature": {
+        "variable": "initial_temperature",
+        "description": "The initial temperature of the room in Celsius (float)."
+    },
+    "outside_temperature": {
+        "variable": "outside_temperature",
+        "description": "The outside temperature in Celsius (float)."
+    },
+    "room_volume": {
+        "variable": "room_volume",
+        "description": "The volume of the room in cubic meters (float)."
     }
 }
