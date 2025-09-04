@@ -1,13 +1,20 @@
 # Collaborative Swarm of Multi-agent LLM-Orchestrated-Systems (COSMOS)
 # COSMOS Framework
 
-COSMOS is a modular framework designed to integrate and evaluate Multi-agent Systems with Swarm Intelligence. This project is part of a research effort for a scientific paper and a doctoral thesis.
+COSMOS is a modular framework designed to integrate and evaluate Multi-Agent Systems with Swarm Intelligence. This project is part of a research effort for a scientific paper and a doctoral thesis.
 
 ## Abstract
 
-COSMOS is a comprehensive framework that integrates Multi-agent Systems and Swarm Intelligence to tackle complex tasks in machine learning. By combining these two paradigms, COSMOS aims to enhance the performance and adaptability of models across various applications. The framework supports a range of tasks such as occupancy forecasting, object recognition, and depth analysis, showcasing its potential for real-world scenarios.
-Besides, COSMOS incorporates swarm intelligence techniques and answer aggregation methods to optimize decision-making processes in multi-agent environments and improve traceability and interpretability of results.
-The framework emphasizes flexibility and scalability, allowing researchers to customize hyperparameters, preprocess data dynamically, and incorporate new models with minimal effort. Its predictive capabilities are demonstrated through applications  COSMOS is designed to support reproducible research, making it a valuable tool for advancing the state of the art in machine learning and its applications.
+This repository provides the official implementation of COSMOS (Collaborative Swarm of Multi-agent LLM-Orchestrated Systems), 
+a flexible framework that brings together Swarm Intelligence and coordinated Multi-Agent Systems powered by Large Language Models. 
+
+The COSMOS architecture includes a modular Coordinator that dynamically decomposes tasks, forms agent crews, and manages 
+inter-agent communication. Aggregation mechanisms inspired by Social Choice Theory—such as plurality voting, 
+weighted averages, and cognitive aggregation—enable the system to generate robust and explainable outcomes.
+COSMOS is easily extensible: users can modify agents, adjust hyperparameters, and run end-to-end experiments for diverse 
+tasks, including embedding and contextual answer generation, occupancy detection and forecasting, or multi-modal thermodynamic simulation. 
+All scenarios, code, and configurations from the associated publication can be reproduced or extended in this repository, 
+providing a hands-on platform to build or benchmark new agent-based solutions.
 
 ## Features
 - **Multi-agent Systems**: Implement and evaluate various multi-agent strategies.
@@ -59,10 +66,10 @@ The framework emphasizes flexibility and scalability, allowing researchers to cu
 - requirements.txt: Project dependencies.
 
 ## Project license
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details. 
+This project is released under the MIT License - see the [LICENSE](./LICENSE) file for full details.
 
 ## Contributions
-Contributions are welcome! Please open an issue or submit a pull request to suggest improvements.  
+Contributions are welcome! If you have suggestions or improvements, please feel free to open an issue or submit a pull request.  
 
 ## Author
 Marta Romero García-Rubio
