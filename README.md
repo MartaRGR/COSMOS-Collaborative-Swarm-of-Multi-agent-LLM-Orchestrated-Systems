@@ -34,8 +34,8 @@ providing a hands-on platform to build or benchmark new agent-based solutions.
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/MartaRGR/cosmos-framework.git
-   cd cosmos-framework
+   git clone https://github.com/MartaRGR/COSMOS-Collaborative-Swarm-of-Multi-agent-LLM-Orchestrated-Systems
+   cd COSMOS-Collaborative-Swarm-of-Multi-agent-LLM-Orchestrated-Systems
    
 2. Create a virtual environment:
     ```bash
