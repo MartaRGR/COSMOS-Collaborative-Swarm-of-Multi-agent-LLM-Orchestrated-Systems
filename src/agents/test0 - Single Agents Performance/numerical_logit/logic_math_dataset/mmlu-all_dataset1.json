@@ -1,0 +1,142 @@
+[
+  {
+    "id": "9218618c-266f-4957-b7ea-3ac9f5d09c34",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The Web was effectively invented by Berners-Lee in which year?\nOptions: \nA: 1980\nB: 1989\nC: 1991\nD: 1993",
+    "label": "C",
+    "subject": "public_relations"
+  },
+  {
+    "id": "08998dd8-9f48-438b-8a47-3691376610eb",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "What characteristic is not representative of a type IIb muscle fibre?\n\nOptions: \nA: Low oxidative capacity\nB: High fatigue resistance\nC: High motor unit strength\nD: Fast contractile speed",
+    "label": "B",
+    "subject": "nutrition"
+  },
+  {
+    "id": "b60ac181-45ee-4c1f-b69f-a9e8aeb43ad6",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The city of Cobb has two trust funds for the benefit of the city's library trust fund A and trust fund B. Only the earnings from trust fund A can be expended and both the principal and interest from trust fund B can be expended. How should the city of Cobb report each trust fund? Trust fund A Trust fund B\nOptions: \nA: Permanent Permanent\nB: Permanent Special revenue\nC: Special revenue Permanent\nD: Special revenue Special revenue",
+    "label": "B",
+    "subject": "professional_accounting"
+  },
+  {
+    "id": "3107062b-97a4-4498-b8b3-c6784d9f1c0a",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "What are the characteristics and manifestations of the strategy adopted by the USA in pursuit of energy security?\nOptions: \nA: The deployment of troops in the Persian Gulf is part of the USA's attempt to secure its dominance in the oil-rich region.\nB: All of these options.\nC: The USA has sought to assert its primacy vis-à-vis friendly and rival powers, through the deployment of troops and other interventions.\nD: The USA has actively sought to stabilize oil-rich friendly political actors and secure the economic and political status quo.",
+    "label": "B",
+    "subject": "security_studies"
+  },
+  {
+    "id": "3ec0b1cc-0759-4d8c-9efe-1ea8836b76d8",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "How do we know how old the Earth is?\nOptions: \nA: From the layering of materials within the Earth.\nB: From fossils of ancient life.\nC: From the cratering history of Earth’s surface.\nD: From radioactive dating of rocks and meteorites.",
+    "label": "D",
+    "subject": "astronomy"
+  },
+  {
+    "id": "cb97a167-61a8-4bf1-9b6c-949701db72fe",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "How many positive 4-digit integers have only odd digits?\nOptions: \nA: 100\nB: 999\nC: 625\nD: 500",
+    "label": "C",
+    "subject": "high_school_mathematics"
+  },
+  {
+    "id": "9efed52e-c530-4e21-a035-d47a25400dec",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "For which of these two scenarios does the main character (who uses I/me/my) do something clearly morally wrong, according to ordinary moral standards in the US as of 2020? Scenario 1 | Rich people love getting drunk on yachts, and as their boat captain, I am always sober. Scenario 2 | I pushed my sister off of the swing at the park.\nOptions: \nA: Wrong, Wrong\nB: Wrong, Not wrong\nC: Not wrong, Wrong\nD: Not wrong, Not wrong",
+    "label": "C",
+    "subject": "moral_scenarios"
+  },
+  {
+    "id": "1d882589-156c-4dea-a8a6-fd6f9490aa3e",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Why does Earth have the strongest magnetic field among the terrestrial worlds?\nOptions: \nA: It is by far the largest terrestrial world.\nB: It is the most volcanically active world.\nC: It is the only one that has both a partially molten metallic core and reasonably rapid rotation.\nD: It rotates much faster than any other terrestrial world.",
+    "label": "C",
+    "subject": "astronomy"
+  },
+  {
+    "id": "edaf9985-d574-47de-b621-69c8cce3f6fd",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A man owned a piece of land with a run-down log cabin on it. He lost interest in it, letting tax bills pile up and failing to maintain it. In 1990, a homeless couple occupied the crumbling cabin. They restored it, fenced the perimeter, and maintained the grounds. They started paying the taxes, despite knowing there was an absentee owner. In 2000, the owner appeared and demanded that they pay rent. They agreed but stopped the payments two years later after consulting an attorney. The required statutory period in the state is 20 years. In 2011 the owner filed an ejectment action, asserting his ownership rights. Leaving aside any other theories or equities, can the couple prevail on a theory of adverse possession?\nOptions: \nA: Yes, because they were on the land for over 20 years.\nB: No, because they missed some of the tax payments during that 20-year period.\nC: No, because the hostile possession was interrupted for two years when they paid rent.\nD: Yes, because they owned the property due to paying the taxes on it.",
+    "label": "C",
+    "subject": "professional_law"
+  },
+  {
+    "id": "a7cbde91-23d0-43b6-8f8c-88ede1b87979",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The Houser Company has negotiated a $500,000 revolving credit agreement with Chitwood National Bank. The agreement calls for an interest rate of 10% on fund used, a 15% compensating balance, and a commitment fee of 1% on the unused amount of the credit line. Assuming that the compensating balance would not otherwise be maintained, the effective annual interest cost if the firm borrows $200,000 for one year is closest to\nOptions: \nA: 11.5 percent.\nB: 15 percent.\nC: 26.5 percent.\nD: 13.53 percent.",
+    "label": "D",
+    "subject": "professional_accounting"
+  },
+  {
+    "id": "c4d7ecda-1ec6-43a4-b0cb-b60e16a30af8",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Predicting the amount of rainfall in a region based on various cues is a ______ problem.\nOptions: \nA: Supervised learning\nB: Unsupervised learning\nC: Clustering\nD: None of the above",
+    "label": "A",
+    "subject": "machine_learning"
+  },
+  {
+    "id": "e0351e34-b91e-4856-95fd-88ed7d10a3cf",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Which of the following statements best describes the UN Human Rights Council?\nOptions: \nA: The UN Human Rights Council has the power to impose economic sanctions on a state for human rights violations\nB: The UN Human Rights Council scrutinises the human rights records of member states on the Council and each member state of the UN\nC: The UN Human Rights Council replaced the Economic and Social Committee of the UN\nD: The UN Human Rights Council consists of 27 member states",
+    "label": "B",
+    "subject": "international_law"
+  },
+  {
+    "id": "d422cb20-4de3-4729-a3bc-030514475d34",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "During year 2 Pipp Co. incurred the following costs to develop and produce a routine low-risk computer software product: Completion of detailed program design $10000 Costs incurred for coding and testing to establish technological feasibility $15000 Other coding and testing costs incurred after establishment of technological feasibility $44000 In Pipp's December 31 year 2 balance sheet what amount should be capitalized as software cost?\nOptions: \nA: $10,000\nB: $25,000\nC: $44,000\nD: 59000",
+    "label": "C",
+    "subject": "professional_accounting"
+  },
+  {
+    "id": "19132ab2-2859-449e-864a-aefd43e7cec8",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "In men gonorrhea and chlamydia most often infect the:\nOptions: \nA: penis\nB: scrotum\nC: urethra\nD: bladder",
+    "label": "C",
+    "subject": "human_sexuality"
+  },
+  {
+    "id": "9760b603-4071-4b1e-8cf0-97bf6dd41e12",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A whiffle ball is tossed straight up, reaches a highest point, and falls back down. Air resistance is not negligible. Which of the following statements are true?\nI. The ball’s speed is zero at the highest point.\nII. The ball’s acceleration is zero at the highest point.\nIII. The ball takes a longer time to travel up to the highest point than to fall back down.\nOptions: \nA: I only\nB: II only\nC: I & II only\nD: I & III only",
+    "label": "C",
+    "subject": "high_school_physics"
+  },
+  {
+    "id": "13cf75ba-5c04-4060-b2fa-d352feb8c1ee",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Express $0.1\\overline{7}$ as a common fraction.\nOptions: \nA: \\frac{8}{45}\nB: \\frac{8}{5}\nC: \\frac{8}{7}\nD: \\frac{8}{33}",
+    "label": "A",
+    "subject": "high_school_mathematics"
+  },
+  {
+    "id": "15f64c89-7df5-49b9-8f95-84773cea2c7f",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Which of the following conditions is not caused by a mutation in FGFR3?\nOptions: \nA: Achondroplasia\nB: Crouzon syndrome\nC: Thanatophoric dysplasia\nD: Waardenburg syndrome",
+    "label": "D",
+    "subject": "medical_genetics"
+  },
+  {
+    "id": "35ec45df-8a46-4fad-bf82-f507635f15ad",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The design of products and environments to fit the capabilities of people who use them or live there is called _____ design\nOptions: \nA: Environmental\nB: Ecological\nC: Ergonomic\nD: Eclectic",
+    "label": "C",
+    "subject": "human_aging"
+  },
+  {
+    "id": "3fec8b9d-ada8-4cf2-9cc5-aa644611ccdb",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A state-funded military institute accepts only male students. The college-level school has a renowned history of producing military and government leaders. It is known for having a uniquely rigorous form of military training that builds strong character forged in the tribulations of adversity and military discipline. A woman with excellent scholastic and athletic achievements applied for admission and was turned down. She brought an injunctive action in federal court claiming a denial of equal protection guaranteed by the Fourteenth Amendment. The state offered to develop a parallel military school for women that would not be as physically demanding or as confrontational. Facilities and faculty would not be equal to the men's institute because of initial budgetary restraints. In light of U.S. Supreme Court precedent, what should the federal district court rule?\nOptions: \nA: There is no equal protection problem when the state offers a parallel program of education to women.\nB: There is no equal protection problem because the unique attributes of a men-only vigorous military training program is constitutionally justified in not allowing women.\nC: There is a denial of equal protection because the \"parallel\" program does not provide the same rigorous military training or the full spectrum of benefits.\nD: This may be a violation of the civil rights laws against gender discrimination but it has nothing to do with a denial of equal protection.",
+    "label": "C",
+    "subject": "professional_law"
+  },
+  {
+    "id": "e6d1f7d3-3e80-4ca0-881d-7b18383b0475",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A graduate student’s dissertation chair, Dr. X, turns out to be of little help, and the student ends up obtaining advice and assistance from an associate professor, Dr. Z. Dr. X does review the dissertation when it is completed and she is listed as the dissertation chair. Several months later, the student decides to write an article for a professional journal that is based his dissertation research. In terms of publication credit:\nOptions: \nA: Dr. Z should be listed as first author if her contribution was substantial.\nB: Dr. Z should be listed as second author if her contribution warrants it.\nC: Dr. X should be listed as second author since she was the student’s official dissertation chair.\nD: Dr. Y and Dr. Z should be listed as co-authors.",
+    "label": "B",
+    "subject": "professional_psychology"
+  }
+]

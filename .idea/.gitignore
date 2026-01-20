@@ -1,0 +1,19 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+venv/
+.env
+
+.vscode/
+
+.idea/
+
+*.zip
+/src/agents/test0 - Single Agents Performance/objects_recognition/coco/annotations_trainval2017/
+

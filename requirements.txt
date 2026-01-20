@@ -1,0 +1,54 @@
+#PyTorch
+torch==2.7.1
+torchvision==0.22.1
+torchaudio==2.7.1
+
+#Hugging Face Transformers and Sentence Transformers
+transformers==4.44.2
+sentence-transformers==2.7.0
+
+#Generic Libraries
+pillow==11.1.0
+pydantic==2.10.4
+python-dotenv==1.0.1
+pytz==2024.2
+typing_extensions==4.12.2
+aiofiles==24.1.0
+PyYAML==6.0.2
+python-docx==1.1.2
+
+#LangChain and related packages
+langchain_community
+langchain_openai
+langchain-core
+langgraph
+
+#YOLO
+opencv-python
+ultralytics
+
+# Azure y Accelerate
+accelerate==1.6.0
+azure-ai-inference==1.0.0b9
+azure-core==1.33.0
+anthropic==0.74.1
+
+#Phoenix tracing
+arize-phoenix
+arize-phoenix-otel
+openinference-instrumentation-langchain
+
+# Other packages
+grandalf==0.8
+pymupdf==1.26.3
+
+# For testing the MAS-SI system
+matplotlib==3.10.6
+datasets==3.6.0
+
+# Solve numeric-text problems of LLMs (not understanding prompt for occupancy detector)
+word2number==1.1
+
+# Prophet y pycocotools al final (pueden ser problemáticos)
+prophet==1.1.7
+pycocotools==2.0.10

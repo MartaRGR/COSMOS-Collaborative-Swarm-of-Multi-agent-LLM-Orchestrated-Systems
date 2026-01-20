@@ -1,0 +1,121 @@
+[
+  {
+    "id": "a9de1297-76e3-437f-a8a6-2ce8ecf6acde",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "A rope 20 meters long is cut into two pieces. If the length of one piece of rope is 3 meters shorter than the length of the other, what is the length, in meters, of the longer piece of rope?\nOptions: A)7.5, B)8.9, C)9.9, D)11.5, E)11.7",
+    "label": "D",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "368b79bb-3b9f-445b-999f-a385b4f3880a",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "In a railway station, there are two trains going. One in the harbor line and one in the main line, each having a frequency of 10 minutes. The main line service starts at 5 o'clock and the harbor line starts at 5.02 A.M. A man goes to the station every day to catch the first train that comes. What is the probability of the man catching the first train?\nOptions: A)0.9, B)0.8, C)0.6, D)0.65, E)1.5",
+    "label": "B",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "4f65e914-eaa9-46f3-8713-edce816c8a71",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "The nefarious bandit Hoopsmot decides to go in with his criminal partner Smolapon to purchase a number of senators. Hoopsmot contributes $16,000 to their bribery pool, and Smolapon contributes just $4,000. Their total allows them to influence 30 senators. How many senators of these can be considered Hoopsmot's?\nOptions: A)18, B)20, C)22, D)24, E)26",
+    "label": "D",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "1bc5e461-9d60-4766-883e-b8575e079f53",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "If m > 0, y > 0, and x is m percent of 4y, then, in terms of y, m is what percentage of x?\nOptions: A)y/400, B)4y, C)50y, D)2500/y, E)5000/y",
+    "label": "D",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "1a853723-c78c-484c-b940-bee6e0aaf7d1",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Alex and Jacob works at a toy shop that make toys. Alex takes 7 hours to make a toy, and Jacob takes 9 hours to make a toy. During a month, both of them makes 35 toys in total. If both of them have worked for almost similar number of hours how many toys have been prepared by Jacob?\nOptions: A)15, B)16, C)17, D)18, E)19",
+    "label": "A",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "b4b98fe9-1392-4c5e-87d2-cc8e9626ee04",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Jerry purchased a 1-year $5,000 bond that paid an annual interest rate of 12% compounded every six months. How much interest had this bond accrued at maturity?\nOptions: A)$5102, B)$618, C)$216, D)$202, E)$200",
+    "label": "B",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "dc0b8a1a-ab64-4ed4-8b1d-ffec08b9f617",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Three bells ring at intervals of 36 seconds, 40 seconds and 48 seconds, respectively. They start ringing together at a particular time. When they will ring together again?\nOptions: A)After 6 minutes, B)After 12 minutes, C)After 18 minutes, D)After 24 minutes, E)none",
+    "label": "B",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "139a4a32-21bf-4548-afe9-8400e832db8d",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "A rectangular piece of 150 sq m has a length which is 1m more than the 4 times the breadth. What is the perimeter of the piece?\nOptions: A)60 m, B)61 m, C)62 m, D)63 m, E)64 m",
+    "label": "C",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "46bd0d5b-ec67-43d7-bf0b-4cd25f820593",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "What is the units digit of 9^3-7?\nOptions: A)1, B)3, C)5, D)2, E)4",
+    "label": "D",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "b40b0663-e469-49c3-8562-b52ed2306cc5",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "In a survey of students, each student selected from a list of 10 songs the 2 songs that the student liked best. If each song was selected 5 times, how many students were surveyed?\nOptions: A)96, B)48, C)32, D)25, E)18",
+    "label": "D",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "aafebcf6-f8e3-439f-981d-ddc26e9a5cf3",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Jack buys 18 sharpeners (white and brown) for rs. 100. If he pays 1 rupee more for each white than brown sharpeners. How many of white and how many brown sharpeners did he buy?\nOptions: A)10,8, B)9,8, C)7,8, D)5,6, E)11,12",
+    "label": "A",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "e31d24ed-726a-4b6a-95c6-797aa013ab8b",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "A square piece of cloth is trimmed by 4 feet on one edge to form a rectangular piece, which is then cut diagonally in half to create two triangles. If the area of each of triangle is 70 square feet, what was the perimeter (in feet) of the original piece of square cloth?\nOptions: A)56, B)58, C)60, D)62, E)64",
+    "label": "A",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "dc34cbb1-3d0e-4299-adf0-ae4ea77a61e3",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "There is a 90% chance that a registered voter in Burghtown voted in the last election. If five registered voters are chosen at random, what is the approximate likelihood that exactly four of them voted in the last election?\nOptions: A)26.2%, B)32.8%, C)43.7%, D)59.0%, E)65.6%",
+    "label": "E",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "4a2c2bb3-ff2d-43bc-85a2-1bfa22695f6f",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "The average (arithmetic mean) of the weight of 10 vehicles is 12.2 tons. The average weight of the group of vehicles increased by 2.6 tons after a new heavy duty truck was added to the group? What is the weight in tons of the heavy duty truck?\nOptions: A)40.8, B)41.6, C)42.2, D)43.5, E)44.8",
+    "label": "A",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "a8fe9580-c5b9-4128-b889-a278890a33be",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "[5 + ? × 19 - 15 - 7]/[13 × 13 - 156] = 6\nOptions: A)4, B)4.5, C)5, D)5.5, E)6.5",
+    "label": "C",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "f5cd4e24-9083-43ef-ace1-8f31d975524a",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Car ‘X’ covers a distance of 320 kms in 8 hours and car ‘Y’ covers a distance of 415 kms in 5 hrs. What is the difference in the speed of the two cars?\nOptions: A)42kms/hr, B)41km/hr, C)43kms/hr, D)45kms/hr, E)None of these",
+    "label": "C",
+    "subject": "arithmetic"
+  },
+  {
+    "id": "a52a31f7-a292-45e9-b1f9-2bb8771b09b6",
+    "task_instruction": "Choose the correct answer to this arithmetic reasoning multiple-choice question. Provide your answer as a single letter (A, B, C, D or E).",
+    "input_text": "Printer A and Printer B can each print 1⁄2 page per second. How long will it take both printers working together to print 100 pages?\nOptions: A)25 seconds, B)50 seconds, C)100 seconds, D)200 seconds, E)400 seconds",
+    "label": "C",
+    "subject": "arithmetic"
+  }
+]

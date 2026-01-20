@@ -1,0 +1,121 @@
+[
+  {
+    "id": "0d8e43db-0217-48d4-88b9-1d282fde3b64",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "There are 25 suitcases, 5 of which are damaged. Three suitcases are selected at random. What is the probability that exactly 2 are damaged?\nOptions: \nA: 2/69\nB: 1/30\nC: 2/23\nD: 12/125",
+    "label": "C",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "8f1381ac-7968-4553-aea6-8e1479f76e97",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A discrete graph is complete if there is an edge connecting any pair of vertices. How many edges does a complete graph with 10 vertices have?\nOptions: \nA: 10\nB: 20\nC: 25\nD: 45",
+    "label": "D",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "f72f75e4-127c-4a2d-96a9-92c58a39c2b2",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "A group G in which (ab)^2 = a^2b^2 for all a, b in G is necessarily\nOptions: \nA: finite\nB: cyclic\nC: of order two\nD: abelian",
+    "label": "D",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "1d5a9817-87f1-46ad-832a-927a2383f5db",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "If f : (0, 1) → (0, 1], then which of the following could be TRUE?\nI. f is one-to-one and onto.\nII. The image of f is compact.\nIII. f is continuous, one-to-one, and onto.\nOptions: \nA: I only\nB: II only\nC: I and II only\nD: I and III only",
+    "label": "C",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "0f5369b2-241f-42a7-a1f2-63016bc83507",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Let S be a compact topological space, let T be a topological space, and let f be a function from S onto T. Of the following conditions on f, which is the weakest condition sufficient to ensure the compactness of T?\nOptions: \nA: f is a homeomorphism.\nB: f is continuous and one-to-one\nC: f is continuous.\nD: f is one-to-one",
+    "label": "C",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "af998a86-6e68-4358-9c84-77af5d72d44f",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Which of the following are valid intervals of convergence for a power series?\n(I) [−1, 3)\n(II) (−∞, 0]\n(III) [2, 2] ∪ [3, 3]\n(IV) (−∞,∞)\nOptions: \nA: Only (II)\nB: Only (IV )\nC: (I) and (IV )\nD: (II) and (III)",
+    "label": "C",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "08a7d22c-1a33-4760-ad19-acc48a0daa24",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "The region bounded by the x-axis and the function f(x) = x/(1 + x^3) is rotated about the x-axis. What is the volume of the solid generated?\nOptions: \nA: π/3\nB: π/4\nC: π\nD: 2π",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "552d9ab3-b743-44d3-86d9-c14d3fd01a5c",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "In a game two players take turns tossing a fair coin; the winner is the first one to toss a head. The probability that the player who makes the first toss wins the game is\nOptions: \nA: 1/4\nB: 1/3\nC: 1/2\nD: 2/3",
+    "label": "D",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "89dabd8e-a657-4557-9f4f-52bf4eca54a6",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Suppose A is a 3 × 3 matrix such that det(A − λI) = −λ^3 + 3λ^2 + λ − 3, where I is the 3 × 3 identity matrix. Which of the following are TRUE of A?\nI. The trace of A is 3.\nII. The determinate of A is −3.\nIII. The matrix A has eigenvalues −3 and 1.\nOptions: \nA: I only\nB: II only\nC: III only\nD: I and II only",
+    "label": "D",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "7c329dd4-d150-43aa-afa9-b3040b0af637",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Let R be a ring and let U and V be (two-sided) ideals of R. Which of the following must also be ideals of R ?\nI. {u + v : u \\in and v \\in V}\nII. {uv : u \\in U and v \\in V}\nIII. {x : x \\in U and x \\in V}\nOptions: \nA: II only\nB: III only\nC: I and II only\nD: I and III only",
+    "label": "D",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "445fa769-ccb6-4494-8c6e-5b0661c4fbc3",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "In the xy-plane, the graph of x^(log y) = y^log x is\nOptions: \nA: the open first quadrant\nB: a closed curve\nC: a ray in the open first quadrant\nD: a single point",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "4e802a3e-3b73-4aba-89fa-4896f9dec6d6",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Let f(x,y) = x^2 - 2xy + y^3 for all real x and y. Which of the following is true?\nOptions: \nA: f has all of its relative extrema on the line x = y.\nB: f has all of its relative extrema on the parabola x = y^2.\nC: f has a relative minimum at (0, 0).\nD: f has an absolute minimum at (2/3, 2/3).",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "097e512f-bd6e-4175-8192-a1f1e307091c",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Which of the following is an equation of the line tangent to the graph of y = x + e^x at x = 0 ?\nOptions: \nA: y = 2x + 1\nB: y = 2x\nC: y = x + 2\nD: y = x + 1",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "42e421f4-f1cf-4e63-97cb-2633efad322b",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Statement 1 |  Suppose ∑|a_i| diverges and ∑ a_i = 2. There is a rearrangement a_i_k of the terms such that ∑ a_i_k = 4. Statement 2 | There exists metric spaces X and Y with X closed and bounded and a continuous mapping f : X → Y such that f(X) is NOT “closed and bounded”.\nOptions: \nA: True, True\nB: True, False\nC: False, True\nD: False, False",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "64e019bf-090e-446c-b3a5-198cd25777ea",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "In the xy-plane, the curve with parametric equations x = cos t and y = sin t, 0 <= t <= pi, has length\nOptions: \nA: 3\nB: pi\nC: 3pi\nD: 3/2",
+    "label": "B",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "028a4ead-e1e7-4ab7-a73b-61c842af0963",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Let V be the real vector space of all real 2 x 3 matrices, and let W be the real vector space of all real 4 x 1 column vectors. If T is a linear transformation from V onto W, what is the dimension of the subspace kernel of T?\nOptions: \nA: 2\nB: 3\nC: 4\nD: 5",
+    "label": "A",
+    "subject": "college_mathematics"
+  },
+  {
+    "id": "fbff6e92-b6d9-4c34-b54d-728d6d173964",
+    "task_instruction": "Answer the following multiple-choice question. Provide your answer as a single letter (A, B, C, or D).",
+    "input_text": "Let X be a topological space, and let A, B, and C be nonempty subsets of X such that A c B c C; that is, A is a proper subset of B, and B is a proper subset of C. Which of the following statements is (are) true?\nI. If A and C are connected, then B is connected.\nII. If A and C are compact, then B is compact.\nIII. If A and C are Hausdorff, then B is Hausdorff.\nOptions: \nA: I and II only\nB: III only\nC: I and III only\nD: I, II, and III",
+    "label": "D",
+    "subject": "college_mathematics"
+  }
+]
